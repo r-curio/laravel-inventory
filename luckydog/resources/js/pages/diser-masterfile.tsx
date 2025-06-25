@@ -1,0 +1,555 @@
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import AppLayout from '@/layouts/app-layout';
+import { type BreadcrumbItem } from '@/types';
+import { Diser } from '@/types/diser';
+import { Head } from '@inertiajs/react';
+import {
+    createColumnHelper,
+    flexRender,
+    getCoreRowModel,
+    getFilteredRowModel,
+    getPaginationRowModel,
+    useReactTable,
+    type CellContext,
+    type Header,
+    type HeaderGroup,
+    type Row,
+} from '@tanstack/react-table';
+import axios from 'axios';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import { Eye, FileDown, Filter, Plus, Search, Settings2, Trash2 } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { toast } from 'sonner';
+
+const breadcrumbs: BreadcrumbItem[] = [
+    {
+        title: 'Diser Masterfile',
+        href: '/diser-masterfile',
+    },
+];
+
+// Define predetermined views
+const PREDEFINED_VIEWS = {
+    all: {
+        name: 'All Columns',
+        description: 'Show all available columns',
+        hiddenColumns: [] as string[],
+    },
+    diser_computation: {
+        name: 'Diser Computation',
+        hiddenColumns: ['others_1', 'others_3', 'company_sv'] as string[],
+    },
+    diser_allowance: {
+        name: 'Diser Allowance',
+        hiddenColumns: ['others_1', 'others_2', 'others_3', 'sv_only', 'company_sv', 'rsc_re', 'name', 'sales'] as string[],
+    },
+};
+
+type ViewKey = keyof typeof PREDEFINED_VIEWS;
+
+type DiserMasterfileProps = {
+    disers: Diser[];
+};
+
+type PendingUpdate = {
+    id: number;
+    changes: Record<string, string>;
+};
+
+export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
+    const [data, setData] = useState<Diser[]>(disers);
+    const [globalFilter, setGlobalFilter] = useState('');
+    const [selectedView, setSelectedView] = useState<ViewKey>('all');
+    const [hideZeroSales, setHideZeroSales] = useState(false);
+    const columnHelper = createColumnHelper<Diser>();
+    const pendingUpdatesRef = useRef<Map<string, PendingUpdate>>(new Map());
+    const batchUpdateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+    const processBatchUpdate = useCallback(async () => {
+        const updates = Array.from(pendingUpdatesRef.current.values());
+        if (updates.length === 0) return;
+
+        try {
+            await axios.post('/disers/batch-update', { updates });
+            toast.success(`Successfully updated ${updates.length} changes`);
+            pendingUpdatesRef.current.clear();
+        } catch (error) {
+            toast.error('Failed to save changes');
+            // Revert all pending changes
+            setData(disers);
+            pendingUpdatesRef.current.clear();
+        }
+    }, [disers]);
+
+    const handleCellChange = useCallback(
+        (rowIndex: number, columnId: string, value: string) => {
+            setData((old) =>
+                old.map((row, index) => {
+                    if (index === rowIndex) {
+                        return {
+                            ...row,
+                            [columnId]: value,
+                        };
+                    }
+                    return row;
+                }),
+            );
+
+            const diser = data[rowIndex];
+            const key = `${diser.id}-${columnId}`;
+
+            // Update or create pending update
+            const existingUpdate = pendingUpdatesRef.current.get(key);
+            if (existingUpdate) {
+                existingUpdate.changes[columnId] = value;
+            } else {
+                pendingUpdatesRef.current.set(key, {
+                    id: diser.id,
+                    changes: { [columnId]: value },
+                });
+            }
+
+            // Clear existing timeout
+            if (batchUpdateTimeoutRef.current) {
+                clearTimeout(batchUpdateTimeoutRef.current);
+            }
+
+            // Set new timeout
+            batchUpdateTimeoutRef.current = setTimeout(processBatchUpdate, 3000);
+        },
+        [data, processBatchUpdate],
+    );
+
+    // Cleanup timeout on unmount
+    useEffect(() => {
+        return () => {
+            if (batchUpdateTimeoutRef.current) {
+                clearTimeout(batchUpdateTimeoutRef.current);
+            }
+        };
+    }, []);
+
+    const handleDelete = async (rowIndex: number) => {
+        const diser = data[rowIndex];
+        try {
+            await axios.delete(`/disers/${diser.id}`);
+            setData((old) => old.filter((_, index) => index !== rowIndex));
+            toast.success('Diser deleted successfully');
+        } catch (error) {
+            toast.error('Failed to delete diser');
+        }
+    };
+
+    const EditableCell = ({ getValue, row, column, table }: CellContext<Diser, string>) => {
+        const initialValue = getValue();
+        const [value, setValue] = useState(initialValue);
+
+        const onBlur = () => {
+            handleCellChange(row.index, column.id, value);
+        };
+
+        return <Input value={value} onChange={(e) => setValue(e.target.value)} onBlur={onBlur} />;
+    };
+
+    const NumberCell = ({ getValue, row, column, table }: CellContext<Diser, number>) => {
+        const initialValue = getValue();
+        const [value, setValue] = useState(initialValue?.toString() || '');
+
+        const onBlur = () => {
+            // Only allow numbers and decimal points
+            const numericValue = value.replace(/[^0-9.]/g, '');
+            const numValue = parseFloat(numericValue) || 0;
+            handleCellChange(row.index, column.id, numValue.toString());
+        };
+
+        const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+            const inputValue = e.target.value;
+            // Allow typing numbers, decimal points, and backspace
+            if (inputValue === '' || /^[0-9]*\.?[0-9]*$/.test(inputValue)) {
+                setValue(inputValue);
+            }
+        };
+
+        return <Input type="number" step="0.01" min="0" value={value} onChange={handleChange} onBlur={onBlur} className="text-right" />;
+    };
+
+    const ReadOnlyCell = ({ getValue }: CellContext<Diser, string>) => {
+        const value = getValue();
+        return <div className="px-2 py-1">{value}</div>;
+    };
+
+    const ComputedTotalCell = ({ row }: { row: Row<Diser> }) => {
+        const currentFbName = row.getValue('fb_name') as string;
+
+        // Calculate total for all rows with the same fb_name
+        const total = data
+            .filter((item) => item.fb_name === currentFbName)
+            .reduce((sum, item) => {
+                const rate = typeof item.rate === 'number' ? item.rate : parseFloat(item.rate) || 0;
+                const sales = typeof item.sales === 'number' ? item.sales : parseFloat(item.sales) || 0;
+                return sum + rate * sales;
+            }, 0);
+
+        return <div className="px-2 py-1 text-right font-medium">{total.toFixed(2)}</div>;
+    };
+
+    const columns = [
+        columnHelper.accessor('name', {
+            header: 'Name',
+            cell: ReadOnlyCell,
+        }),
+        columnHelper.accessor('rsc_re', {
+            header: 'RSC RE',
+            cell: EditableCell,
+        }),
+        columnHelper.accessor('fb_name', {
+            header: 'FB Name',
+            cell: EditableCell,
+        }),
+        columnHelper.accessor('rate', {
+            header: 'Rate',
+            cell: NumberCell,
+        }),
+        columnHelper.accessor('sales', {
+            header: 'Sales',
+            cell: NumberCell,
+        }),
+        columnHelper.display({
+            id: 'total',
+            header: 'Total',
+            cell: ComputedTotalCell,
+        }),
+        columnHelper.accessor('others_1', {
+            header: 'Others 1',
+            cell: EditableCell,
+        }),
+        columnHelper.accessor('hold_stop_allow', {
+            header: 'Hold Stop Allow',
+            cell: EditableCell,
+        }),
+        columnHelper.accessor('gcash_number', {
+            header: 'GCash Number',
+            cell: EditableCell,
+        }),
+        columnHelper.accessor('gcash_name', {
+            header: 'GCash Name',
+            cell: EditableCell,
+        }),
+        columnHelper.accessor('sv_only', {
+            header: 'SV Only',
+            cell: EditableCell,
+        }),
+        columnHelper.accessor('company_sv', {
+            header: 'Company SV',
+            cell: EditableCell,
+        }),
+        columnHelper.accessor('others_2', {
+            header: 'Others 2',
+            cell: EditableCell,
+        }),
+        columnHelper.accessor('others_3', {
+            header: 'Others 3',
+            cell: EditableCell,
+        }),
+        columnHelper.display({
+            id: 'actions',
+            header: 'Actions',
+            cell: (props: { row: Row<Diser> }) => (
+                <Button variant="destructive" size="sm" onClick={() => handleDelete(props.row.index)}>
+                    <Trash2 className="h-4 w-4" />
+                </Button>
+            ),
+        }),
+    ];
+
+    // Apply zero sales filter using a custom filter function
+    const filteredData = useMemo(() => {
+        if (!hideZeroSales) return data;
+
+        return data.filter((item) => {
+            const sales = typeof item.sales === 'number' ? item.sales : parseFloat(String(item.sales)) || 0;
+            return sales > 0;
+        });
+    }, [data, hideZeroSales]);
+
+    // Update table data when filter changes
+    useEffect(() => {
+        setData(disers);
+    }, [disers]);
+
+    // Handle view change
+    const handleViewChange = (viewKey: string) => {
+        setSelectedView(viewKey as ViewKey);
+        const view = PREDEFINED_VIEWS[viewKey as ViewKey];
+
+        // Update column visibility
+        table.getAllColumns().forEach((column) => {
+            if (column.id !== 'actions') {
+                const shouldBeHidden = view.hiddenColumns.includes(column.id);
+                column.toggleVisibility(!shouldBeHidden);
+            }
+        });
+    };
+
+    const addNewRow = async () => {
+        try {
+            const response = await axios.post('/disers', {
+                name: '',
+                rsc_re: '',
+                fb_name: '',
+                rate: '',
+                sales: '',
+                others_1: '',
+                hold_stop_allow: '',
+                gcash_number: '',
+                gcash_name: '',
+                sv_only: '',
+                company_sv: '',
+                others_2: '',
+                others_3: '',
+            });
+
+            setData([...data, response.data.diser]);
+            toast.success('Diser created successfully');
+        } catch (error) {
+            toast.error('Failed to create diser');
+        }
+    };
+
+    const table = useReactTable({
+        data: filteredData, // Use filtered data instead of original data
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
+        initialState: {
+            pagination: {
+                pageSize: 20,
+            },
+            columnVisibility: Object.fromEntries(PREDEFINED_VIEWS[selectedView].hiddenColumns.map((col) => [col, false])),
+        },
+        state: {
+            globalFilter,
+        },
+        onGlobalFilterChange: setGlobalFilter,
+        globalFilterFn: (row, columnId, filterValue) => {
+            const searchTerm = String(filterValue).toLowerCase().trim();
+            if (!searchTerm) return true;
+
+            // Get all visible columns for the row
+            const visibleColumns = row.getAllCells().map((cell) => cell.column.id);
+
+            // Check if any of the visible columns contain the search term
+            return visibleColumns.some((columnId) => {
+                const value = row.getValue(columnId);
+                if (value == null) return false;
+
+                const searchValue = String(value).toLowerCase();
+                return searchValue.includes(searchTerm);
+            });
+        },
+    });
+
+    const exportToPDF = () => {
+        const doc = new jsPDF({
+            orientation: 'landscape',
+            unit: 'mm',
+            format: 'a4',
+        });
+
+        // Add title
+        doc.setFontSize(23);
+        doc.text('Diser Masterfile', 14, 15);
+
+        // Add date
+        doc.setFontSize(10);
+        doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 22);
+
+        // Get visible columns and their headers
+        const visibleColumns = table.getAllColumns().filter((column) => column.getIsVisible() && column.id !== 'actions');
+
+        const headers = visibleColumns.map((column) => column.id.charAt(0).toUpperCase() + column.id.slice(1).replace(/_/g, ' '));
+
+        // Get filtered data
+        const filteredData = table.getFilteredRowModel().rows.map((row) =>
+            visibleColumns.map((column) => {
+                const value = row.getValue(column.id);
+                return value ? String(value) : '';
+            }),
+        );
+
+        // Generate table
+        autoTable(doc, {
+            head: [headers],
+            body: filteredData,
+            startY: 30,
+            styles: {
+                fontSize: 8,
+                cellPadding: 1,
+            },
+            headStyles: {
+                fillColor: [41, 128, 185],
+                textColor: 255,
+                fontSize: 9,
+                fontStyle: 'bold',
+            },
+            alternateRowStyles: {
+                fillColor: [245, 245, 245],
+            },
+            margin: { top: 30, left: 1, right: 1, bottom: 10 },
+            theme: 'grid',
+            didDrawPage: function (data) {
+                // Add page numbers
+                doc.setFontSize(8);
+                doc.text(`Page ${data.pageNumber}`, data.settings.margin.left, doc.internal.pageSize.height - 10);
+            },
+        });
+
+        // Save the PDF
+        doc.save('diser-masterfile.pdf');
+    };
+
+    return (
+        <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title="Diser Masterfile" />
+            <div className="container mx-auto px-2 py-6">
+                <div className="mb-4 flex items-center justify-between">
+                    <h1 className="text-2xl font-bold">Diser Masterfile</h1>
+                    <div className="flex gap-2">
+                        <Select value={selectedView} onValueChange={handleViewChange}>
+                            <SelectTrigger className="w-[180px]">
+                                <Eye className="mr-2 h-4 w-4" />
+                                <SelectValue placeholder="Select view" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {Object.entries(PREDEFINED_VIEWS).map(([key, view]) => (
+                                    <SelectItem key={key} value={key}>
+                                        <div>
+                                            <div className="font-medium">{view.name}</div>
+                                        </div>
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        <div className="flex items-center space-x-2 rounded-md border px-3 py-2">
+                            <Filter className="h-4 w-4 text-muted-foreground" />
+                            <div className="flex items-center space-x-2">
+                                <Checkbox
+                                    id="hide-zero-sales"
+                                    checked={hideZeroSales}
+                                    onCheckedChange={(checked) => setHideZeroSales(checked as boolean)}
+                                />
+                                <Label htmlFor="hide-zero-sales" className="text-sm">
+                                    Hide Zero Sales
+                                </Label>
+                            </div>
+                        </div>
+                        <Button variant="outline" size="sm" onClick={exportToPDF}>
+                            <FileDown className="mr-2 h-4 w-4" />
+                            Export PDF
+                        </Button>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="outline" size="sm">
+                                    <Settings2 className="mr-2 h-4 w-4" />
+                                    Columns
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                {table
+                                    .getAllColumns()
+                                    .filter((column) => column.id !== 'actions')
+                                    .map((column) => (
+                                        <DropdownMenuCheckboxItem
+                                            key={column.id}
+                                            checked={column.getIsVisible()}
+                                            onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                                        >
+                                            {column.id.charAt(0).toUpperCase() + column.id.slice(1).replace(/_/g, ' ')}
+                                        </DropdownMenuCheckboxItem>
+                                    ))}
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                        <Button onClick={addNewRow}>
+                            <Plus className="mr-2 h-4 w-4" />
+                            Add Diser
+                        </Button>
+                    </div>
+                </div>
+
+                <div className="rounded-md border">
+                    <div className="p-4">
+                        <div className="mb-4 flex items-center gap-2">
+                            <div className="relative max-w-sm flex-1">
+                                <Search className="absolute top-2.5 left-2 h-4 w-4 text-muted-foreground" />
+                                <Input
+                                    placeholder="Search all columns..."
+                                    value={globalFilter ?? ''}
+                                    onChange={(e) => setGlobalFilter(e.target.value)}
+                                    className="pl-8"
+                                />
+                            </div>
+                        </div>
+                        <div className="overflow-x-auto">
+                            <table className="w-full">
+                                <thead>
+                                    {table.getHeaderGroups().map((headerGroup: HeaderGroup<Diser>) => (
+                                        <tr key={headerGroup.id}>
+                                            {headerGroup.headers.map((header: Header<Diser, unknown>, index: number) => (
+                                                <th
+                                                    key={header.id}
+                                                    className={`border-b px-4 py-2 text-left font-medium whitespace-normal ${
+                                                        index === 0 ? 'sticky left-0 z-10 bg-white shadow-sm' : ''
+                                                    }`}
+                                                >
+                                                    {flexRender(header.column.columnDef.header, header.getContext())}
+                                                </th>
+                                            ))}
+                                        </tr>
+                                    ))}
+                                </thead>
+                                <tbody>
+                                    {table.getRowModel().rows.map((row: Row<Diser>) => (
+                                        <tr key={row.id}>
+                                            {row.getVisibleCells().map((cell, index: number) => (
+                                                <td
+                                                    key={cell.id}
+                                                    className={`min-w-fit border-b px-4 py-2 whitespace-normal ${
+                                                        index === 0 ? 'sticky left-0 z-10 bg-white shadow-sm' : ''
+                                                    }`}
+                                                >
+                                                    <div className="flex min-h-[2.5rem] max-w-fit min-w-[150px] items-center">
+                                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                    </div>
+                                                </td>
+                                            ))}
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="flex items-center justify-between border-t p-4">
+                        <div className="flex items-center gap-2">
+                            <Button variant="outline" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
+                                Previous
+                            </Button>
+                            <Button variant="outline" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
+                                Next
+                            </Button>
+                        </div>
+                        <div className="text-sm text-gray-500">
+                            Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </AppLayout>
+    );
+}
