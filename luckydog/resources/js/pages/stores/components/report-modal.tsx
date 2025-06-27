@@ -7,6 +7,8 @@ import axios from 'axios';
 import { Printer } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { usePage } from '@inertiajs/react';
+import { type SharedData } from '@/types';
 import InventoryPDF from '../inventoryPDF';
 
 type StoreItem = {
@@ -41,6 +43,9 @@ export default function ReportModal({
     storeLocation: string | null;
     storeId: number;
 }) {
+    const { auth } = usePage<SharedData>().props;
+    const isAdmin = auth.user?.role === 'admin';
+    
     const [boxCapacity, setBoxCapacity] = useState<number>(255);
     const [relevant_data, setRelevantData] = useState<StoreItem[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -98,7 +103,18 @@ export default function ReportModal({
                 <div className="flex flex-col gap-2">
                     <div className="flex flex-col gap-2">
                         <p>Box Capacity</p>
-                        <Input type="number" value={boxCapacity} onChange={(e) => setBoxCapacity(Number(e.target.value))} />
+                        <Input 
+                            type="number" 
+                            value={boxCapacity} 
+                            onChange={(e) => setBoxCapacity(Number(e.target.value))} 
+                            disabled={!isAdmin}
+                            className={!isAdmin ? 'opacity-50 cursor-not-allowed' : ''}
+                        />
+                        {!isAdmin && (
+                            <p className="text-sm text-muted-foreground">
+                                Only administrators can modify box capacity settings.
+                            </p>
+                        )}
                     </div>
                     <Button onClick={handleButtonClick} disabled={isLoading}>
                         {isLoading ? 'Creating Order...' : 'Generate Report'}

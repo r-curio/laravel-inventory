@@ -27,9 +27,13 @@ return new class extends Migration
             $table->string('class')->nullable();
             $table->string('pullout_status')->nullable();
             $table->string('dgcage_status')->nullable();
+            $table->string('dgcage_comment')->nullable();
             $table->string('tshirt_status')->nullable();
+            $table->string('tshirt_comment')->nullable();
             $table->string('litter_box_status')->nullable();
+            $table->string('litter_box_comment')->nullable();
             $table->string('pet_bed_status')->nullable();
+            $table->string('pet_bed_comment')->nullable();
             $table->string('gondola_dep')->nullable();
             $table->string('date_depo_refund')->nullable();
             $table->string('missing_deliveries')->nullable();
@@ -39,6 +43,10 @@ return new class extends Migration
             $table->string('items_not_allowed')->nullable();
             $table->string('items_order')->nullable();
             $table->string('others')->nullable();
+            $table->string('others_2')->nullable();
+            $table->string('others_3')->nullable();
+            $table->string('date')->nullable();
+
         });
     }
 

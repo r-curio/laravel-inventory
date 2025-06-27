@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/app-layout';
-import { type BreadcrumbItem } from '@/types';
+import { Item, type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
 import {
     createColumnHelper,
@@ -329,6 +329,9 @@ export default function StoreShow({ store, items, storeItems: initialStoreItems 
         columnHelper.accessor('item_name', {
             header: 'Item Name',
             cell: (info) => info.getValue(),
+            meta: {
+                className: 'sticky left-0 z-10 bg-white',
+            },
         }),
         columnHelper.accessor('order', {
             header: 'Order',
@@ -498,13 +501,18 @@ export default function StoreShow({ store, items, storeItems: initialStoreItems 
                                 <ReportModal data={data} storeName={store.name} storeLocation={store.dc} storeId={store.id} />
                             </div>
                         </div>
-                        <div className="max-h-[500px] overflow-x-auto">
-                            <table className="w-full overflow-y-auto">
+                        <div className="max-h-[700px] overflow-x-auto">
+                            <table className="w-full">
                                 <thead>
                                     {table.getHeaderGroups().map((headerGroup: HeaderGroup<StoreItem>) => (
                                         <tr key={headerGroup.id}>
                                             {headerGroup.headers.map((header: Header<StoreItem, unknown>) => (
-                                                <th key={header.id} className="border-b px-4 py-2 text-left font-medium whitespace-normal">
+                                                <th
+                                                    key={header.id}
+                                                    className={`border-b px-4 py-2 text-left font-medium whitespace-normal ${
+                                                        header.column.id === 'name' ? 'sticky left-0 z-10 bg-white' : ''
+                                                    }`}
+                                                >
                                                     {flexRender(header.column.columnDef.header, header.getContext())}
                                                 </th>
                                             ))}
@@ -515,7 +523,12 @@ export default function StoreShow({ store, items, storeItems: initialStoreItems 
                                     {table.getRowModel().rows.map((row: Row<StoreItem>) => (
                                         <tr key={row.id}>
                                             {row.getVisibleCells().map((cell) => (
-                                                <td key={cell.id} className="min-w-fit border-b px-4 py-2 whitespace-normal">
+                                                <td
+                                                    key={cell.id}
+                                                    className={`min-w-fit border-b px-4 py-2 whitespace-normal ${
+                                                        cell.column.id === 'item_name' ? 'sticky left-0 z-10 bg-white' : ''
+                                                    }`}
+                                                >
                                                     <div className="flex min-h-[2.5rem] max-w-fit min-w-[150px] items-center">
                                                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                                     </div>
@@ -525,19 +538,6 @@ export default function StoreShow({ store, items, storeItems: initialStoreItems 
                                     ))}
                                 </tbody>
                             </table>
-                        </div>
-                    </div>
-                    <div className="flex items-center justify-between border-t p-4">
-                        <div className="flex items-center gap-2">
-                            <Button variant="outline" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
-                                Previous
-                            </Button>
-                            <Button variant="outline" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
-                                Next
-                            </Button>
-                        </div>
-                        <div className="text-sm text-gray-500">
-                            Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
                         </div>
                     </div>
                 </div>

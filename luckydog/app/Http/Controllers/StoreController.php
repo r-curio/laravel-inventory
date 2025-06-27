@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 use App\Models\StoreItem;
+use App\Models\StockLevel;
+use App\Models\Diser;
 
 class StoreController extends Controller
 {
@@ -15,12 +17,26 @@ class StoreController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        $stores = Store::all();
-        return Inertia::render('store-masterfile', [
-            'stores' => $stores,
-        ]);
-    }
+{
+    $stores = Store::all();
+    $disers = Diser::all()->keyBy('name'); // Index disers by their name
+
+    $result = $stores->map(function($store) use ($disers) {
+        $diser = $disers->get($store->name);
+
+        // Merge store and diser attributes, prefixing diser fields to avoid collision
+        return array_merge(
+            $store->toArray(),
+            $diser ? collect($diser)->mapWithKeys(function($value, $key) {
+                return ['diser_' . $key => $value];
+            })->toArray() : []
+        );
+    });
+
+    return Inertia::render('store-masterfile', [
+        'stores' => $result,
+    ]);
+}
 
     /**
      * Show the form for creating a new resource.
@@ -79,6 +95,21 @@ class StoreController extends Controller
             $query->select('items.*')
                   ->orderBy('store_item.order');
         }]);
+
+        // Get all the stock levels that match the store's co and class
+        $stockLevels = StockLevel::where('co', $store->co)
+            ->where('class', $store->class)
+            ->get()
+            ->keyBy('name'); // Index by name for faster lookup
+
+        // Replace store_item order with stock_levels order
+        $store->items->each(function($item) use ($stockLevels) {
+            $stockLevel = $stockLevels->get($item->name);
+            if ($stockLevel) {
+                $item->pivot->order = $stockLevel->order;
+            }
+            // If no matching stock level found, keep the existing order value
+        });
 
         return Inertia::render('stores/po', [
             'store' => $store,

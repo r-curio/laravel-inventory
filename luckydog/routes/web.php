@@ -28,11 +28,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('items/{item}', [ItemController::class, 'destroy'])->name('items.destroy');
     Route::post('items/batch-update', [ItemController::class, 'batchUpdate'])->name('items.batch-update');
 
-    // Diser Routes
-    Route::get('diser-masterfile', [DiserController::class, 'index'])->name('diser-masterfile');
-    Route::post('disers', [DiserController::class, 'store'])->name('disers.store');
-    Route::delete('disers/{diser}', [DiserController::class, 'destroy'])->name('disers.destroy');
-    Route::post('disers/batch-update', [DiserController::class, 'batchUpdate'])->name('disers.batch-update');
+    // Diser Routes - Admin only
+    Route::middleware(['admin'])->group(function () {
+        Route::get('diser-masterfile', [DiserController::class, 'index'])->name('diser-masterfile');
+        Route::post('disers', [DiserController::class, 'store'])->name('disers.store');
+        Route::delete('disers/{diser}', [DiserController::class, 'destroy'])->name('disers.destroy');
+        Route::post('disers/batch-update', [DiserController::class, 'batchUpdate'])->name('disers.batch-update');
+    });
 
     // Store Item Routes
     Route::post('/stores/{store}/items', [StoreItemController::class, 'store'])->name('stores.items.store');

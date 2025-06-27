@@ -1,0 +1,397 @@
+{
+    "name": "TV-CLASS-L",
+    "co": "TV",
+    "class": "L",
+    "products": [
+        {
+            "TV-1SR": {
+                "order": 10
+            }
+        },
+        {
+            "TV-5/8SR": {
+                "order": 10
+            }
+        },
+        {
+            "TV-1MB": {
+                "order": 5
+            }
+        },
+        {
+            "TV-5/8MB": {
+                "order": 5
+            }
+        },
+        {
+            "TV-1DL": {
+                "order": 2
+            }
+        },
+        {
+            "TV-5/8DL": {
+                "order": 5
+            }
+        },
+        {
+            "TV-1HL": {
+                "order": 5
+            }
+        },
+        {
+            "TV-5/8HM": {
+                "order": 5
+            }
+        },
+        {
+            "TV-5/8HS": {
+                "order": 2
+            }
+        },
+        {
+            "TV-REF RL": {
+                "order": 5
+            }
+        },
+        {
+            "TV-REF12": {
+                "order": 10
+            }
+        },
+        {
+            "TV-MET DL": {
+                "order": 0
+            }
+        },
+        {
+            "TV-BRAID4": {
+                "order": 5
+            }
+        },
+        {
+            "TV-BRAID5": {
+                "order": 5
+            }
+        },
+        {
+            "TV-BRAID12": {
+                "order": 2
+            }
+        },
+        {
+            "TV-BRAID15": {
+                "order": 2
+            }
+        },
+        {
+            "TV-3/8 FLTLEAS": {
+                "order": 5
+            }
+        },
+        {
+            "TV-3/8 FLAT COL": {
+                "order": 5
+            }
+        },
+        {
+            "TV-HL12": {
+                "order": 10
+            }
+        },
+        {
+            "TV-CL12": {
+                "order": 5
+            }
+        },
+        {
+            "TV-CL15": {
+                "order": 2
+            }
+        },
+        {
+            "TV-REF20": {
+                "order": 5
+            }
+        },
+        {
+            "TV-REF25": {
+                "order": 5
+            }
+        },
+        {
+            "TV-NYLON8M": {
+                "order": 10
+            }
+        },
+        {
+            "TV-PST CONT": {
+                "order": 2
+            }
+        },
+        {
+            "TV-FL&TK": {
+                "order": 5
+            }
+        },
+        {
+            "TV-FL&TK-XS": {
+                "order": 5
+            }
+        },
+        {
+            "TV-PLN CL10": {
+                "order": 5
+            }
+        },
+        {
+            "TV-3/4MB": {
+                "order": 5
+            }
+        },
+        {
+            "TV-3/8 PRNTCOL": {
+                "order": 15
+            }
+        },
+        {
+            "TV-PRNTCOL 25": {
+                "order": 2
+            }
+        },
+        {
+            "TV-PLST-4": {
+                "order": 5
+            }
+        },
+        {
+            "TV-PLN DBSML": {
+                "order": 5
+            }
+        },
+        {
+            "TV-PLN DBMED": {
+                "order": 5
+            }
+        },
+        {
+            "TV-PRNTD DBSML": {
+                "order": 2
+            }
+        },
+        {
+            "TV-PRNTD DBMED": {
+                "order": 2
+            }
+        },
+        {
+            "TV-PRINTD DBLRG": {
+                "order": 2
+            }
+        },
+        {
+            "TV-DB-OVAL": {
+                "order": 5
+            }
+        },
+        {
+            "TV-DB-OVALSML": {
+                "order": 5
+            }
+        },
+        {
+            "TV-BAMBOO": {
+                "order": 2
+            }
+        },
+        {
+            "TV-RND DB-32": {
+                "order": 5
+            }
+        },
+        {
+            "TV-RND DB-64": {
+                "order": 5
+            }
+        },
+        {
+            "TV-NO TP DB-16": {
+                "order": 0
+            }
+        },
+        {
+            "TV-RND DB-20": {
+                "order": 2
+            }
+        },
+        {
+            "TV-ODA-7": {
+                "order": 5
+            }
+        },
+        {
+            "TV-CHWBN-2PC": {
+                "order": 5
+            }
+        },
+        {
+            "TV-PRSDBONE": {
+                "order": 5
+            }
+        },
+        {
+            "TV-CHWBN4": {
+                "order": 5
+            }
+        },
+        {
+            "TV-CHWSTIKS": {
+                "order": 5
+            }
+        },
+        {
+            "TV-TREAT-1": {
+                "order": 20
+            }
+        },
+        {
+            "TV-TREAT-2": {
+                "order": 20
+            }
+        },
+        {
+            "TV-TREAT-3": {
+                "order": 20
+            }
+        },
+        {
+            "TV-TREAT-4": {
+                "order": 20
+            }
+        },
+        {
+            "TV-TREAT-5": {
+                "order": 20
+            }
+        },
+        {
+            "TV-TREAT-6": {
+                "order": 20
+            }
+        },
+        {
+            "TV-STL CMB": {
+                "order": 5
+            }
+        },
+        {
+            "TV-2X BRSH": {
+                "order": 5
+            }
+        },
+        {
+            "TV-BRSH OV PLST": {
+                "order": 15
+            }
+        },
+        {
+            "TV-BRSH8": {
+                "order": 2
+            }
+        },
+        {
+            "TV-CHAIN-3.5": {
+                "order": 5
+            }
+        },
+        {
+            "TV-CHAIN-4.0": {
+                "order": 5
+            }
+        },
+        {
+            "TV-CHAINEXT.": {
+                "order": 2
+            }
+        },
+        {
+            "TV-CC BALL-MED": {
+                "order": 15
+            }
+        },
+        {
+            "TV-CC BALL-LRG": {
+                "order": 15
+            }
+        },
+        {
+            "TV-TOY ASRTD#1": {
+                "order": 8
+            }
+        },
+        {
+            "TV-TOYROPE#1": {
+                "order": 8
+            }
+        },
+        {
+            "TV-FOODBALL": {
+                "order": 15
+            }
+        },
+        {
+            "TV-SCNTD BONE": {
+                "order": 8
+            }
+        },
+        {
+            "TV-BONE1-2": {
+                "order": 15
+            }
+        },
+        {
+            "TV-BONE3": {
+                "order": 15
+            }
+        },
+        {
+            "TV-BONE4": {
+                "order": 15
+            }
+        },
+        {
+            "TV-FEEDER": {
+                "order": 5
+            }
+        },
+        {
+            "TV-MUZZL20": {
+                "order": 0
+            }
+        },
+        {
+            "TV-MUZZL23": {
+                "order": 0
+            }
+        },
+        {
+            "TV-MUZZL21": {
+                "order": 0
+            }
+        },
+        {
+            "TV-MUZZL24": {
+                "order": 2
+            }
+        },
+        {
+            "TV-TRIM#02": {
+                "order": 2
+            }
+        },
+        {
+            "TV-TRIM NFILE": {
+                "order": 2
+            }
+        }
+    ]
+}

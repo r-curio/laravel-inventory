@@ -20,9 +20,10 @@ import {
 import axios from 'axios';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { FileDown, Plus, Search, Settings2, Trash2 } from 'lucide-react';
+import { FileDown, Search, Settings2, Trash2 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
+import { AddItemModal } from '@/components/add-item-modal';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -136,7 +137,10 @@ export default function Dashboard({ items }: DashboardProps) {
     const columns = [
         columnHelper.accessor('name', {
             header: 'Name',
-            cell: EditableCell,
+            cell: (info) => info.getValue(),
+            meta: {
+                className: 'sticky left-0 z-10 bg-white',
+            },
         }),
         columnHelper.accessor('barcode', {
             header: 'Barcode',
@@ -217,7 +221,7 @@ export default function Dashboard({ items }: DashboardProps) {
         getFilteredRowModel: getFilteredRowModel(),
         initialState: {
             pagination: {
-                pageSize: 20,
+                pageSize: data.length,
             },
         },
         state: {
@@ -242,32 +246,8 @@ export default function Dashboard({ items }: DashboardProps) {
         },
     });
 
-    const addNewRow = async () => {
-        try {
-            const response = await axios.post('/items', {
-                barcode: '',
-                m_no: '',
-                sku: '',
-                co: '',
-                name: '',
-                barcode_name: '',
-                price: 0,
-                inactive: '',
-                reorder_point: 0,
-                multiples: '',
-                damaged: '',
-                item_condition: '',
-                category: '',
-                others_1: '',
-                others_2: '',
-                others_3: '',
-            });
-
-            setData([...data, response.data.item]);
-            toast.success('Item created successfully');
-        } catch (error) {
-            toast.error('Failed to create item');
-        }
+    const handleItemAdded = (newItem: Item) => {
+        setData([...data, newItem]);
     };
 
     const exportToPDF = () => {
@@ -362,10 +342,7 @@ export default function Dashboard({ items }: DashboardProps) {
                                     ))}
                             </DropdownMenuContent>
                         </DropdownMenu>
-                        <Button onClick={addNewRow}>
-                            <Plus className="mr-2 h-4 w-4" />
-                            Add Item
-                        </Button>
+                        <AddItemModal onItemAdded={handleItemAdded} />
                     </div>
                 </div>
 
@@ -382,7 +359,7 @@ export default function Dashboard({ items }: DashboardProps) {
                                 />
                             </div>
                         </div>
-                        <div className="overflow-x-auto">
+                        <div className="overflow-x-auto max-h-[700px] overflow-y-auto">
                             <table className="w-full">
                                 <thead>
                                     {table.getHeaderGroups().map((headerGroup: HeaderGroup<Item>) => (
@@ -419,19 +396,6 @@ export default function Dashboard({ items }: DashboardProps) {
                                     ))}
                                 </tbody>
                             </table>
-                        </div>
-                    </div>
-                    <div className="flex items-center justify-between border-t p-4">
-                        <div className="flex items-center gap-2">
-                            <Button variant="outline" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
-                                Previous
-                            </Button>
-                            <Button variant="outline" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
-                                Next
-                            </Button>
-                        </div>
-                        <div className="text-sm text-gray-500">
-                            Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
                         </div>
                     </div>
                 </div>

@@ -26,9 +26,13 @@ class Store extends Model
         'class',
         'pullout_status',
         'dgcage_status',
+        'dgcage_comment',
         'tshirt_status',
+        'tshirt_comment',
         'litter_box_status',
+        'litter_box_comment',
         'pet_bed_status',
+        'pet_bed_comment',
         'gondola_dep',
         'date_depo_refund',
         'missing_delivery',
@@ -37,6 +41,9 @@ class Store extends Model
         'items_not_allowed',
         'items_order',
         'others',
+        'others_2',
+        'others_3',
+        'date',
     ];
 
     public function items()

@@ -20,9 +20,12 @@ import {
 import axios from 'axios';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { FileDown, Plus, Search, Settings2, Trash2 } from 'lucide-react';
+import { FileDown, Search, Settings2, Trash2, Eye } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { STORE_VIEWS as PREDEFINED_VIEWS } from '@/lib/previews';
+import { AddStoreModal } from '@/components/add-store-modal';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -40,12 +43,21 @@ type PendingUpdate = {
     changes: Record<string, string>;
 };
 
+type ViewKey = keyof typeof PREDEFINED_VIEWS;
+
 export default function Dashboard({ stores }: DashboardProps) {
     const [data, setData] = useState<Store[]>(stores);
     const [globalFilter, setGlobalFilter] = useState('');
+    const [selectedView, setSelectedView] = useState<ViewKey>('all');
     const columnHelper = createColumnHelper<Store>();
     const pendingUpdatesRef = useRef<Map<string, PendingUpdate>>(new Map());
     const batchUpdateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    // Add columnVisibility state
+    const [columnVisibility, setColumnVisibility] = useState(() =>
+        Object.fromEntries(PREDEFINED_VIEWS[selectedView].hiddenColumns.map((col) => [col, false]))
+    );
+
+    console.log(data);
 
     const processBatchUpdate = useCallback(async () => {
         const updates = Array.from(pendingUpdatesRef.current.values());
@@ -111,6 +123,13 @@ export default function Dashboard({ stores }: DashboardProps) {
         };
     }, []);
 
+    // Update columnVisibility when selectedView changes
+    useEffect(() => {
+        setColumnVisibility(
+            Object.fromEntries(PREDEFINED_VIEWS[selectedView].hiddenColumns.map((col) => [col, false]))
+        );
+    }, [selectedView]);
+
     const handleDelete = async (rowIndex: number) => {
         const store = data[rowIndex];
         try {
@@ -136,7 +155,14 @@ export default function Dashboard({ stores }: DashboardProps) {
     const columns = [
         columnHelper.accessor('name', {
             header: 'Store Name',
-            cell: EditableCell,
+            cell: (info) => info.getValue(),
+            meta: {
+                className: 'sticky left-0 z-10 bg-white',
+            },
+        }),
+        columnHelper.accessor('diser_fb_name', {
+            header: 'FB Name',
+            cell: (info) => info.getValue(),
         }),
         columnHelper.accessor('co', {
             header: 'CO',
@@ -159,7 +185,7 @@ export default function Dashboard({ stores }: DashboardProps) {
             cell: EditableCell,
         }),
         columnHelper.accessor('ratbites', {
-            header: 'Rat Bites',
+            header: 'Ratbites',
             cell: EditableCell,
         }),
         columnHelper.accessor('closed', {
@@ -172,6 +198,58 @@ export default function Dashboard({ stores }: DashboardProps) {
         }),
         columnHelper.accessor('class', {
             header: 'Class',
+            cell: EditableCell,
+        }),
+        columnHelper.accessor('pullout_status', {
+            header: 'Pullout Status',
+            cell: EditableCell,
+        }),
+        columnHelper.accessor('dgcage_status', {
+            header: 'Dgcage Status',
+            cell: EditableCell,
+        }),
+        columnHelper.accessor('dgcage_comment', {
+            header: 'Dgcage Comment',
+            cell: EditableCell,
+        }),
+        columnHelper.accessor('tshirt_status', {
+            header: 'Tshirt Status',
+            cell: EditableCell,
+        }),
+        columnHelper.accessor('tshirt_comment', {
+            header: 'Tshirt Comment',
+            cell: EditableCell,
+        }),
+        columnHelper.accessor('litter_box_status', {
+            header: 'Litter Box Status',
+            cell: EditableCell,
+        }),
+        columnHelper.accessor('litter_box_comment', {
+            header: 'Litter Box Comment',
+            cell: EditableCell,
+        }),
+        columnHelper.accessor('pet_bed_status', {
+            header: 'Pet Bed Status',
+            cell: EditableCell,
+        }),
+        columnHelper.accessor('pet_bed_comment', {
+            header: 'Pet Bed Comment',
+            cell: EditableCell,
+        }),
+        columnHelper.accessor('gondola_dep', {
+            header: 'Gondola Dep',
+            cell: EditableCell,
+        }),
+        columnHelper.accessor('date_depo_refund', {
+            header: 'Date Depo Refund',
+            cell: EditableCell,
+        }),
+        columnHelper.accessor('missing_deliveries', {
+            header: 'Missing Delivery',
+            cell: EditableCell,
+        }),
+        columnHelper.accessor('items_on_order', {
+            header: 'Items On Order',
             cell: EditableCell,
         }),
         columnHelper.accessor('po_or_limit', {
@@ -187,8 +265,28 @@ export default function Dashboard({ stores }: DashboardProps) {
             cell: EditableCell,
         }),
         columnHelper.accessor('others', {
-            header: 'Others',
+            header: 'Notes',
             cell: EditableCell,
+        }),
+        columnHelper.accessor('others_2', {
+            header: 'Notes',
+            cell: EditableCell,
+        }),
+        columnHelper.accessor('others_3', {
+            header: 'Notes',
+            cell: EditableCell,
+        }),
+        columnHelper.accessor('date', {
+            header: 'Date',
+            cell: EditableCell,
+        }),
+        columnHelper.accessor('diser_company_sv', {
+            header: 'SV Only',
+            cell: (info) => info.getValue(),
+        }),
+        columnHelper.accessor('diser_hold_stop_allow', {
+            header: 'Hold Stop Allow',
+            cell: (info) => info.getValue(),
         }),
         columnHelper.display({
             id: 'actions',
@@ -209,65 +307,33 @@ export default function Dashboard({ stores }: DashboardProps) {
         getFilteredRowModel: getFilteredRowModel(),
         initialState: {
             pagination: {
-                pageSize: 20,
+                pageSize: data.length,
             },
+            columnVisibility: Object.fromEntries(PREDEFINED_VIEWS[selectedView].hiddenColumns.map((col) => [col, false])),
         },
         state: {
             globalFilter,
+            columnVisibility,
         },
         onGlobalFilterChange: setGlobalFilter,
+        onColumnVisibilityChange: setColumnVisibility,
         globalFilterFn: (row, columnId, filterValue) => {
             const searchTerm = String(filterValue).toLowerCase().trim();
             if (!searchTerm) return true;
-
             // Get all visible columns for the row
             const visibleColumns = row.getAllCells().map((cell) => cell.column.id);
-
             // Check if any of the visible columns contain the search term
             return visibleColumns.some((columnId) => {
                 const value = row.getValue(columnId);
                 if (value == null) return false;
-
                 const searchValue = String(value).toLowerCase();
                 return searchValue.includes(searchTerm);
             });
         },
     });
 
-    const addNewRow = async () => {
-        try {
-            const response = await axios.post('/stores', {
-                name: '',
-                co: '',
-                dc: '',
-                dr_stamped: '',
-                area_size: '',
-                overstock: '',
-                ratbites: '',
-                closed: '',
-                no_diser: '',
-                class: '',
-                pullout_status: '',
-                dgcage_status: '',
-                tshirt_status: '',
-                litter_box_status: '',
-                pet_bed_status: '',
-                gondola_dep: '',
-                date_depo_refund: '',
-                missing_deliveries: '',
-                items_overstock: '',
-                code: '',
-                po_or_limit: '',
-                items_not_allowed: '',
-                items_order: '',
-                others: '',
-            });
-
-            setData([...data, response.data.store]);
-            toast.success('Store created successfully');
-        } catch (error) {
-            toast.error('Failed to create store');
-        }
+    const handleStoreAdded = (newStore: Store) => {
+        setData([...data, newStore]);
     };
 
     const exportToPDF = () => {
@@ -336,6 +402,21 @@ export default function Dashboard({ stores }: DashboardProps) {
                 <div className="mb-4 flex items-center justify-between">
                     <h1 className="text-2xl font-bold">Store Masterfile</h1>
                     <div className="flex gap-2">
+                        <Select value={selectedView} onValueChange={(v) => setSelectedView(v as ViewKey)}>
+                            <SelectTrigger className="w-[180px]">
+                                <Eye className="mr-2 h-4 w-4" />
+                                <SelectValue placeholder="Select view" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {Object.entries(PREDEFINED_VIEWS).map(([key, view]) => (
+                                    <SelectItem key={key} value={key}>
+                                        <div>
+                                            <div className="font-medium">{view.name}</div>
+                                        </div>
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
                         <Button variant="outline" size="sm" onClick={exportToPDF}>
                             <FileDown className="mr-2 h-4 w-4" />
                             Export PDF
@@ -362,10 +443,7 @@ export default function Dashboard({ stores }: DashboardProps) {
                                     ))}
                             </DropdownMenuContent>
                         </DropdownMenu>
-                        <Button onClick={addNewRow}>
-                            <Plus className="mr-2 h-4 w-4" />
-                            Add Store
-                        </Button>
+                        <AddStoreModal onStoreAdded={handleStoreAdded} />
                     </div>
                 </div>
 
@@ -382,13 +460,16 @@ export default function Dashboard({ stores }: DashboardProps) {
                                 />
                             </div>
                         </div>
-                        <div className="overflow-x-auto">
+                        <div className="overflow-x-auto max-h-[700px] overflow-y-auto">
                             <table className="w-full">
                                 <thead>
                                     {table.getHeaderGroups().map((headerGroup: HeaderGroup<Store>) => (
                                         <tr key={headerGroup.id}>
                                             {headerGroup.headers.map((header: Header<Store, unknown>) => (
-                                                <th key={header.id} className="border-b px-4 py-2 text-left font-medium whitespace-normal">
+                                                <th
+                                                    key={header.id}
+                                                    className={`border-b px-4 py-2 text-left font-medium whitespace-normal ${(header.column.columnDef.meta as any)?.className || ''}`}
+                                                >
                                                     {flexRender(header.column.columnDef.header, header.getContext())}
                                                 </th>
                                             ))}
@@ -399,7 +480,10 @@ export default function Dashboard({ stores }: DashboardProps) {
                                     {table.getRowModel().rows.map((row: Row<Store>) => (
                                         <tr key={row.id}>
                                             {row.getVisibleCells().map((cell) => (
-                                                <td key={cell.id} className="min-w-fit border-b px-4 py-2 whitespace-normal">
+                                                <td
+                                                    key={cell.id}
+                                                    className={`min-w-fit border-b px-4 py-2 whitespace-normal ${(cell.column.columnDef.meta as any)?.className || ''}`}
+                                                >
                                                     <div className="flex min-h-[2.5rem] max-w-fit min-w-[150px] items-center">
                                                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                                     </div>
@@ -409,19 +493,6 @@ export default function Dashboard({ stores }: DashboardProps) {
                                     ))}
                                 </tbody>
                             </table>
-                        </div>
-                    </div>
-                    <div className="flex items-center justify-between border-t p-4">
-                        <div className="flex items-center gap-2">
-                            <Button variant="outline" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
-                                Previous
-                            </Button>
-                            <Button variant="outline" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
-                                Next
-                            </Button>
-                        </div>
-                        <div className="text-sm text-gray-500">
-                            Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
                         </div>
                     </div>
                 </div>

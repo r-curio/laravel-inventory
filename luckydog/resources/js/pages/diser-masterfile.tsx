@@ -23,9 +23,11 @@ import {
 import axios from 'axios';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { Eye, FileDown, Filter, Plus, Search, Settings2, Trash2 } from 'lucide-react';
+import { Eye, FileDown, Filter, Search, Settings2, Trash2 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
+import { DISER_VIEWS as PREDEFINED_VIEWS } from '@/lib/previews';
+import { AddDiserModal } from '@/components/add-diser-modal';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -34,22 +36,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-// Define predetermined views
-const PREDEFINED_VIEWS = {
-    all: {
-        name: 'All Columns',
-        description: 'Show all available columns',
-        hiddenColumns: [] as string[],
-    },
-    diser_computation: {
-        name: 'Diser Computation',
-        hiddenColumns: ['others_1', 'others_3', 'company_sv'] as string[],
-    },
-    diser_allowance: {
-        name: 'Diser Allowance',
-        hiddenColumns: ['others_1', 'others_2', 'others_3', 'sv_only', 'company_sv', 'rsc_re', 'name', 'sales'] as string[],
-    },
-};
+
 
 type ViewKey = keyof typeof PREDEFINED_VIEWS;
 
@@ -297,29 +284,8 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
         });
     };
 
-    const addNewRow = async () => {
-        try {
-            const response = await axios.post('/disers', {
-                name: '',
-                rsc_re: '',
-                fb_name: '',
-                rate: '',
-                sales: '',
-                others_1: '',
-                hold_stop_allow: '',
-                gcash_number: '',
-                gcash_name: '',
-                sv_only: '',
-                company_sv: '',
-                others_2: '',
-                others_3: '',
-            });
-
-            setData([...data, response.data.diser]);
-            toast.success('Diser created successfully');
-        } catch (error) {
-            toast.error('Failed to create diser');
-        }
+    const handleDiserAdded = (newDiser: Diser) => {
+        setData([...data, newDiser]);
     };
 
     const table = useReactTable({
@@ -330,7 +296,7 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
         getFilteredRowModel: getFilteredRowModel(),
         initialState: {
             pagination: {
-                pageSize: 20,
+                pageSize: data.length,
             },
             columnVisibility: Object.fromEntries(PREDEFINED_VIEWS[selectedView].hiddenColumns.map((col) => [col, false])),
         },
@@ -476,10 +442,7 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
                                     ))}
                             </DropdownMenuContent>
                         </DropdownMenu>
-                        <Button onClick={addNewRow}>
-                            <Plus className="mr-2 h-4 w-4" />
-                            Add Diser
-                        </Button>
+                        <AddDiserModal onDiserAdded={handleDiserAdded} />
                     </div>
                 </div>
 
@@ -496,7 +459,7 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
                                 />
                             </div>
                         </div>
-                        <div className="overflow-x-auto">
+                        <div className="overflow-x-auto max-h-[700px] overflow-y-auto">
                             <table className="w-full">
                                 <thead>
                                     {table.getHeaderGroups().map((headerGroup: HeaderGroup<Diser>) => (
@@ -533,19 +496,6 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
                                     ))}
                                 </tbody>
                             </table>
-                        </div>
-                    </div>
-                    <div className="flex items-center justify-between border-t p-4">
-                        <div className="flex items-center gap-2">
-                            <Button variant="outline" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
-                                Previous
-                            </Button>
-                            <Button variant="outline" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
-                                Next
-                            </Button>
-                        </div>
-                        <div className="text-sm text-gray-500">
-                            Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
                         </div>
                     </div>
                 </div>
