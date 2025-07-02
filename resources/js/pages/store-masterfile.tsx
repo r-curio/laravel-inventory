@@ -535,63 +535,52 @@ export default function Dashboard({ stores }: DashboardProps) {
                             </div>
                         </div>
                         <div className="overflow-x-auto max-h-[700px] overflow-y-auto">
-                            <div className="min-w-full relative">
-                                {/* Fixed Header */}
-                                <div className="sticky top-0 z-40 bg-white border-b">
-                                    <div className="flex">
-                                        {table.getHeaderGroups().map((headerGroup: HeaderGroup<Store>) => (
-                                            <div key={headerGroup.id} className="flex">
-                                                {headerGroup.headers.map((header: Header<Store, unknown>) => (
-                                                    <div
-                                                        key={header.id}
-                                                        className={`border-b px-4 py-2 text-left font-medium whitespace-normal flex-shrink-0 ${
-                                                            header.column.id === 'name' ? 'sticky left-0 z-50 bg-white min-w-[200px]' : 'min-w-[150px] max-w-[150px]'
-                                                        }`}
-                                                        style={{
-                                                            position: header.column.id === 'name' ? 'sticky' : 'static',
-                                                            left: header.column.id === 'name' ? '0' : 'auto',
-                                                            zIndex: header.column.id === 'name' ? 50 : 'auto',
-                                                            width: header.column.id === 'name' ? '200px' : 'auto',
-                                                            minWidth: header.column.id === 'name' ? '200px' : '150px',
-                                                            maxWidth: header.column.id === 'name' ? '200px' : '150px'
-                                                        }}
-                                                    >
-                                                        {flexRender(header.column.columnDef.header, header.getContext())}
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                {/* Table Body */}
-                                <div className="relative">
+                            <table className="min-w-full">
+                                <thead>
+                                    {table.getHeaderGroups().map((headerGroup: HeaderGroup<Store>) => (
+                                        <tr key={headerGroup.id}>
+                                            {headerGroup.headers.map((header: Header<Store, unknown>, index: number) => (
+                                                <th
+                                                    key={header.id}
+                                                    className={`border-b px-4 py-2 text-left font-medium whitespace-normal ${
+                                                        header.column.id === 'name' ? 'sticky left-0 z-50 bg-white min-w-[200px]' : 'min-w-[150px] max-w-[250px]'
+                                                    } sticky top-0 z-40 bg-white`}
+                                                    style={{
+                                                        width: header.column.id === 'name' ? '200px' : 'auto',
+                                                        minWidth: header.column.id === 'name' ? '200px' : '150px',
+                                                        maxWidth: header.column.id === 'name' ? '200px' : '250px',
+                                                    }}
+                                                >
+                                                    {flexRender(header.column.columnDef.header, header.getContext())}
+                                                </th>
+                                            ))}
+                                        </tr>
+                                    ))}
+                                </thead>
+                                <tbody>
                                     {table.getRowModel().rows.map((row) => (
-                                        <div key={row.id} className="flex border-b">
+                                        <tr key={row.id} className="border-b">
                                             {row.getVisibleCells().map((cell) => (
-                                                <div
+                                                <td
                                                     key={cell.id}
-                                                    className={`px-4 py-2 whitespace-normal flex-shrink-0 ${
+                                                    className={`px-4 py-2 whitespace-normal ${
                                                         cell.column.id === 'name' ? 'sticky left-0 z-30 bg-white min-w-[200px]' : 'min-w-[150px] max-w-[150px]'
                                                     }`}
                                                     style={{
-                                                        position: cell.column.id === 'name' ? 'sticky' : 'static',
-                                                        left: cell.column.id === 'name' ? '0' : 'auto',
-                                                        zIndex: cell.column.id === 'name' ? 30 : 'auto',
                                                         width: cell.column.id === 'name' ? '200px' : 'auto',
                                                         minWidth: cell.column.id === 'name' ? '200px' : '150px',
-                                                        maxWidth: cell.column.id === 'name' ? '200px' : '150px'
+                                                        maxWidth: cell.column.id === 'name' ? '200px' : '150px',
                                                     }}
                                                 >
                                                     <div className="flex min-h-[2.5rem] items-center">
                                                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                                     </div>
-                                                </div>
+                                                </td>
                                             ))}
-                                        </div>
+                                        </tr>
                                     ))}
-                                </div>
-                            </div>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

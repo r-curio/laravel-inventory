@@ -117,7 +117,7 @@ export default function BarcodeShow({ barcodes: initialBarcodes }: BarcodeShowPr
                             const apollo = Number(updatedRow.apollo) || 0;
                             const site3 = Number(updatedRow.site3) || 0;
 
-                            const total = begbal + m30 + apollo + site3;
+                            const total = begbal - (m30 + apollo + site3);
                             updatedRow.total = total;
                         }
 
@@ -364,7 +364,7 @@ export default function BarcodeShow({ barcodes: initialBarcodes }: BarcodeShowPr
         }),
         columnHelper.accessor('total', {
             header: 'Total',
-            cell: EditableCell,
+            cell: (info) => info.getValue()?.toString() ?? '-',
         }),
         columnHelper.accessor('actual', {
             header: 'Actual',

@@ -16,16 +16,19 @@ const mainNavItems: NavItem[] = [
         title: 'Store Masterfile',
         href: '/store-masterfile',
         icon: Store,
+        roles: ['admin'], // Only show for admin users
     },
     {
         title: 'Item Masterfile',
         href: '/item-masterfile',
         icon: Package,
+        roles: ['admin'], // Only show for admin users
     },
     {
         title: 'Stock Level',
         href: '/stock-level',
         icon: BarChart3,
+        roles: ['admin'], // Only show for admin users
     },
     {
         title: 'Diser Masterfile',
