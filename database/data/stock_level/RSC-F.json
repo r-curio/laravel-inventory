@@ -1,0 +1,537 @@
+{
+    "name": "RSC-CLASS-F",
+    "co": "RSC",
+    "class": "F",
+    "products": [
+        {
+            "RSC-1SR": {
+                "order": 55
+            }
+        },
+        {
+            "RSC-5/8SR": {
+                "order": 55
+            }
+        },
+        {
+            "RSC-1MB": {
+                "order": 30
+            }
+        },
+        {
+            "RSC-5/8MB": {
+                "order": 40
+            }
+        },
+        {
+            "RSC-1DL": {
+                "order": 12
+            }
+        },
+        {
+            "RSC-5/8DL": {
+                "order": 15
+            }
+        },
+        {
+            "RSC-1HL": {
+                "order": 15
+            }
+        },
+        {
+            "RSC-5/8HM": {
+                "order": 15
+            }
+        },
+        {
+            "RSC-5/8HS": {
+                "order": 20
+            }
+        },
+        {
+            "RSC-REF RL": {
+                "order": 15
+            }
+        },
+        {
+            "RSC-REF12": {
+                "order": 40
+            }
+        },
+        {
+            "RSC-MET DL": {
+                "order": 10
+            }
+        },
+        {
+            "RSC-BRAID4": {
+                "order": 30
+            }
+        },
+        {
+            "RSC-BRAID5": {
+                "order": 25
+            }
+        },
+        {
+            "RSC-BRAID12": {
+                "order": 10
+            }
+        },
+        {
+            "RSC-BRAID15": {
+                "order": 15
+            }
+        },
+        {
+            "RSC-3/8 FLTLEAS": {
+                "order": 30
+            }
+        },
+        {
+            "RSC-3/8 FLAT COL": {
+                "order": 30
+            }
+        },
+        {
+            "RSC-HL12": {
+                "order": 45
+            }
+        },
+        {
+            "RSC-CL12": {
+                "order": 40
+            }
+        },
+        {
+            "RSC-CL15": {
+                "order": 15
+            }
+        },
+        {
+            "RSC-REF20": {
+                "order": 40
+            }
+        },
+        {
+            "RSC-REF25": {
+                "order": 20
+            }
+        },
+        {
+            "RSC-NYLON8M": {
+                "order": 40
+            }
+        },
+        {
+            "RSC-PST CONT": {
+                "order": 15
+            }
+        },
+        {
+            "RSC-FL&TK": {
+                "order": 15
+            }
+        },
+        {
+            "RSC-FL&TK-XS": {
+                "order": 15
+            }
+        },
+        {
+            "RSC-PLN CL10": {
+                "order": 40
+            }
+        },
+        {
+            "RSC-3/4MB": {
+                "order": 25
+            }
+        },
+        {
+            "RSC-3/8 PRNTCOL": {
+                "order": 60
+            }
+        },
+        {
+            "RSC-PRNTCOL 25": {
+                "order": 10
+            }
+        },
+        {
+            "RSC-1SR30": {
+                "order": 15
+            }
+        },
+        {
+            "RSC-1SR2TONE": {
+                "order": 10
+            }
+        },
+        {
+            "RSC-RAINBOW": {
+                "order": 10
+            }
+        },
+        {
+            "RSC-PLST-4": {
+                "order": 35
+            }
+        },
+        {
+            "RSC-PLN DBSML": {
+                "order": 35
+            }
+        },
+        {
+            "RSC-PLN DBMED": {
+                "order": 30
+            }
+        },
+        {
+            "RSC-PRNTD DBSML": {
+                "order": 15
+            }
+        },
+        {
+            "RSC-PRNTD DBMED": {
+                "order": 15
+            }
+        },
+        {
+            "RSC-PRINTD DBLRG": {
+                "order": 15
+            }
+        },
+        {
+            "RSC-DB-OVAL": {
+                "order": 25
+            }
+        },
+        {
+            "RSC-DB-OVALSML": {
+                "order": 25
+            }
+        },
+        {
+            "RSC-BAMBOO": {
+                "order": 15
+            }
+        },
+        {
+            "RSC-RND DB-32": {
+                "order": 25
+            }
+        },
+        {
+            "RSC-RND DB-64": {
+                "order": 25
+            }
+        },
+        {
+            "RSC-RND DB-20": {
+                "order": 15
+            }
+        },
+        {
+            "RSC-ODA-7": {
+                "order": 15
+            }
+        },
+        {
+            "RSC-CHWBN-2PC": {
+                "order": 30
+            }
+        },
+        {
+            "RSC-PRSDBONE": {
+                "order": 25
+            }
+        },
+        {
+            "RSC-MINISAUSGE": {
+                "order": 30
+            }
+        },
+        {
+            "RSC-CHWBN4": {
+                "order": 15
+            }
+        },
+        {
+            "RSC-CHWSTIKS": {
+                "order": 30
+            }
+        },
+        {
+            "RSC-TREAT-1": {
+                "order": 60
+            }
+        },
+        {
+            "RSC-TREAT-2": {
+                "order": 60
+            }
+        },
+        {
+            "RSC-TREAT-3": {
+                "order": 60
+            }
+        },
+        {
+            "RSC-TREAT-4": {
+                "order": 60
+            }
+        },
+        {
+            "RSC-TREAT-5": {
+                "order": 60
+            }
+        },
+        {
+            "RSC-TREAT-6": {
+                "order": 60
+            }
+        },
+        {
+            "RSC-STL CMB": {
+                "order": 25
+            }
+        },
+        {
+            "RSC-STL CMB HDL": {
+                "order": 15
+            }
+        },
+        {
+            "RSC-2X BRSH": {
+                "order": 15
+            }
+        },
+        {
+            "RSC-BRSH OV PLST": {
+                "order": 60
+            }
+        },
+        {
+            "RSC-BRSH8": {
+                "order": 10
+            }
+        },
+        {
+            "RSC-TSHRT-SML": {
+                "order": 10
+            }
+        },
+        {
+            "RSC-TSHRT-MED": {
+                "order": 10
+            }
+        },
+        {
+            "RSC-TSHRT-LRG": {
+                "order": 15
+            }
+        },
+        {
+            "RSC-TSHRT-XL": {
+                "order": 15
+            }
+        },
+        {
+            "RSC-DIAPR-SML": {
+                "order": 30
+            }
+        },
+        {
+            "RSC-DIAPR-MED": {
+                "order": 30
+            }
+        },
+        {
+            "RSC-DIAPR-LRG": {
+                "order": 25
+            }
+        },
+        {
+            "RSC-MWRP-SML": {
+                "order": 15
+            }
+        },
+        {
+            "RSC-MWRP-MED": {
+                "order": 15
+            }
+        },
+        {
+            "RSC-PET BAG": {
+                "order": 18
+            }
+        },
+        {
+            "RSC-CHAIN-3.5": {
+                "order": 30
+            }
+        },
+        {
+            "RSC-CHAIN-4.0": {
+                "order": 30
+            }
+        },
+        {
+            "RSC-CHAIN-2.0": {
+                "order": 30
+            }
+        },
+        {
+            "RSC-CHAIN-3.0": {
+                "order": 25
+            }
+        },
+        {
+            "RSC-CHAINEXT.": {
+                "order": 25
+            }
+        },
+        {
+            "RSC-CC BALL-MED": {
+                "order": 55
+            }
+        },
+        {
+            "RSC-CC BALL-LRG": {
+                "order": 55
+            }
+        },
+        {
+            "RSC-TOY ASRTD#1": {
+                "order": 25
+            }
+        },
+        {
+            "RSC-TOYROPE#1": {
+                "order": 25
+            }
+        },
+        {
+            "RSC-FOODBALL": {
+                "order": 45
+            }
+        },
+        {
+            "RSC-SCNTD BONE": {
+                "order": 40
+            }
+        },
+        {
+            "RSC-BONE1-2": {
+                "order": 30
+            }
+        },
+        {
+            "RSC-BONE3": {
+                "order": 40
+            }
+        },
+        {
+            "RSC-BONE4": {
+                "order": 45
+            }
+        },
+        {
+            "RSC-RNDBEL#1": {
+                "order": 25
+            }
+        },
+        {
+            "RSC-PLSH FRUITS": {
+                "order": 15
+            }
+        },
+        {
+            "RSC-PLSH FOX": {
+                "order": 25
+            }
+        },
+        {
+            "RSC-PLSH PAWS": {
+                "order": 15
+            }
+        },
+        {
+            "RSC-PGHEAD": {
+                "order": 25
+            }
+        },
+        {
+            "RSC-SPIKEY": {
+                "order": 25
+            }
+        },
+        {
+            "RSC-BLUECAT": {
+                "order": 25
+            }
+        },
+        {
+            "RSC-RND ROPE": {
+                "order": 15
+            }
+        },
+        {
+            "RSC-PLSH MONSTR": {
+                "order": 15
+            }
+        },
+        {
+            "RSC-FEEDER": {
+                "order": 15
+            }
+        },
+        {
+            "RSC-MUZZL20": {
+                "order": 8
+            }
+        },
+        {
+            "RSC-MUZZL23": {
+                "order": 8
+            }
+        },
+        {
+            "RSC-MUZZL21": {
+                "order": 8
+            }
+        },
+        {
+            "RSC-MUZZL24": {
+                "order": 10
+            }
+        },
+        {
+            "RSC-CAGE-24": {
+                "order": 0
+            }
+        },
+        {
+            "RSC-CAGE-29": {
+                "order": 0
+            }
+        },
+        {
+            "RSC-CAGE-12": {
+                "order": 0
+            }
+        },
+        {
+            "RSC-TRIM#02": {
+                "order": 30
+            }
+        },
+        {
+            "RSC-TRIM NFILE": {
+                "order": 25
+            }
+        }
+    ]
+}

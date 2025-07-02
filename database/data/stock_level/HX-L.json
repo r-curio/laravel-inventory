@@ -1,0 +1,387 @@
+{
+    "name": "HX-CLASS-L",
+    "co": "HX",
+    "class": "L",
+    "products": [
+        {
+            "HX-1SR": {
+                "order": 15
+            }
+        },
+        {
+            "HX-5/8SR": {
+                "order": 15
+            }
+        },
+        {
+            "HX-1MB": {
+                "order": 5
+            }
+        },
+        {
+            "HX-5/8MB": {
+                "order": 10
+            }
+        },
+        {
+            "HX-1DL": {
+                "order": 3
+            }
+        },
+        {
+            "HX-5/8DL": {
+                "order": 5
+            }
+        },
+        {
+            "HX-1HL": {
+                "order": 5
+            }
+        },
+        {
+            "HX-5/8HM": {
+                "order": 5
+            }
+        },
+        {
+            "HX-5/8HS": {
+                "order": 5
+            }
+        },
+        {
+            "HX-REF RL": {
+                "order": 8
+            }
+        },
+        {
+            "HX-REF12": {
+                "order": 15
+            }
+        },
+        {
+            "HX-BRAID4": {
+                "order": 8
+            }
+        },
+        {
+            "HX-BRAID5": {
+                "order": 10
+            }
+        },
+        {
+            "HX-BRAID12": {
+                "order": 2
+            }
+        },
+        {
+            "HX-BRAID15": {
+                "order": 4
+            }
+        },
+        {
+            "HX-3/8 FLTLEAS": {
+                "order": 5
+            }
+        },
+        {
+            "HX-3/8 FLAT COL": {
+                "order": 5
+            }
+        },
+        {
+            "HX-HL12": {
+                "order": 5
+            }
+        },
+        {
+            "HX-CL12": {
+                "order": 8
+            }
+        },
+        {
+            "HX-CL15": {
+                "order": 6
+            }
+        },
+        {
+            "HX-REF20": {
+                "order": 8
+            }
+        },
+        {
+            "HX-REF25": {
+                "order": 8
+            }
+        },
+        {
+            "HX-NYLON8M": {
+                "order": 8
+            }
+        },
+        {
+            "HX-FL&TK": {
+                "order": 4
+            }
+        },
+        {
+            "HX-PLN CL10": {
+                "order": 10
+            }
+        },
+        {
+            "HX-3/4MB": {
+                "order": 5
+            }
+        },
+        {
+            "HX-3/8 PRNTCOL": {
+                "order": 15
+            }
+        },
+        {
+            "HX-PLST-4": {
+                "order": 10
+            }
+        },
+        {
+            "HX-PLN DBSML": {
+                "order": 10
+            }
+        },
+        {
+            "HX-PLN DBMED": {
+                "order": 5
+            }
+        },
+        {
+            "HX-PRNTD DBSML": {
+                "order": 2
+            }
+        },
+        {
+            "HX-PRNTD DBMED": {
+                "order": 5
+            }
+        },
+        {
+            "HX-PRINTD DBLRG": {
+                "order": 5
+            }
+        },
+        {
+            "HX-DB-OVAL": {
+                "order": 6
+            }
+        },
+        {
+            "HX-DB-OVALSML": {
+                "order": 6
+            }
+        },
+        {
+            "HX-RND DB-32": {
+                "order": 10
+            }
+        },
+        {
+            "HX-RND DB-64": {
+                "order": 10
+            }
+        },
+        {
+            "HX-ODA-7": {
+                "order": 5
+            }
+        },
+        {
+            "HX-CHWBN-2PC": {
+                "order": 5
+            }
+        },
+        {
+            "HX-MINISAUSGE": {
+                "order": 5
+            }
+        },
+        {
+            "HX-CHWBN4": {
+                "order": 5
+            }
+        },
+        {
+            "HX-TREAT-1": {
+                "order": 5
+            }
+        },
+        {
+            "HX-TREAT-2": {
+                "order": 5
+            }
+        },
+        {
+            "HX-TREAT-3": {
+                "order": 5
+            }
+        },
+        {
+            "HX-TREAT-4": {
+                "order": 5
+            }
+        },
+        {
+            "HX-TREAT-5": {
+                "order": 5
+            }
+        },
+        {
+            "HX-TREAT-6": {
+                "order": 5
+            }
+        },
+        {
+            "HX-STL CMB": {
+                "order": 5
+            }
+        },
+        {
+            "HX-STL CMB HDL": {
+                "order": 5
+            }
+        },
+        {
+            "HX-2X BRSH": {
+                "order": 2
+            }
+        },
+        {
+            "HX-BRSH OV PLST": {
+                "order": 10
+            }
+        },
+        {
+            "HX-DIAPR-SML": {
+                "order": 2
+            }
+        },
+        {
+            "HX-DIAPR-MED": {
+                "order": 2
+            }
+        },
+        {
+            "HX-DIAPR-LRG": {
+                "order": 5
+            }
+        },
+        {
+            "HX-CHAIN-3.5": {
+                "order": 20
+            }
+        },
+        {
+            "HX-CHAIN-4.0": {
+                "order": 30
+            }
+        },
+        {
+            "HX-CHAIN-2.0": {
+                "order": 20
+            }
+        },
+        {
+            "HX-CHAIN-3.0": {
+                "order": 20
+            }
+        },
+        {
+            "HX-CHAINEXT.": {
+                "order": 20
+            }
+        },
+        {
+            "HX-CC BALL-MED": {
+                "order": 10
+            }
+        },
+        {
+            "HX-CC BALL-LRG": {
+                "order": 15
+            }
+        },
+        {
+            "HX-TOY ASRTD#1": {
+                "order": 10
+            }
+        },
+        {
+            "HX-TOYROPE#1": {
+                "order": 5
+            }
+        },
+        {
+            "HX-FOODBALL": {
+                "order": 15
+            }
+        },
+        {
+            "HX-SCNTD BONE": {
+                "order": 10
+            }
+        },
+        {
+            "HX-BONE3": {
+                "order": 10
+            }
+        },
+        {
+            "HX-BONE4": {
+                "order": 10
+            }
+        },
+        {
+            "HX-FEEDER": {
+                "order": 2
+            }
+        },
+        {
+            "HX-MUZZL20": {
+                "order": 0
+            }
+        },
+        {
+            "HX-MUZZL23": {
+                "order": 2
+            }
+        },
+        {
+            "HX-MUZZL21": {
+                "order": 0
+            }
+        },
+        {
+            "HX-MUZZL24": {
+                "order": 2
+            }
+        },
+        {
+            "HX-CAGE-24": {
+                "order": 0
+            }
+        },
+        {
+            "HX-CAGE-29": {
+                "order": 0
+            }
+        },
+        {
+            "HX-CAGE-12": {
+                "order": 0
+            }
+        },
+        {
+            "HX-TRIM#02": {
+                "order": 3
+            }
+        }
+    ]
+}

@@ -1,0 +1,612 @@
+{
+    "name": "SM-CLASS-C",
+    "co": "SM",
+    "class": "C",
+    "products": [
+        {
+            "SM-1SR": {
+                "order": 75
+            }
+        },
+        {
+            "SM-5/8SR": {
+                "order": 100
+            }
+        },
+        {
+            "SM-1MB": {
+                "order": 55
+            }
+        },
+        {
+            "SM-5/8MB": {
+                "order": 55
+            }
+        },
+        {
+            "SM-5/8DL": {
+                "order": 45
+            }
+        },
+        {
+            "SM-1HL": {
+                "order": 40
+            }
+        },
+        {
+            "SM-5/8HM": {
+                "order": 40
+            }
+        },
+        {
+            "SM-5/8HS": {
+                "order": 30
+            }
+        },
+        {
+            "SM-REF RL": {
+                "order": 55
+            }
+        },
+        {
+            "SM-REF12": {
+                "order": 80
+            }
+        },
+        {
+            "SM-MET DL": {
+                "order": 35
+            }
+        },
+        {
+            "SM-BRAID4": {
+                "order": 55
+            }
+        },
+        {
+            "SM-BRAID5": {
+                "order": 55
+            }
+        },
+        {
+            "SM-BRAID12": {
+                "order": 35
+            }
+        },
+        {
+            "SM-BRAID15": {
+                "order": 60
+            }
+        },
+        {
+            "SM-3/8 FLTLEAS": {
+                "order": 55
+            }
+        },
+        {
+            "SM-3/8 FLAT COL": {
+                "order": 45
+            }
+        },
+        {
+            "SM-HL12": {
+                "order": 80
+            }
+        },
+        {
+            "SM-CL12": {
+                "order": 60
+            }
+        },
+        {
+            "SM-CL15": {
+                "order": 35
+            }
+        },
+        {
+            "SM-REF20": {
+                "order": 55
+            }
+        },
+        {
+            "SM-REF25": {
+                "order": 40
+            }
+        },
+        {
+            "SM-NYLON8M": {
+                "order": 55
+            }
+        },
+        {
+            "SM-PST CONT": {
+                "order": 25
+            }
+        },
+        {
+            "SM-FL&TK": {
+                "order": 25
+            }
+        },
+        {
+            "SM-FL&TK-XS": {
+                "order": 15
+            }
+        },
+        {
+            "SM-PLN CL10": {
+                "order": 70
+            }
+        },
+        {
+            "SM-3/4MB": {
+                "order": 70
+            }
+        },
+        {
+            "SM-3/8 PRNTCOL": {
+                "order": 140
+            }
+        },
+        {
+            "SM-PRNTCOL 25": {
+                "order": 35
+            }
+        },
+        {
+            "SM-CL25": {
+                "order": 25
+            }
+        },
+        {
+            "SM-PRNTHRN XL": {
+                "order": 15
+            }
+        },
+        {
+            "SM-1SR30": {
+                "order": 100
+            }
+        },
+        {
+            "SM-1SR2TONE": {
+                "order": 35
+            }
+        },
+        {
+            "SM-RAINBOW": {
+                "order": 20
+            }
+        },
+        {
+            "SM-PLST-4": {
+                "order": 70
+            }
+        },
+        {
+            "SM-PLN DBSML": {
+                "order": 70
+            }
+        },
+        {
+            "SM-PLN DBMED": {
+                "order": 60
+            }
+        },
+        {
+            "SM-PRNTD DBSML": {
+                "order": 25
+            }
+        },
+        {
+            "SM-PRNTD DBMED": {
+                "order": 45
+            }
+        },
+        {
+            "SM-PRINTD DBLRG": {
+                "order": 30
+            }
+        },
+        {
+            "SM-DB-OVAL": {
+                "order": 55
+            }
+        },
+        {
+            "SM-DB-OVALSML": {
+                "order": 55
+            }
+        },
+        {
+            "SM-BAMBOO": {
+                "order": 35
+            }
+        },
+        {
+            "SM-PRNTD DB146": {
+                "order": 35
+            }
+        },
+        {
+            "SM-RND DB-32": {
+                "order": 60
+            }
+        },
+        {
+            "SM-RND DB-64": {
+                "order": 60
+            }
+        },
+        {
+            "SM-NO TP DB-32": {
+                "order": 20
+            }
+        },
+        {
+            "SM-NO TP DB-16": {
+                "order": 20
+            }
+        },
+        {
+            "SM-NO TP DB-24": {
+                "order": 20
+            }
+        },
+        {
+            "SM-NO TP DB-25": {
+                "order": 12
+            }
+        },
+        {
+            "SM-RND DB-20": {
+                "order": 60
+            }
+        },
+        {
+            "SM-ODA-7": {
+                "order": 60
+            }
+        },
+        {
+            "SM-CHWBN-2PC": {
+                "order": 70
+            }
+        },
+        {
+            "SM-PRSDBONE": {
+                "order": 60
+            }
+        },
+        {
+            "SM-MINISAUSGE": {
+                "order": 75
+            }
+        },
+        {
+            "SM-CHWBN4": {
+                "order": 70
+            }
+        },
+        {
+            "SM-CHWSTIKS": {
+                "order": 75
+            }
+        },
+        {
+            "SM-TREAT-1": {
+                "order": 105
+            }
+        },
+        {
+            "SM-TREAT-2": {
+                "order": 105
+            }
+        },
+        {
+            "SM-TREAT-3": {
+                "order": 105
+            }
+        },
+        {
+            "SM-TREAT-4": {
+                "order": 100
+            }
+        },
+        {
+            "SM-TREAT-5": {
+                "order": 100
+            }
+        },
+        {
+            "SM-TREAT-6": {
+                "order": 100
+            }
+        },
+        {
+            "SM-STL CMB": {
+                "order": 70
+            }
+        },
+        {
+            "SM-STL CMB HDL": {
+                "order": 55
+            }
+        },
+        {
+            "SM-2X BRSH": {
+                "order": 20
+            }
+        },
+        {
+            "SM-BRSH OV PLST": {
+                "order": 100
+            }
+        },
+        {
+            "SM-BRSH8": {
+                "order": 30
+            }
+        },
+        {
+            "SM-TSHRT-SML": {
+                "order": 45
+            }
+        },
+        {
+            "SM-TSHRT-MED": {
+                "order": 55
+            }
+        },
+        {
+            "SM-TSHRT-LRG": {
+                "order": 55
+            }
+        },
+        {
+            "SM-TSHRT-XL": {
+                "order": 55
+            }
+        },
+        {
+            "SM-DIAPR-SML": {
+                "order": 90
+            }
+        },
+        {
+            "SM-DIAPR-MED": {
+                "order": 90
+            }
+        },
+        {
+            "SM-DIAPR-LRG": {
+                "order": 90
+            }
+        },
+        {
+            "SM-MWRP-SML": {
+                "order": 65
+            }
+        },
+        {
+            "SM-MWRP-MED": {
+                "order": 65
+            }
+        },
+        {
+            "SM-SOFT D-SML": {
+                "order": 15
+            }
+        },
+        {
+            "SM-SOFT D-MED": {
+                "order": 15
+            }
+        },
+        {
+            "SM-SOFT D-LRG": {
+                "order": 15
+            }
+        },
+        {
+            "SM-CHAIN-3.5": {
+                "order": 60
+            }
+        },
+        {
+            "SM-CHAIN-4.0": {
+                "order": 55
+            }
+        },
+        {
+            "SM-CHAIN-2.0": {
+                "order": 60
+            }
+        },
+        {
+            "SM-CHAIN-3.0": {
+                "order": 60
+            }
+        },
+        {
+            "SM-CHAINEXT.": {
+                "order": 40
+            }
+        },
+        {
+            "SM-CC BALL-MED": {
+                "order": 120
+            }
+        },
+        {
+            "SM-CC BALL-LRG": {
+                "order": 75
+            }
+        },
+        {
+            "SM-TOY ASRTD#1": {
+                "order": 55
+            }
+        },
+        {
+            "SM-TOYROPE#1": {
+                "order": 60
+            }
+        },
+        {
+            "SM-FOODBALL": {
+                "order": 75
+            }
+        },
+        {
+            "SM-SCNTD BONE": {
+                "order": 70
+            }
+        },
+        {
+            "SM-BONE1-2": {
+                "order": 30
+            }
+        },
+        {
+            "SM-BONE3": {
+                "order": 75
+            }
+        },
+        {
+            "SM-BONE4": {
+                "order": 60
+            }
+        },
+        {
+            "SM-TOY ASRTD#8": {
+                "order": 40
+            }
+        },
+        {
+            "SM-RNDBEL#1": {
+                "order": 70
+            }
+        },
+        {
+            "SM-BONE#5G": {
+                "order": 55
+            }
+        },
+        {
+            "SM-PLSH#1": {
+                "order": 90
+            }
+        },
+        {
+            "SM-PLSHHD#2": {
+                "order": 90
+            }
+        },
+        {
+            "SM-TOYROPE#3": {
+                "order": 60
+            }
+        },
+        {
+            "SM-PLSH FRUITS": {
+                "order": 30
+            }
+        },
+        {
+            "SM-PLSH FOX": {
+                "order": 30
+            }
+        },
+        {
+            "SM-PLSH PAWS": {
+                "order": 30
+            }
+        },
+        {
+            "SM-PGHEAD": {
+                "order": 45
+            }
+        },
+        {
+            "SM-BLUECAT": {
+                "order": 30
+            }
+        },
+        {
+            "SM-RND ROPE": {
+                "order": 30
+            }
+        },
+        {
+            "SM-PLSH MONSTR": {
+                "order": 30
+            }
+        },
+        {
+            "SM-FEEDER": {
+                "order": 22
+            }
+        },
+        {
+            "SM-MUZZL20": {
+                "order": 20
+            }
+        },
+        {
+            "SM-MUZZL23": {
+                "order": 20
+            }
+        },
+        {
+            "SM-MUZZL21": {
+                "order": 15
+            }
+        },
+        {
+            "SM-MUZZL24": {
+                "order": 25
+            }
+        },
+        {
+            "SM-CAGE-24": {
+                "order": 0
+            }
+        },
+        {
+            "SM-CAGE-29": {
+                "order": 0
+            }
+        },
+        {
+            "SM-CAGE-12": {
+                "order": 0
+            }
+        },
+        {
+            "SM-TRIM#02": {
+                "order": 60
+            }
+        },
+        {
+            "SM-TRIM NFILE": {
+                "order": 40
+            }
+        },
+        {
+            "SM-CLT-SML": {
+                "order": 16
+            }
+        },
+        {
+            "SM-CLT-LRG": {
+                "order": 16
+            }
+        },
+        {
+            "SM-SCOOPR": {
+                "order": 40
+            }
+        }
+    ]
+}

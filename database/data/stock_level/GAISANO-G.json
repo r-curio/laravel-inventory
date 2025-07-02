@@ -1,0 +1,557 @@
+{
+    "name": "Gaisano-Class-G",
+    "co": "GAI",
+    "class": "G",
+    "products": [
+        {
+            "GAI-1SR": {
+                "order": 30
+            }
+        },
+        {
+            "GAI-5/8SR": {
+                "order": 30
+            }
+        },
+        {
+            "GAI-1MB": {
+                "order": 15
+            }
+        },
+        {
+            "GAI-5/8MB": {
+                "order": 15
+            }
+        },
+        {
+            "GAI-5/8DL": {
+                "order": 10
+            }
+        },
+        {
+            "GAI-5/8HM": {
+                "order": 10
+            }
+        },
+        {
+            "GAI-5/8HS": {
+                "order": 10
+            }
+        },
+        {
+            "GAI-REF RL": {
+                "order": 10
+            }
+        },
+        {
+            "GAI-REF12": {
+                "order": 30
+            }
+        },
+        {
+            "GAI-BRAID4": {
+                "order": 15
+            }
+        },
+        {
+            "GAI-BRAID5": {
+                "order": 15
+            }
+        },
+        {
+            "GAI-BRAID12": {
+                "order": 10
+            }
+        },
+        {
+            "GAI-3/8 FLTLEAS": {
+                "order": 20
+            }
+        },
+        {
+            "GAI-3/8 FLAT COL": {
+                "order": 15
+            }
+        },
+        {
+            "GAI-HL12": {
+                "order": 20
+            }
+        },
+        {
+            "GAI-CL12": {
+                "order": 20
+            }
+        },
+        {
+            "GAI-CL15": {
+                "order": 10
+            }
+        },
+        {
+            "GAI-REF20": {
+                "order": 10
+            }
+        },
+        {
+            "GAI-REF25": {
+                "order": 10
+            }
+        },
+        {
+            "GAI-NYLON8M": {
+                "order": 10
+            }
+        },
+        {
+            "GAI-PST CONT": {
+                "order": 10
+            }
+        },
+        {
+            "GAI-FL&TK-XS": {
+                "order": 10
+            }
+        },
+        {
+            "GAI-PLN CL10": {
+                "order": 20
+            }
+        },
+        {
+            "GAI-3/4MB": {
+                "order": 20
+            }
+        },
+        {
+            "GAI-3/8 PRNTCOL": {
+                "order": 30
+            }
+        },
+        {
+            "GAI-PRNTCOL 25": {
+                "order": 8
+            }
+        },
+        {
+            "GAI-1SR30": {
+                "order": 20
+            }
+        },
+        {
+            "GAI-1SR2TONE": {
+                "order": 20
+            }
+        },
+        {
+            "GAI-RAINBOW": {
+                "order": 10
+            }
+        },
+        {
+            "GAI-PLST-4": {
+                "order": 15
+            }
+        },
+        {
+            "GAI-PLN DBSML": {
+                "order": 15
+            }
+        },
+        {
+            "GAI-PLN DBMED": {
+                "order": 10
+            }
+        },
+        {
+            "GAI-PRNTD DBSML": {
+                "order": 10
+            }
+        },
+        {
+            "GAI-PRNTD DBMED": {
+                "order": 10
+            }
+        },
+        {
+            "GAI-PRINTD DBLRG": {
+                "order": 8
+            }
+        },
+        {
+            "GAI-DB-OVAL": {
+                "order": 15
+            }
+        },
+        {
+            "GAI-DB-OVALSML": {
+                "order": 15
+            }
+        },
+        {
+            "GAI-BAMBOO": {
+                "order": 10
+            }
+        },
+        {
+            "GAI-RND DB-32": {
+                "order": 15
+            }
+        },
+        {
+            "GAI-RND DB-64": {
+                "order": 15
+            }
+        },
+        {
+            "GAI-NO TP DB-16": {
+                "order": 3
+            }
+        },
+        {
+            "GAI-RND DB-20": {
+                "order": 10
+            }
+        },
+        {
+            "GAI-ODA-7": {
+                "order": 15
+            }
+        },
+        {
+            "GAI-CHWBN-2PC": {
+                "order": 15
+            }
+        },
+        {
+            "GAI-PRSDBONE": {
+                "order": 15
+            }
+        },
+        {
+            "GAI-MINISAUSGE": {
+                "order": 15
+            }
+        },
+        {
+            "GAI-CHWBN4": {
+                "order": 15
+            }
+        },
+        {
+            "GAI-CHWSTIKS": {
+                "order": 15
+            }
+        },
+        {
+            "GAI-TREAT-1": {
+                "order": 20
+            }
+        },
+        {
+            "GAI-TREAT-2": {
+                "order": 20
+            }
+        },
+        {
+            "GAI-TREAT-3": {
+                "order": 20
+            }
+        },
+        {
+            "GAI-TREAT-4": {
+                "order": 20
+            }
+        },
+        {
+            "GAI-TREAT-5": {
+                "order": 20
+            }
+        },
+        {
+            "GAI-TREAT-6": {
+                "order": 20
+            }
+        },
+        {
+            "GAI-CHKNSAUSGE": {
+                "order": 0
+            }
+        },
+        {
+            "GAI-BEEFSAUSGE": {
+                "order": 0
+            }
+        },
+        {
+            "GAI-STL CMB": {
+                "order": 15
+            }
+        },
+        {
+            "GAI-STL CMB HDL": {
+                "order": 15
+            }
+        },
+        {
+            "GAI-2X BRSH": {
+                "order": 10
+            }
+        },
+        {
+            "GAI-BRSH OV PLST": {
+                "order": 30
+            }
+        },
+        {
+            "GAI-BRSH8": {
+                "order": 0
+            }
+        },
+        {
+            "GAI-TSHRT-SML": {
+                "order": 8
+            }
+        },
+        {
+            "GAI-TSHRT-MED": {
+                "order": 8
+            }
+        },
+        {
+            "GAI-TSHRT-LRG": {
+                "order": 8
+            }
+        },
+        {
+            "GAI-DIAPR-SML": {
+                "order": 7
+            }
+        },
+        {
+            "GAI-DIAPR-MED": {
+                "order": 7
+            }
+        },
+        {
+            "GAI-DIAPR-LRG": {
+                "order": 7
+            }
+        },
+        {
+            "GAI-CHAIN-3.5": {
+                "order": 20
+            }
+        },
+        {
+            "GAI-CHAIN-4.0": {
+                "order": 30
+            }
+        },
+        {
+            "GAI-CHAIN-2.0": {
+                "order": 20
+            }
+        },
+        {
+            "GAI-CHAIN-3.0": {
+                "order": 30
+            }
+        },
+        {
+            "GAI-CHAINEXT.": {
+                "order": 20
+            }
+        },
+        {
+            "GAI-CC BALL-MED": {
+                "order": 25
+            }
+        },
+        {
+            "GAI-CC BALL-LRG": {
+                "order": 25
+            }
+        },
+        {
+            "GAI-TOY ASRTD#1": {
+                "order": 20
+            }
+        },
+        {
+            "GAI-TOYROPE#1": {
+                "order": 20
+            }
+        },
+        {
+            "GAI-FOODBALL": {
+                "order": 20
+            }
+        },
+        {
+            "GAI-SCNTD BONE": {
+                "order": 20
+            }
+        },
+        {
+            "GAI-BONE1-2": {
+                "order": 15
+            }
+        },
+        {
+            "GAI-BONE3": {
+                "order": 20
+            }
+        },
+        {
+            "GAI-BONE4": {
+                "order": 20
+            }
+        },
+        {
+            "GAI-TOY ASRTD#8": {
+                "order": 20
+            }
+        },
+        {
+            "GAI-RNDBEL#1": {
+                "order": 20
+            }
+        },
+        {
+            "GAI-BONE#5G": {
+                "order": 15
+            }
+        },
+        {
+            "GAI-PLSH#1": {
+                "order": 15
+            }
+        },
+        {
+            "GAI-PLSHHD#2": {
+                "order": 15
+            }
+        },
+        {
+            "GAI-TOYROPE#3": {
+                "order": 15
+            }
+        },
+        {
+            "GAI-PLSH FRUITS": {
+                "order": 15
+            }
+        },
+        {
+            "GAI-PLSH FOX": {
+                "order": 15
+            }
+        },
+        {
+            "GAI-PLSH PAWS": {
+                "order": 15
+            }
+        },
+        {
+            "GAI-PGHEAD": {
+                "order": 15
+            }
+        },
+        {
+            "GAI-DONUTS": {
+                "order": 0
+            }
+        },
+        {
+            "GAI-RND OBLNG": {
+                "order": 0
+            }
+        },
+        {
+            "GAI-SPIKEY": {
+                "order": 15
+            }
+        },
+        {
+            "GAI-BLUECAT": {
+                "order": 15
+            }
+        },
+        {
+            "GAI-RND ROPE": {
+                "order": 15
+            }
+        },
+        {
+            "GAI-PLSH MONSTR": {
+                "order": 15
+            }
+        },
+        {
+            "GAI-FEEDER": {
+                "order": 10
+            }
+        },
+        {
+            "GAI-MUZZL20": {
+                "order": 5
+            }
+        },
+        {
+            "GAI-MUZZL23": {
+                "order": 5
+            }
+        },
+        {
+            "GAI-MUZZL21": {
+                "order": 5
+            }
+        },
+        {
+            "GAI-MUZZL24": {
+                "order": 8
+            }
+        },
+        {
+            "GAI-CAGE-24": {
+                "order": 4
+            }
+        },
+        {
+            "GAI-CAGE-29": {
+                "order": 4
+            }
+        },
+        {
+            "GAI-CAGE-12": {
+                "order": 2
+            }
+        },
+        {
+            "GAI-TRIM#02": {
+                "order": 15
+            }
+        },
+        {
+            "GAI-TRIM NFILE": {
+                "order": 15
+            }
+        },
+        {
+            "GAI-TRIM MINI": {
+                "order": 0
+            }
+        },
+        {
+            "GAI-SCOOPR": {
+                "order": 20
+            }
+        },
+        {
+            "GAISANO-CLASS-G": {
+                "order": 1557
+            }
+        }
+    ]
+}

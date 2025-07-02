@@ -1,0 +1,467 @@
+{
+    "name": "HMN-CLASS-F",
+    "co": "HMN",
+    "class": "F",
+    "products": [
+        {
+            "HMN-1SR": {
+                "order": 60
+            }
+        },
+        {
+            "HMN-5/8SR": {
+                "order": 60
+            }
+        },
+        {
+            "HMN-1MB": {
+                "order": 50
+            }
+        },
+        {
+            "HMN-5/8MB": {
+                "order": 40
+            }
+        },
+        {
+            "HMN-1DL": {
+                "order": 12
+            }
+        },
+        {
+            "HMN-5/8DL": {
+                "order": 30
+            }
+        },
+        {
+            "HMN-1HL": {
+                "order": 25
+            }
+        },
+        {
+            "HMN-5/8HM": {
+                "order": 25
+            }
+        },
+        {
+            "HMN-5/8HS": {
+                "order": 25
+            }
+        },
+        {
+            "HMN-REF RL": {
+                "order": 30
+            }
+        },
+        {
+            "HMN-REF12": {
+                "order": 60
+            }
+        },
+        {
+            "HMN-MET DL": {
+                "order": 30
+            }
+        },
+        {
+            "HMN-BRAID4": {
+                "order": 30
+            }
+        },
+        {
+            "HMN-BRAID5": {
+                "order": 40
+            }
+        },
+        {
+            "HMN-BRAID12": {
+                "order": 10
+            }
+        },
+        {
+            "HMN-BRAID15": {
+                "order": 20
+            }
+        },
+        {
+            "HMN-3/8 FLTLEAS": {
+                "order": 20
+            }
+        },
+        {
+            "HMN-3/8 FLAT COL": {
+                "order": 20
+            }
+        },
+        {
+            "HMN-HL12": {
+                "order": 50
+            }
+        },
+        {
+            "HMN-CL12": {
+                "order": 50
+            }
+        },
+        {
+            "HMN-CL15": {
+                "order": 20
+            }
+        },
+        {
+            "HMN-REF20": {
+                "order": 40
+            }
+        },
+        {
+            "HMN-REF25": {
+                "order": 40
+            }
+        },
+        {
+            "HMN-NYLON8M": {
+                "order": 40
+            }
+        },
+        {
+            "HMN-HDC": {
+                "order": 20
+            }
+        },
+        {
+            "HMN-PST CONT": {
+                "order": 20
+            }
+        },
+        {
+            "HMN-FL&TK": {
+                "order": 20
+            }
+        },
+        {
+            "HMN-FL&TK-XS": {
+                "order": 20
+            }
+        },
+        {
+            "HMN-PLN CL10": {
+                "order": 30
+            }
+        },
+        {
+            "HMN-3/4MB": {
+                "order": 30
+            }
+        },
+        {
+            "HMN-3/8 PRNTCOL": {
+                "order": 70
+            }
+        },
+        {
+            "HMN-PRNTCOL 25": {
+                "order": 10
+            }
+        },
+        {
+            "HMN-PLN DBSML": {
+                "order": 30
+            }
+        },
+        {
+            "HMN-PLN DBMED": {
+                "order": 30
+            }
+        },
+        {
+            "HMN-PRNTD DBSML": {
+                "order": 20
+            }
+        },
+        {
+            "HMN-PRNTD DBMED": {
+                "order": 20
+            }
+        },
+        {
+            "HMN-PRINTD DBLRG": {
+                "order": 20
+            }
+        },
+        {
+            "HMN-DB-OVAL": {
+                "order": 30
+            }
+        },
+        {
+            "HMN-DB-OVALSML": {
+                "order": 30
+            }
+        },
+        {
+            "HMN-BAMBOO": {
+                "order": 10
+            }
+        },
+        {
+            "HMN-PRNTD DB146": {
+                "order": 10
+            }
+        },
+        {
+            "HMN-RND DB-32": {
+                "order": 50
+            }
+        },
+        {
+            "HMN-RND DB-64": {
+                "order": 50
+            }
+        },
+        {
+            "HMN-ODA-7": {
+                "order": 30
+            }
+        },
+        {
+            "HMN-PRSDBONE": {
+                "order": 30
+            }
+        },
+        {
+            "HMN-MINISAUSGE": {
+                "order": 30
+            }
+        },
+        {
+            "HMN-CHWBN4": {
+                "order": 30
+            }
+        },
+        {
+            "HMN-CHWSTIKS": {
+                "order": 30
+            }
+        },
+        {
+            "HMN-TREAT-1": {
+                "order": 55
+            }
+        },
+        {
+            "HMN-TREAT-2": {
+                "order": 55
+            }
+        },
+        {
+            "HMN-TREAT-3": {
+                "order": 55
+            }
+        },
+        {
+            "HMN-TREAT-4": {
+                "order": 55
+            }
+        },
+        {
+            "HMN-TREAT-5": {
+                "order": 55
+            }
+        },
+        {
+            "HMN-TREAT-6": {
+                "order": 55
+            }
+        },
+        {
+            "HMN-STL CMB": {
+                "order": 25
+            }
+        },
+        {
+            "HMN-STL CMB HDL": {
+                "order": 25
+            }
+        },
+        {
+            "HMN-2X BRSH": {
+                "order": 10
+            }
+        },
+        {
+            "HMN-BRSH OV PLST": {
+                "order": 50
+            }
+        },
+        {
+            "HMN-BRSH8": {
+                "order": 10
+            }
+        },
+        {
+            "HMN-TSHRT-SML": {
+                "order": 10
+            }
+        },
+        {
+            "HMN-TSHRT-MED": {
+                "order": 10
+            }
+        },
+        {
+            "HMN-TSHRT-LRG": {
+                "order": 20
+            }
+        },
+        {
+            "HMN-TSHRT-XL": {
+                "order": 20
+            }
+        },
+        {
+            "HMN-DIAPR-SML": {
+                "order": 20
+            }
+        },
+        {
+            "HMN-DIAPR-MED": {
+                "order": 25
+            }
+        },
+        {
+            "HMN-DIAPR-LRG": {
+                "order": 25
+            }
+        },
+        {
+            "HMN-MWRP-SML": {
+                "order": 25
+            }
+        },
+        {
+            "HMN-MWRP-MED": {
+                "order": 25
+            }
+        },
+        {
+            "HMN-CHAIN-3.5": {
+                "order": 40
+            }
+        },
+        {
+            "HMN-CHAIN-4.0": {
+                "order": 60
+            }
+        },
+        {
+            "HMN-CHAIN-2.0": {
+                "order": 50
+            }
+        },
+        {
+            "HMN-CHAIN-3.0": {
+                "order": 40
+            }
+        },
+        {
+            "HMN-CHAINEXT.": {
+                "order": 60
+            }
+        },
+        {
+            "HMN-CC BALL-MED": {
+                "order": 40
+            }
+        },
+        {
+            "HMN-CC BALL-LRG": {
+                "order": 30
+            }
+        },
+        {
+            "HMN-TOY ASRTD#1": {
+                "order": 30
+            }
+        },
+        {
+            "HMN-TOYROPE#1": {
+                "order": 30
+            }
+        },
+        {
+            "HMN-FOODBALL": {
+                "order": 50
+            }
+        },
+        {
+            "HMN-SCNTD BONE": {
+                "order": 30
+            }
+        },
+        {
+            "HMN-BONE1-2": {
+                "order": 40
+            }
+        },
+        {
+            "HMN-BONE3": {
+                "order": 50
+            }
+        },
+        {
+            "HMN-BONE4": {
+                "order": 50
+            }
+        },
+        {
+            "HMN-FEEDER": {
+                "order": 30
+            }
+        },
+        {
+            "HMN-MUZZL20": {
+                "order": 10
+            }
+        },
+        {
+            "HMN-MUZZL23": {
+                "order": 10
+            }
+        },
+        {
+            "HMN-MUZZL21": {
+                "order": 10
+            }
+        },
+        {
+            "HMN-MUZZL24": {
+                "order": 20
+            }
+        },
+        {
+            "HMN-CAGE-24": {
+                "order": 4
+            }
+        },
+        {
+            "HMN-CAGE-29": {
+                "order": 4
+            }
+        },
+        {
+            "HMN-CAGE-12": {
+                "order": 2
+            }
+        },
+        {
+            "HMN-TRIM#02": {
+                "order": 60
+            }
+        },
+        {
+            "HMN-TRIM NFILE": {
+                "order": 30
+            }
+        }
+    ]
+}

@@ -1,0 +1,497 @@
+{
+    "name": "PET-CLASS-C",
+    "co": "PET",
+    "class": "C",
+    "products": [
+        {
+            "PET-1SR": {
+                "order": 80
+            }
+        },
+        {
+            "PET-5/8SR": {
+                "order": 80
+            }
+        },
+        {
+            "PET-1MB": {
+                "order": 30
+            }
+        },
+        {
+            "PET-5/8MB": {
+                "order": 30
+            }
+        },
+        {
+            "PET-5/8DL": {
+                "order": 30
+            }
+        },
+        {
+            "PET-1HL": {
+                "order": 30
+            }
+        },
+        {
+            "PET-5/8HM": {
+                "order": 20
+            }
+        },
+        {
+            "PET-5/8HS": {
+                "order": 20
+            }
+        },
+        {
+            "PET-REF RL": {
+                "order": 40
+            }
+        },
+        {
+            "PET-REF12": {
+                "order": 60
+            }
+        },
+        {
+            "PET-MET DL": {
+                "order": 10
+            }
+        },
+        {
+            "PET-BRAID4": {
+                "order": 30
+            }
+        },
+        {
+            "PET-BRAID5": {
+                "order": 40
+            }
+        },
+        {
+            "PET-BRAID12": {
+                "order": 20
+            }
+        },
+        {
+            "PET-BRAID15": {
+                "order": 30
+            }
+        },
+        {
+            "PET-3/8 FLTLEAS": {
+                "order": 30
+            }
+        },
+        {
+            "PET-3/8 FLAT COL": {
+                "order": 30
+            }
+        },
+        {
+            "PET-HL12": {
+                "order": 80
+            }
+        },
+        {
+            "PET-CL12": {
+                "order": 60
+            }
+        },
+        {
+            "PET-CL15": {
+                "order": 30
+            }
+        },
+        {
+            "PET-REF20": {
+                "order": 40
+            }
+        },
+        {
+            "PET-REF25": {
+                "order": 30
+            }
+        },
+        {
+            "PET-NYLON8M": {
+                "order": 50
+            }
+        },
+        {
+            "PET-HDC": {
+                "order": 10
+            }
+        },
+        {
+            "PET-PST CONT": {
+                "order": 25
+            }
+        },
+        {
+            "PET-FL&TK": {
+                "order": 30
+            }
+        },
+        {
+            "PET-FL&TK-XS": {
+                "order": 30
+            }
+        },
+        {
+            "PET-PLN CL10": {
+                "order": 40
+            }
+        },
+        {
+            "PET-3/4MB": {
+                "order": 40
+            }
+        },
+        {
+            "PET-3/8 PRNTCOL": {
+                "order": 90
+            }
+        },
+        {
+            "PET-PRNTCOL 25": {
+                "order": 30
+            }
+        },
+        {
+            "PET-1SR30": {
+                "order": 80
+            }
+        },
+        {
+            "PET-1SR2TONE": {
+                "order": 40
+            }
+        },
+        {
+            "PET-RAINBOW": {
+                "order": 30
+            }
+        },
+        {
+            "PET-PLST-4": {
+                "order": 0
+            }
+        },
+        {
+            "PET-PLN DBSML": {
+                "order": 0
+            }
+        },
+        {
+            "PET-PLN DBMED": {
+                "order": 0
+            }
+        },
+        {
+            "PET-PRNTD DBMED": {
+                "order": 20
+            }
+        },
+        {
+            "PET-PRINTD DBLRG": {
+                "order": 20
+            }
+        },
+        {
+            "PET-DB-OVAL": {
+                "order": 20
+            }
+        },
+        {
+            "PET-DB-OVALSML": {
+                "order": 0
+            }
+        },
+        {
+            "PET-BAMBOO": {
+                "order": 0
+            }
+        },
+        {
+            "PET-PRNTD DB146": {
+                "order": 30
+            }
+        },
+        {
+            "PET-RND DB-32": {
+                "order": 45
+            }
+        },
+        {
+            "PET-RND DB-64": {
+                "order": 45
+            }
+        },
+        {
+            "PET-ODA-7": {
+                "order": 30
+            }
+        },
+        {
+            "PET-CHWBN-2PC": {
+                "order": 50
+            }
+        },
+        {
+            "PET-PRSDBONE": {
+                "order": 30
+            }
+        },
+        {
+            "PET-MINISAUSGE": {
+                "order": 50
+            }
+        },
+        {
+            "PET-CHWBN4": {
+                "order": 40
+            }
+        },
+        {
+            "PET-CHWSTIKS": {
+                "order": 40
+            }
+        },
+        {
+            "PET-TREAT-1": {
+                "order": 80
+            }
+        },
+        {
+            "PET-TREAT-2": {
+                "order": 80
+            }
+        },
+        {
+            "PET-TREAT-3": {
+                "order": 80
+            }
+        },
+        {
+            "PET-TREAT-4": {
+                "order": 80
+            }
+        },
+        {
+            "PET-TREAT-5": {
+                "order": 80
+            }
+        },
+        {
+            "PET-TREAT-6": {
+                "order": 80
+            }
+        },
+        {
+            "PET-STL CMB": {
+                "order": 40
+            }
+        },
+        {
+            "PET-STL CMB HDL": {
+                "order": 40
+            }
+        },
+        {
+            "PET-2X BRSH": {
+                "order": 30
+            }
+        },
+        {
+            "PET-BRSH OV PLST": {
+                "order": 90
+            }
+        },
+        {
+            "PET-BRSH8": {
+                "order": 30
+            }
+        },
+        {
+            "PET-TSHRT-SML": {
+                "order": 35
+            }
+        },
+        {
+            "PET-TSHRT-MED": {
+                "order": 35
+            }
+        },
+        {
+            "PET-TSHRT-LRG": {
+                "order": 35
+            }
+        },
+        {
+            "PET-TSHRT-XL": {
+                "order": 35
+            }
+        },
+        {
+            "PET-DIAPR-SML": {
+                "order": 0
+            }
+        },
+        {
+            "PET-DIAPR-MED": {
+                "order": 0
+            }
+        },
+        {
+            "PET-DIAPR-LRG": {
+                "order": 0
+            }
+        },
+        {
+            "PET-MWRP-SML": {
+                "order": 0
+            }
+        },
+        {
+            "PET-MWRP-MED": {
+                "order": 0
+            }
+        },
+        {
+            "PET-PET BAG": {
+                "order": 14
+            }
+        },
+        {
+            "PET-CHAIN-3.5": {
+                "order": 20
+            }
+        },
+        {
+            "PET-CHAIN-4.0": {
+                "order": 20
+            }
+        },
+        {
+            "PET-CHAIN-2.0": {
+                "order": 30
+            }
+        },
+        {
+            "PET-CHAIN-3.0": {
+                "order": 20
+            }
+        },
+        {
+            "PET-CC BALL-MED": {
+                "order": 80
+            }
+        },
+        {
+            "PET-CC BALL-LRG": {
+                "order": 70
+            }
+        },
+        {
+            "PET-TOY ASRTD#1": {
+                "order": 40
+            }
+        },
+        {
+            "PET-TOYROPE#1": {
+                "order": 60
+            }
+        },
+        {
+            "PET-FOODBALL": {
+                "order": 70
+            }
+        },
+        {
+            "PET-SCNTD BONE": {
+                "order": 50
+            }
+        },
+        {
+            "PET-BONE-2": {
+                "order": 50
+            }
+        },
+        {
+            "PET-BONE3": {
+                "order": 60
+            }
+        },
+        {
+            "PET-BONE4": {
+                "order": 60
+            }
+        },
+        {
+            "PET-TOY ASRTD#8": {
+                "order": 40
+            }
+        },
+        {
+            "PET-PET-BONE#5G": {
+                "order": 40
+            }
+        },
+        {
+            "PET-TOYROPE#3": {
+                "order": 40
+            }
+        },
+        {
+            "PET-FEEDER": {
+                "order": 30
+            }
+        },
+        {
+            "PET-MUZZL20": {
+                "order": 15
+            }
+        },
+        {
+            "PET-MUZZL23": {
+                "order": 15
+            }
+        },
+        {
+            "PET-MUZZL21": {
+                "order": 15
+            }
+        },
+        {
+            "PET-MUZZL24": {
+                "order": 20
+            }
+        },
+        {
+            "PET-CAGE-24": {
+                "order": 8
+            }
+        },
+        {
+            "PET-CAGE-29": {
+                "order": 8
+            }
+        },
+        {
+            "PET-CAGE-12": {
+                "order": 4
+            }
+        },
+        {
+            "PET-TRIM#02": {
+                "order": 70
+            }
+        },
+        {
+            "PET-TRIM NFILE": {
+                "order": 40
+            }
+        }
+    ]
+}

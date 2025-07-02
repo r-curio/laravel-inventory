@@ -1,0 +1,282 @@
+{
+    "name": "WALTERMART-CLASS-K",
+    "co": "Waltermart",
+    "class": "CLASS K ",
+    "products": [
+        {
+            "WM-1SR": {
+                "order": 30
+            }
+        },
+        {
+            "WM-5/8SR": {
+                "order": 30
+            }
+        },
+        {
+            "WM-3/8 FLTLEAS": {
+                "order": 20
+            }
+        },
+        {
+            "WM-REF20": {
+                "order": 20
+            }
+        },
+        {
+            "WM-PLN CL10": {
+                "order": 20
+            }
+        },
+        {
+            "WM-3/8 PRNTCOL": {
+                "order": 40
+            }
+        },
+        {
+            "WM-1SR30": {
+                "order": 30
+            }
+        },
+        {
+            "WM-PLST-4": {
+                "order": 30
+            }
+        },
+        {
+            "WM-PLN DBSML": {
+                "order": 30
+            }
+        },
+        {
+            "WM-PRNTD DBSML": {
+                "order": 10
+            }
+        },
+        {
+            "WM-PRNTD DBMED": {
+                "order": 20
+            }
+        },
+        {
+            "WM-PRINTD DBLRG": {
+                "order": 20
+            }
+        },
+        {
+            "WM-DB-OVAL": {
+                "order": 20
+            }
+        },
+        {
+            "WM-DB-OVALSML": {
+                "order": 10
+            }
+        },
+        {
+            "WM-BAMBOO": {
+                "order": 10
+            }
+        },
+        {
+            "WM-RND DB-32": {
+                "order": 20
+            }
+        },
+        {
+            "WM-RND DB-64": {
+                "order": 20
+            }
+        },
+        {
+            "WM-NO TP DB-16": {
+                "order": 5
+            }
+        },
+        {
+            "WM-STL CMB": {
+                "order": 30
+            }
+        },
+        {
+            "WM-BRSH OV PLST": {
+                "order": 40
+            }
+        },
+        {
+            "WM-BRSH8": {
+                "order": 3
+            }
+        },
+        {
+            "WM-TSHRT-SML": {
+                "order": 10
+            }
+        },
+        {
+            "WM-TSHRT-MED": {
+                "order": 10
+            }
+        },
+        {
+            "WM-TSHRT-LRG": {
+                "order": 10
+            }
+        },
+        {
+            "WM-TSHRT-XL": {
+                "order": 10
+            }
+        },
+        {
+            "WM-DIAPR-SML": {
+                "order": 20
+            }
+        },
+        {
+            "WM-DIAPR-MED": {
+                "order": 20
+            }
+        },
+        {
+            "WM-DIAPR-LRG": {
+                "order": 20
+            }
+        },
+        {
+            "WM-PET BAG": {
+                "order": 2
+            }
+        },
+        {
+            "WM-CHAIN-3.5": {
+                "order": 25
+            }
+        },
+        {
+            "WM-CHAIN-4.0": {
+                "order": 25
+            }
+        },
+        {
+            "WM-CHAINEXT.": {
+                "order": 10
+            }
+        },
+        {
+            "WM-CC BALL-MED": {
+                "order": 40
+            }
+        },
+        {
+            "WM-CC BALL-LRG": {
+                "order": 40
+            }
+        },
+        {
+            "WM-TOY ASRTD#1": {
+                "order": 20
+            }
+        },
+        {
+            "WM-FOODBALL": {
+                "order": 20
+            }
+        },
+        {
+            "WM-BONE3": {
+                "order": 20
+            }
+        },
+        {
+            "WM-BONE4": {
+                "order": 20
+            }
+        },
+        {
+            "WM-BONE#5G": {
+                "order": 20
+            }
+        },
+        {
+            "WM-PLSH#1": {
+                "order": 40
+            }
+        },
+        {
+            "WM-PLSHHD#2": {
+                "order": 40
+            }
+        },
+        {
+            "WM-PLSH FRUITS": {
+                "order": 20
+            }
+        },
+        {
+            "WM-PLSH FOX": {
+                "order": 20
+            }
+        },
+        {
+            "WM-PGHEAD": {
+                "order": 20
+            }
+        },
+        {
+            "WM-BLUECAT": {
+                "order": 20
+            }
+        },
+        {
+            "WM-RND ROPE": {
+                "order": 20
+            }
+        },
+        {
+            "WM-FEEDER": {
+                "order": 6
+            }
+        },
+        {
+            "WM-CAGE-29": {
+                "order": 0
+            }
+        },
+        {
+            "WM-CAGE-12": {
+                "order": 0
+            }
+        },
+        {
+            "WM-TRIM#02": {
+                "order": 15
+            }
+        },
+        {
+            "WM-CLT-SML": {
+                "order": 6
+            }
+        },
+        {
+            "WM-CLT-LRG": {
+                "order": 3
+            }
+        },
+        {
+            "WM-SCOOPR": {
+                "order": 15
+            }
+        },
+        {
+            "WM-BED-SML": {
+                "order": 0
+            }
+        },
+        {
+            "WM-BED-MED": {
+                "order": 0
+            }
+        }
+    ]
+}

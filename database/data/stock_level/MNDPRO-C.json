@@ -1,0 +1,187 @@
+{
+    "name": "MNDPRO-CLASS-C",
+    "co": "MNDPRO",
+    "class": "C",
+    "products": [
+        {
+            "MP-1SR": {
+                "order": 30
+            }
+        },
+        {
+            "MP-5/8SR": {
+                "order": 30
+            }
+        },
+        {
+            "MP-5/8MB": {
+                "order": 10
+            }
+        },
+        {
+            "MP-1HL": {
+                "order": 10
+            }
+        },
+        {
+            "MP-5/8HS": {
+                "order": 10
+            }
+        },
+        {
+            "MP-REF12": {
+                "order": 30
+            }
+        },
+        {
+            "MP-BRAID4": {
+                "order": 10
+            }
+        },
+        {
+            "MP-BRAID5": {
+                "order": 10
+            }
+        },
+        {
+            "MP-3/8 FLTLEAS": {
+                "order": 10
+            }
+        },
+        {
+            "MP-3/8 FLAT COL": {
+                "order": 10
+            }
+        },
+        {
+            "MP-CL12": {
+                "order": 30
+            }
+        },
+        {
+            "MP-REF20": {
+                "order": 20
+            }
+        },
+        {
+            "MP-NYLON8M": {
+                "order": 20
+            }
+        },
+        {
+            "MP-PLN CL10": {
+                "order": 30
+            }
+        },
+        {
+            "MP-3/8 PRNTCOL": {
+                "order": 30
+            }
+        },
+        {
+            "MP-DB-OVAL": {
+                "order": 15
+            }
+        },
+        {
+            "MP-DB-OVALSML": {
+                "order": 15
+            }
+        },
+        {
+            "MP-RND DB-32": {
+                "order": 15
+            }
+        },
+        {
+            "MP-RND DB-64": {
+                "order": 15
+            }
+        },
+        {
+            "MP-MINISAUSGE": {
+                "order": 20
+            }
+        },
+        {
+            "MP-TREAT-3": {
+                "order": 30
+            }
+        },
+        {
+            "MP-TREAT-4": {
+                "order": 30
+            }
+        },
+        {
+            "MP-TREAT-5": {
+                "order": 30
+            }
+        },
+        {
+            "MP-STL CMB": {
+                "order": 20
+            }
+        },
+        {
+            "MP-STL CMB HDL": {
+                "order": 20
+            }
+        },
+        {
+            "MP-BRSH OV PLST": {
+                "order": 40
+            }
+        },
+        {
+            "DIAPR-SML": {
+                "order": 7
+            }
+        },
+        {
+            "DIAPR-MED": {
+                "order": 7
+            }
+        },
+        {
+            "DIAPR-LRG": {
+                "order": 6
+            }
+        },
+        {
+            "MP-CC BALL-MED": {
+                "order": 30
+            }
+        },
+        {
+            "MP-CC BALL-LRG": {
+                "order": 30
+            }
+        },
+        {
+            "MP-FOODBALL": {
+                "order": 30
+            }
+        },
+        {
+            "MP-SCNTD BONE": {
+                "order": 30
+            }
+        },
+        {
+            "MP-FEEDER": {
+                "order": 10
+            }
+        },
+        {
+            "MP-TRIM#02": {
+                "order": 15
+            }
+        },
+        {
+            "MP-TRIM NFILE": {
+                "order": 15
+            }
+        }
+    ]
+}
