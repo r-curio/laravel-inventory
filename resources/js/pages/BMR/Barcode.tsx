@@ -56,7 +56,24 @@ export default function BarcodeShow({ barcodes: initialBarcodes }: BarcodeShowPr
     }, [data]);
 
     const handleSave = useCallback(async () => {
-        const updates = Array.from(pendingUpdatesRef.current.values());
+        // Build updates so that each update includes all relevant fields for the backend
+        const updates = Array.from(pendingUpdatesRef.current.values()).map((update) => {
+            // Find the full row data for this barcode
+            const barcode = data.find((b) => b.id === update.id);
+            if (!barcode) return update; // fallback
+            return {
+                id: update.id,
+                changes: {
+                    ...update.changes,
+                    // Always include all relevant fields
+                    damaged: barcode.damaged,
+                    actual: barcode.actual,
+                    purchase: barcode.purchase,
+                    returns: barcode.returns,
+                    // Optionally add any other fields needed for backend calculation
+                },
+            };
+        });
 
         if (updates.length === 0) {
             toast.info('No changes to save');

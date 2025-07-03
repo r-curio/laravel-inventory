@@ -56,21 +56,6 @@ class OrderController extends Controller
                 ]);
             }
 
-            // Update all relevant fields to 0 for all related store_items
-            $storeItemIds = collect($request->store_items)->pluck('id');
-            StoreItem::whereIn('id', $storeItemIds)->update([
-                'order' => 0,
-                'inventory' => 0,
-                'dr_6578' => 0,
-                'dr_958' => 0,
-                'pic_53' => 0,
-                'total' => 0,
-                's_divide_2' => 0,
-                's_order_2' => 0,
-                's_order_5' => 0,
-                'final_order' => 0,
-            ]);
-
             Store::where('id', $request->store_id)->update([
                 'is_processed' => true,
             ]);

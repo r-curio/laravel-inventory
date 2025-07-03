@@ -10,6 +10,7 @@ use App\Models\Barcode;
 use Illuminate\Support\Facades\Log;
 use App\Models\Item;
 use App\Models\Store;
+use Illuminate\Support\Facades\DB;
 
 class BMRController extends Controller
 {
@@ -89,13 +90,17 @@ class BMRController extends Controller
                     Log::info("Updated barcode record for item_id: {$item['item_id']} with factory: {$item['assigned_factory']}");
                 } else {
                     // Create new barcode record
+                    // Find the most recent barcode for this item_id
+                    $previousBarcode = Barcode::where('item_id', $item['item_id'])->orderByDesc('id')->first();
+                    $begbal = $previousBarcode ? $previousBarcode->endbal : 0;
+
                     $createData = [
                         'item_id' => $item['item_id'],
                         'name' => $item['item_name'],
                         'm30' => 0,
                         'apollo' => 0,
                         'site3' => 0,
-                        'begbal' => 0,
+                        'begbal' => $begbal,
                         'total' => 0,
                         'actual' => 0,
                         'purchase' => 0,
@@ -201,14 +206,59 @@ class BMRController extends Controller
         ]);
 
         try {
-            foreach ($request->updates as $update) {
-                $barcode = Barcode::find($update['id']);
-                if ($barcode) {
-                    // set the begbal equal to the current final_total
-                    $barcode->begbal = $barcode->endbal;
-                    $barcode->update($update['changes']);
+            DB::transaction(function () use ($request) {
+                foreach ($request->updates as $update) {
+                    $barcode = Barcode::find($update['id']);
+                    if ($barcode) {
+                        // Always use the values from the request for calculation
+                        $damaged = isset($update['changes']['damaged']) ? $update['changes']['damaged'] : 0;
+                        $actual = isset($update['changes']['actual']) ? $update['changes']['actual'] : 0;
+                        $purchase = isset($update['changes']['purchase']) ? $update['changes']['purchase'] : 0;
+                        $returns = isset($update['changes']['returns']) ? $update['changes']['returns'] : 0;
+                        $barcode->begbal = $damaged + $actual + $purchase + $returns;
+
+                        // Remove endbal from update array to avoid overwriting
+                        $changes = $update['changes'];
+                        $barcode->damaged = 0;
+                        $barcode->actual = 0;
+                        $barcode->purchase = 0;
+                        $barcode->returns = 0;
+                        $barcode->endbal = 0;
+                        $barcode->final_total = 0;
+                        $barcode->s_request = 0;
+                        $barcode->f_request = 0;
+
+
+                        unset($changes['endbal']);
+                        unset($changes['damaged']);
+                        unset($changes['actual']);
+                        unset($changes['total']);
+                        unset($changes['purchase']);
+                        unset($changes['returns']);
+                        unset($changes['begbal']);
+                        unset($changes['final_total']);
+                        unset($changes['s_request']);
+                        unset($changes['f_request']);
+
+                        $barcode->update($changes);
+                    }
                 }
-            }
+            });
+
+            $processedStoreIds = Store::where('is_processed', true)->pluck('id');
+
+            StoreItem::whereIn('store_id', $processedStoreIds)->update([
+                'order' => 0,
+                'inventory' => 0,
+                'dr_6578' => 0,
+                'dr_958' => 0,
+                'pic_53' => 0,
+                'total' => 0,
+                's_divide_2' => 0,
+                's_order_2' => 0,
+                's_order_5' => 0,
+                'final_order' => 0,
+            ]);
 
             // set all stores is_procesed to false
             Store::where('is_processed', true)->update(['is_processed' => false]);
