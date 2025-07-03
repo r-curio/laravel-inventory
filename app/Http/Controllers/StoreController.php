@@ -80,6 +80,27 @@ class StoreController extends Controller
 
         $store = Store::create($validated);
 
+        $items = Item::where('co', $store->co)->get();
+        foreach ($items as $item) {
+            StoreItem::create([
+                'store_id' => $store->id,
+                'item_id' => $item->id,
+                'order' => 0,
+                'inventory' => 0,
+                'dr_6578' => 0,
+                'dr_958' => 0,
+                'pic_53' => 0,
+                'total' => 0,
+                's_divide_2' => 0,
+                's_order_2' => 0,
+                's_order_5' => 0,
+                'final_order' => 0,
+                'created_at' => now(),
+                'updated_at' => now(),
+
+            ]);
+        }
+
         return response()->json([
             'message' => 'Store created successfully',
             'store' => $store

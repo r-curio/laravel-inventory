@@ -309,80 +309,60 @@ export function AddStoreModal({ onStoreAdded }: AddStoreModalProps) {
                                 <Label htmlFor="pullout_status" className="text-sm font-medium">
                                     Pullout Status
                                 </Label>
-                                <Select value={formData.pullout_status} onValueChange={(value) => handleInputChange('pullout_status', value)}>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select status" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="active">Active</SelectItem>
-                                        <SelectItem value="inactive">Inactive</SelectItem>
-                                        <SelectItem value="pending">Pending</SelectItem>
-                                    </SelectContent>
-                                </Select>
+                                <Input
+                                    id="pullout_status"
+                                    value={formData.pullout_status}
+                                    onChange={(e) => handleInputChange('pullout_status', e.target.value)}
+                                    placeholder="Enter pullout status"
+                                />
                             </div>
 
                             <div>
                                 <Label htmlFor="dgcage_status" className="text-sm font-medium">
                                     Dgcage Status
                                 </Label>
-                                <Select value={formData.dgcage_status} onValueChange={(value) => handleInputChange('dgcage_status', value)}>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select status" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="active">Active</SelectItem>
-                                        <SelectItem value="inactive">Inactive</SelectItem>
-                                        <SelectItem value="pending">Pending</SelectItem>
-                                    </SelectContent>
-                                </Select>
+                                <Input
+                                    id="dgcage_status"
+                                    value={formData.dgcage_status}
+                                    onChange={(e) => handleInputChange('dgcage_status', e.target.value)}
+                                    placeholder="Enter dgcage status"
+                                />
                             </div>
 
                             <div>
                                 <Label htmlFor="tshirt_status" className="text-sm font-medium">
                                     Tshirt Status
                                 </Label>
-                                <Select value={formData.tshirt_status} onValueChange={(value) => handleInputChange('tshirt_status', value)}>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select status" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="active">Active</SelectItem>
-                                        <SelectItem value="inactive">Inactive</SelectItem>
-                                        <SelectItem value="pending">Pending</SelectItem>
-                                    </SelectContent>
-                                </Select>
+                                <Input
+                                    id="tshirt_status"
+                                    value={formData.tshirt_status}
+                                    onChange={(e) => handleInputChange('tshirt_status', e.target.value)}
+                                    placeholder="Enter tshirt status"
+                                />
                             </div>
 
                             <div>
                                 <Label htmlFor="litter_box_status" className="text-sm font-medium">
                                     Litter Box Status
                                 </Label>
-                                <Select value={formData.litter_box_status} onValueChange={(value) => handleInputChange('litter_box_status', value)}>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select status" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="active">Active</SelectItem>
-                                        <SelectItem value="inactive">Inactive</SelectItem>
-                                        <SelectItem value="pending">Pending</SelectItem>
-                                    </SelectContent>
-                                </Select>
+                                <Input
+                                    id="litter_box_status"
+                                    value={formData.litter_box_status}
+                                    onChange={(e) => handleInputChange('litter_box_status', e.target.value)}
+                                    placeholder="Enter litter box status"
+                                />
                             </div>
 
                             <div>
                                 <Label htmlFor="pet_bed_status" className="text-sm font-medium">
                                     Pet Bed Status
                                 </Label>
-                                <Select value={formData.pet_bed_status} onValueChange={(value) => handleInputChange('pet_bed_status', value)}>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select status" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="active">Active</SelectItem>
-                                        <SelectItem value="inactive">Inactive</SelectItem>
-                                        <SelectItem value="pending">Pending</SelectItem>
-                                    </SelectContent>
-                                </Select>
+                                <Input
+                                    id="pet_bed_status"
+                                    value={formData.pet_bed_status}
+                                    onChange={(e) => handleInputChange('pet_bed_status', e.target.value)}
+                                    placeholder="Enter pet bed status"
+                                />
                             </div>
 
                             <div>

@@ -10,7 +10,6 @@ import {
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,
-    getPaginationRowModel,
     useReactTable,
     type CellContext,
     type Header,
@@ -50,7 +49,6 @@ export default function Dashboard({ stores }: DashboardProps) {
     const [globalFilter, setGlobalFilter] = useState('');
     const [debouncedFilter, setDebouncedFilter] = useState('');
     const [selectedView, setSelectedView] = useState<ViewKey>('all');
-    const [pageSize, setPageSize] = useState(50);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const columnHelper = createColumnHelper<Store>();
@@ -339,30 +337,16 @@ export default function Dashboard({ stores }: DashboardProps) {
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         initialState: {
-            pagination: {
-                pageSize: pageSize,
-            },
             columnVisibility: Object.fromEntries(PREDEFINED_VIEWS[selectedView].hiddenColumns.map((col) => [col, false])),
         },
         state: {
             globalFilter: debouncedFilter,
             columnVisibility,
-            pagination: {
-                pageIndex: 0,
-                pageSize: pageSize,
-            },
         },
         onGlobalFilterChange: setDebouncedFilter,
         onColumnVisibilityChange: setColumnVisibility,
-        onPaginationChange: (updater) => {
-            if (typeof updater === 'function') {
-                const newState = updater({ pageIndex: 0, pageSize });
-                setPageSize(newState.pageSize);
-            }
-        },
         globalFilterFn: (row, columnId, filterValue) => {
             const searchTerm = String(filterValue).toLowerCase().trim();
             if (!searchTerm) return true;

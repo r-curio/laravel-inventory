@@ -10,7 +10,6 @@ import {
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,
-    getPaginationRowModel,
     useReactTable,
     type CellContext,
     type Header,
@@ -45,7 +44,6 @@ export default function Dashboard({ items }: DashboardProps) {
     const [data, setData] = useState<Item[]>(items);
     const [globalFilter, setGlobalFilter] = useState('');
     const [debouncedFilter, setDebouncedFilter] = useState('');
-    const [pageSize, setPageSize] = useState(50);
     const [columnVisibility, setColumnVisibility] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -255,14 +253,9 @@ export default function Dashboard({ items }: DashboardProps) {
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         initialState: {
-            pagination: {
-                pageSize: pageSize,
-            },
             columnVisibility: {
-                // Hide less important columns by default for better performance
                 others_1: false,
                 others_2: false,
                 others_3: false,
@@ -272,32 +265,17 @@ export default function Dashboard({ items }: DashboardProps) {
         },
         state: {
             globalFilter: debouncedFilter,
-            pagination: {
-                pageIndex: 0,
-                pageSize: pageSize,
-            },
             columnVisibility,
         },
         onGlobalFilterChange: setDebouncedFilter,
-        onPaginationChange: (updater) => {
-            if (typeof updater === 'function') {
-                const newState = updater({ pageIndex: 0, pageSize });
-                setPageSize(newState.pageSize);
-            }
-        },
         onColumnVisibilityChange: setColumnVisibility,
         globalFilterFn: (row, columnId, filterValue) => {
             const searchTerm = String(filterValue).toLowerCase().trim();
             if (!searchTerm) return true;
-
-            // Get all visible columns for the row
             const visibleColumns = row.getAllCells().map((cell) => cell.column.id);
-
-            // Check if any of the visible columns contain the search term
             return visibleColumns.some((columnId) => {
                 const value = row.getValue(columnId);
                 if (value == null) return false;
-
                 const searchValue = String(value).toLowerCase();
                 return searchValue.includes(searchTerm);
             });

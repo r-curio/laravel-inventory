@@ -31,7 +31,7 @@ class StockLevelController extends Controller
             ->leftJoin('items', 'stock_levels.name', '=', 'items.name')
             ->where('stock_levels.store_name', $storeName)
             ->where('stock_levels.class', $class)
-            ->orderBy('items.m_no')
+            ->orderByRaw('items.m_no IS NULL, items.m_no ASC')
             ->get();
 
         return response()->json($stockLevels);

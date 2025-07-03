@@ -13,7 +13,6 @@ import {
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,
-    getPaginationRowModel,
     useReactTable,
     type CellContext,
     type Header,
@@ -292,12 +291,8 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
         data: filteredData, // Use filtered data instead of original data
         columns,
         getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         initialState: {
-            pagination: {
-                pageSize: data.length,
-            },
             columnVisibility: Object.fromEntries(PREDEFINED_VIEWS[selectedView].hiddenColumns.map((col) => [col, false])),
         },
         state: {
@@ -307,15 +302,12 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
         globalFilterFn: (row, columnId, filterValue) => {
             const searchTerm = String(filterValue).toLowerCase().trim();
             if (!searchTerm) return true;
-
             // Get all visible columns for the row
             const visibleColumns = row.getAllCells().map((cell) => cell.column.id);
-
             // Check if any of the visible columns contain the search term
             return visibleColumns.some((columnId) => {
                 const value = row.getValue(columnId);
                 if (value == null) return false;
-
                 const searchValue = String(value).toLowerCase();
                 return searchValue.includes(searchTerm);
             });
