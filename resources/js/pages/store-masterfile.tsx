@@ -579,12 +579,10 @@ export default function Dashboard({ stores }: DashboardProps) {
                                                 <th
                                                     key={header.id}
                                                     className={`border-b px-4 py-2 text-left font-medium whitespace-normal ${
-                                                        header.column.id === 'name' ? 'sticky left-0 z-50 bg-white min-w-[200px]' : 'min-w-[150px] max-w-[250px]'
+                                                            header.column.id === 'name' ? 'sticky left-0 z-50 bg-white min-w-[200px]' : 'min-w-[200px]'
                                                     } sticky top-0 z-40 bg-white`}
                                                     style={{
-                                                        width: header.column.id === 'name' ? '200px' : 'auto',
-                                                        minWidth: header.column.id === 'name' ? '200px' : '150px',
-                                                        maxWidth: header.column.id === 'name' ? '200px' : '250px',
+                                                        minWidth: header.column.id === 'name' ? '200px' : '200px',
                                                     }}
                                                 >
                                                     {flexRender(header.column.columnDef.header, header.getContext())}
@@ -600,12 +598,10 @@ export default function Dashboard({ stores }: DashboardProps) {
                                                 <td
                                                     key={cell.id}
                                                     className={`px-4 py-2 whitespace-normal ${
-                                                        cell.column.id === 'name' ? 'sticky left-0 z-30 bg-white min-w-[200px]' : 'min-w-[150px] max-w-[150px]'
+                                                        cell.column.id === 'name' ? 'sticky left-0 z-30 bg-white min-w-[200px]' : 'min-w-[200px]'
                                                     }`}
                                                     style={{
-                                                        width: cell.column.id === 'name' ? '200px' : 'auto',
-                                                        minWidth: cell.column.id === 'name' ? '200px' : '150px',
-                                                        maxWidth: cell.column.id === 'name' ? '200px' : '150px',
+                                                        minWidth: cell.column.id === 'name' ? '200px' : '200px',
                                                     }}
                                                 >
                                                     <div className="flex min-h-[2.5rem] items-center">

@@ -489,8 +489,8 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
                                             {headerGroup.headers.map((header: Header<Diser, unknown>, index: number) => (
                                                 <th
                                                     key={header.id}
-                                                    className={`border-b px-4 py-2 text-left font-medium whitespace-normal ${
-                                                        index === 0 ? 'sticky left-0 z-10 bg-white shadow-sm' : ''
+                                                    className={`border-b px-4 py-2 text-left font-medium whitespace-normal bg-white sticky top-0 z-20 ${
+                                                        index === 0 ? 'sticky left-0 z-30 bg-white shadow-sm' : ''
                                                     }`}
                                                 >
                                                     {flexRender(header.column.columnDef.header, header.getContext())}
@@ -509,7 +509,7 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
                                                         index === 0 ? 'sticky left-0 z-10 bg-white shadow-sm' : ''
                                                     }`}
                                                 >
-                                                    <div className="flex min-h-[2.5rem] max-w-fit min-w-[150px] items-center">
+                                                    <div className="flex min-h-[2.5rem] max-w-fit min-w-[200px] items-center">
                                                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                                     </div>
                                                 </td>

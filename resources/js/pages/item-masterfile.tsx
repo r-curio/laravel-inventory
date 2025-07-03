@@ -54,8 +54,9 @@ export default function Dashboard({ items }: DashboardProps) {
     const batchUpdateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const [sorting, setSorting] = useState<SortingState>([
-        { id: 'name', desc: false },
+        { id: 'co', desc: false },
         { id: 'm_no', desc: false },
+        { id: 'name', desc: false },
     ]);
 
     // Debounced search effect
@@ -196,27 +197,29 @@ export default function Dashboard({ items }: DashboardProps) {
             header: 'SKU',
             cell: EditableCell,
         }),
-        columnHelper.accessor('m_no', {
-            header: ({ column }) => (
-                <div className="flex cursor-pointer items-center" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-                    M No
-                    {column.getIsSorted() === 'asc' ? ' ↑' : column.getIsSorted() === 'desc' ? ' ↓' : ''}
-                </div>
-            ),
-            cell: EditableCell,
-            enableSorting: true,
-            sortingFn: (rowA, rowB, columnId) => {
-                // Sort as numbers if possible
-                const a = Number(rowA.getValue(columnId));
-                const b = Number(rowB.getValue(columnId));
-                if (!isNaN(a) && !isNaN(b)) return a - b;
-                // Fallback to string comparison
-                return String(rowA.getValue(columnId)).localeCompare(String(rowB.getValue(columnId)));
-            },
-        }),
         columnHelper.accessor('co', {
             header: 'CO',
             cell: EditableCell,
+            enableSorting: true,
+            sortingFn: (rowA, rowB, columnId) => {
+                const a = String(rowA.getValue(columnId)).toLowerCase();
+                const b = String(rowB.getValue(columnId)).toLowerCase();
+                if (a !== b) return a.localeCompare(b);
+                // If co is the same, sort by m_no
+                const mNoA = Number(rowA.getValue('m_no'));
+                const mNoB = Number(rowB.getValue('m_no'));
+                if (!isNaN(mNoA) && !isNaN(mNoB)) {
+                    if (mNoA !== mNoB) return mNoA - mNoB;
+                } else {
+                    const strA = String(rowA.getValue('m_no'));
+                    const strB = String(rowB.getValue('m_no'));
+                    if (strA !== strB) return strA.localeCompare(strB);
+                }
+                // If m_no is also the same, sort by name
+                const nameA = String(rowA.getValue('name')).toLowerCase();
+                const nameB = String(rowB.getValue('name')).toLowerCase();
+                return nameA.localeCompare(nameB);
+            },
         }),
         columnHelper.accessor('barcode_name', {
             header: 'Barcode Name',
@@ -262,6 +265,36 @@ export default function Dashboard({ items }: DashboardProps) {
             header: 'Others 3',
             cell: EditableCell,
         }),
+        columnHelper.accessor('m_no', {
+            header: ({ column }) => (
+                <div className="flex cursor-pointer items-center" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                    M No
+                    {column.getIsSorted() === 'asc' ? ' ↑' : column.getIsSorted() === 'desc' ? ' ↓' : ''}
+                </div>
+            ),
+            cell: EditableCell,
+            enableSorting: true,
+            sortingFn: (rowA, rowB, columnId) => {
+                // Sort as numbers if possible
+                const a = Number(rowA.getValue(columnId));
+                const b = Number(rowB.getValue(columnId));
+                if (!isNaN(a) && !isNaN(b)) {
+                    if (a !== b) return a - b;
+                    // If m_no is the same, sort by name
+                    const nameA = String(rowA.getValue('name')).toLowerCase();
+                    const nameB = String(rowB.getValue('name')).toLowerCase();
+                    return nameA.localeCompare(nameB);
+                }
+                // Fallback to string comparison
+                const strA = String(rowA.getValue(columnId));
+                const strB = String(rowB.getValue(columnId));
+                if (strA !== strB) return strA.localeCompare(strB);
+                // If m_no is the same, sort by name
+                const nameA = String(rowA.getValue('name')).toLowerCase();
+                const nameB = String(rowB.getValue('name')).toLowerCase();
+                return nameA.localeCompare(nameB);
+            },
+        }),
         columnHelper.display({
             id: 'actions',
             header: 'Actions',
@@ -288,8 +321,9 @@ export default function Dashboard({ items }: DashboardProps) {
                 item_condition: false,
             },
             sorting: [
-                { id: 'name', desc: false },
+                { id: 'co', desc: false },
                 { id: 'm_no', desc: false },
+                { id: 'name', desc: false },
             ],
         },
         state: {
@@ -461,7 +495,7 @@ export default function Dashboard({ items }: DashboardProps) {
                                                 <th
                                                     key={header.id}
                                                     className={`border-b px-4 py-2 text-left font-medium whitespace-normal ${
-                                                        header.column.id === 'name' ? 'sticky left-0 z-50 bg-white min-w-[200px]' : 'min-w-[150px] max-w-[250px]'
+                                                        header.column.id === 'name' ? 'sticky left-0 z-50 bg-white min-w-[200px]' : 'min-w-[150px]'
                                                     } sticky top-0 z-40 bg-white`}
                                                     style={{
                                                         width: header.column.id === 'name' ? '200px' : 'auto',
@@ -482,12 +516,10 @@ export default function Dashboard({ items }: DashboardProps) {
                                                 <td
                                                     key={cell.id}
                                                     className={`px-4 py-2 whitespace-normal ${
-                                                        cell.column.id === 'name' ? 'sticky left-0 z-30 bg-white min-w-[200px]' : 'min-w-[150px] max-w-[150px]'
+                                                        cell.column.id === 'name' ? 'sticky left-0 z-30 bg-white min-w-[200px]' : 'min-w-[200px]'
                                                     }`}
                                                     style={{
-                                                        width: cell.column.id === 'name' ? '200px' : 'auto',
-                                                        minWidth: cell.column.id === 'name' ? '200px' : '150px',
-                                                        maxWidth: cell.column.id === 'name' ? '200px' : '150px',
+                                                        minWidth: cell.column.id === 'name' ? '200px' : '200px',
                                                     }}
                                                 >
                                                     <div className="flex min-h-[2.5rem] items-center">
