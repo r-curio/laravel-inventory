@@ -46,6 +46,8 @@ export default function StockLevelPage({ uniqueCombinations }: StockLevelProps) 
     const pendingUpdatesRef = useRef<Map<string, PendingUpdate>>(new Map());
     const batchUpdateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const [newStockLevel, setNewStockLevel] = useState({ name: '', order: '' });
+    const [isAdding, setIsAdding] = useState(false);
 
     // Debounced search effect
     useEffect(() => {
@@ -145,7 +147,8 @@ export default function StockLevelPage({ uniqueCombinations }: StockLevelProps) 
             const response = await axios.get('/stock-level/data', {
                 params: {
                     store_name: combination.store_name,
-                    class: combination.class
+                    class: combination.class,
+                    co: combination.co
                 }
             });
             setStockLevels(response.data);
@@ -219,6 +222,30 @@ export default function StockLevelPage({ uniqueCombinations }: StockLevelProps) 
         },
     });
 
+    const handleAddStockLevel = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!selectedCombination) return;
+        setIsAdding(true);
+        setError(null);
+        try {
+            const response = await axios.post('/stock-level', {
+                store_name: selectedCombination.store_name,
+                class: selectedCombination.class,
+                co: (selectedCombination.co || ''),
+                name: newStockLevel.name,
+                order: newStockLevel.order,
+            });
+            setStockLevels((prev) => [...prev, response.data]);
+            setNewStockLevel({ name: '', order: '' });
+            toast.success('Stock level added');
+        } catch (error) {
+            setError('Failed to add stock level');
+            toast.error('Failed to add stock level');
+        } finally {
+            setIsAdding(false);
+        }
+    };
+
     // Show loading or error states
     if (error) {
         return (
@@ -273,6 +300,10 @@ export default function StockLevelPage({ uniqueCombinations }: StockLevelProps) 
                                             <span className="text-sm">{combination.class}</span>
                                         </div>
                                     </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-sm font-medium text-gray-600">CO:</span>
+                                        <span className="text-sm">{combination.co}</span>
+                                    </div>
                                 </CardContent>
                             </Card>
                         ))}
@@ -285,6 +316,32 @@ export default function StockLevelPage({ uniqueCombinations }: StockLevelProps) 
                                 {selectedCombination.store_name} - Class: {selectedCombination.class}
                             </h2>
                         </div>
+
+                        {/* Add Stock Level Form */}
+                        <form onSubmit={handleAddStockLevel} className="mb-4 flex gap-2 items-end">
+                            <div>
+                                <label className="block text-sm font-medium">Name</label>
+                                <Input
+                                    value={newStockLevel.name}
+                                    onChange={e => setNewStockLevel(s => ({ ...s, name: e.target.value }))}
+                                    placeholder="Item name"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium">Order</label>
+                                <Input
+                                    value={newStockLevel.order}
+                                    onChange={e => setNewStockLevel(s => ({ ...s, order: e.target.value }))}
+                                    placeholder="Order"
+                                    required
+                                    type="number"
+                                />
+                            </div>
+                            <Button type="submit" disabled={isAdding || !newStockLevel.name || !newStockLevel.order}>
+                                {isAdding ? 'Adding...' : 'Add Stock Level'}
+                            </Button>
+                        </form>
 
                         <div className="mb-4 flex items-center gap-2">
                             <div className="relative max-w-sm flex-1">

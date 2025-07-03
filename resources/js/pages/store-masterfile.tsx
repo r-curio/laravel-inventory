@@ -15,11 +15,13 @@ import {
     type Header,
     type HeaderGroup,
     type Row,
+    getSortedRowModel,
+    type SortingState,
 } from '@tanstack/react-table';
 import axios from 'axios';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { FileDown, Search, Settings2, Trash2, Eye } from 'lucide-react';
+import { FileDown, Search, Settings2, Trash2, Eye, ChevronUp, ChevronDown } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState, useMemo } from 'react';
 import { toast } from 'sonner';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -55,6 +57,11 @@ export default function Dashboard({ stores }: DashboardProps) {
     const pendingUpdatesRef = useRef<Map<string, PendingUpdate>>(new Map());
     const batchUpdateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    
+    // Initialize sorting state with name column sorted ascending
+    const [sorting, setSorting] = useState<SortingState>([
+        { id: 'name', desc: false }
+    ]);
     
     // Add columnVisibility state
     const [columnVisibility, setColumnVisibility] = useState(() =>
@@ -188,8 +195,29 @@ export default function Dashboard({ stores }: DashboardProps) {
     // Memoized columns to prevent unnecessary re-renders
     const columns = useMemo(() => [
         columnHelper.accessor('name', {
-            header: 'Store Name',
+            header: ({ column }) => (
+                <div 
+                    className="flex cursor-pointer items-center gap-1 select-none" 
+                    onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                >
+                    <span>Store Name</span>
+                    <div className="flex flex-col">
+                        {column.getIsSorted() === 'asc' ? (
+                            <ChevronUp className="h-4 w-4" />
+                        ) : column.getIsSorted() === 'desc' ? (
+                            <ChevronDown className="h-4 w-4" />
+                        ) : (
+                            <div className="h-4 w-4 opacity-50">
+                                <ChevronUp className="h-3 w-3" />
+                                <ChevronDown className="h-3 w-3 -mt-1" />
+                            </div>
+                        )}
+                    </div>
+                </div>
+            ),
             cell: (info) => info.getValue(),
+            enableSorting: true,
+            sortingFn: 'alphanumeric',
             meta: {
                 className: 'sticky left-0 z-10 bg-white',
             },
@@ -334,19 +362,40 @@ export default function Dashboard({ stores }: DashboardProps) {
     ], [columnHelper, EditableCell, handleDelete]);
 
     const table = useReactTable({
-        data,
+        data, // Use original data, not sortedData
         columns,
         getCoreRowModel: getCoreRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
+        getSortedRowModel: getSortedRowModel(),
         initialState: {
             columnVisibility: Object.fromEntries(PREDEFINED_VIEWS[selectedView].hiddenColumns.map((col) => [col, false])),
+            sorting: [{ id: 'name', desc: false }], // Set initial sorting here too
         },
         state: {
             globalFilter: debouncedFilter,
             columnVisibility,
+            sorting,
         },
+        onSortingChange: setSorting,
         onGlobalFilterChange: setDebouncedFilter,
         onColumnVisibilityChange: setColumnVisibility,
+        // Enable sorting
+        enableSorting: true,
+        // Custom sorting functions can be defined here if needed
+        sortingFns: {
+            // Example: custom sorting for name field that handles null values
+            nameSort: (rowA, rowB, columnId) => {
+                const a = rowA.getValue(columnId) as string;
+                const b = rowB.getValue(columnId) as string;
+                
+                // Handle null/undefined values
+                if (!a && !b) return 0;
+                if (!a) return 1;
+                if (!b) return -1;
+                
+                return a.localeCompare(b);
+            },
+        },
         globalFilterFn: (row, columnId, filterValue) => {
             const searchTerm = String(filterValue).toLowerCase().trim();
             if (!searchTerm) return true;

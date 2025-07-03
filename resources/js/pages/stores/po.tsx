@@ -78,7 +78,7 @@ type StoreShowProps = {
     storeItems: StoreItem[];
 };
 
-export default function StoreShow({ store, items, storeItems: initialStoreItems }: StoreShowProps) {
+export default function StoreShow({ store, storeItems: initialStoreItems }: StoreShowProps) {
     console.log('Initial Store Items:', initialStoreItems);
 
     const [data, setData] = useState<StoreItem[]>(initialStoreItems);
@@ -104,6 +104,7 @@ export default function StoreShow({ store, items, storeItems: initialStoreItems 
     // Keep dataRef in sync with data state
     useEffect(() => {
         dataRef.current = data;
+        console.log('Store:', store);
     }, [data]);
 
     const processBatchUpdate = useCallback(async () => {
@@ -454,6 +455,7 @@ export default function StoreShow({ store, items, storeItems: initialStoreItems 
                                 class: 'Class',
                                 pullout_status: 'Pullout Status',
                                 dgcage_status: 'Dgcage Status',
+                                pet_bed_status: 'Pet Bed Status',
                                 tshirt_status: 'Tshirt Status',
                                 litter_box_status: 'Litter Box Status',
                                 missing_deliveries: 'Missing Delivery',

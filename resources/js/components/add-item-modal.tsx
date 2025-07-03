@@ -146,6 +146,7 @@ export function AddItemModal({ onItemAdded }: AddItemModalProps) {
                                     value={formData.barcode}
                                     onChange={(e) => handleInputChange('barcode', e.target.value)}
                                     placeholder="Enter barcode"
+                                    required
                                 />
                             </div>
 
@@ -158,6 +159,7 @@ export function AddItemModal({ onItemAdded }: AddItemModalProps) {
                                     value={formData.barcode_name}
                                     onChange={(e) => handleInputChange('barcode_name', e.target.value)}
                                     placeholder="Enter barcode name"
+                                    required
                                 />
                             </div>
 
@@ -170,18 +172,7 @@ export function AddItemModal({ onItemAdded }: AddItemModalProps) {
                                     value={formData.sku}
                                     onChange={(e) => handleInputChange('sku', e.target.value)}
                                     placeholder="Enter SKU"
-                                />
-                            </div>
-
-                            <div>
-                                <Label htmlFor="m_no" className="text-sm font-medium">
-                                    M No
-                                </Label>
-                                <Input
-                                    id="m_no"
-                                    value={formData.m_no}
-                                    onChange={(e) => handleInputChange('m_no', e.target.value)}
-                                    placeholder="Enter M No"
+                                    required
                                 />
                             </div>
 
@@ -194,6 +185,7 @@ export function AddItemModal({ onItemAdded }: AddItemModalProps) {
                                     value={formData.co}
                                     onChange={(e) => handleInputChange('co', e.target.value)}
                                     placeholder="Enter CO"
+                                    required
                                 />
                             </div>
                         </div>

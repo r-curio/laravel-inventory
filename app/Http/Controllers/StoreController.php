@@ -18,7 +18,7 @@ class StoreController extends Controller
      */
     public function index()
 {
-    $stores = Store::all();
+    $stores = Store::orderBy('name')->get();
     $disers = Diser::all()->keyBy('name'); // Index disers by their name
 
     $result = $stores->map(function($store) use ($disers) {
@@ -134,7 +134,6 @@ class StoreController extends Controller
 
         return Inertia::render('stores/po', [
             'store' => $store,
-            'items' => $store->items,
             'storeItems' => $store->items->map(function($item) {
                 return [
                     'id' => $item->pivot->id,
@@ -201,6 +200,10 @@ class StoreController extends Controller
     public function destroy(Store $store)
     {
         $store->delete();
+
+        // delete all store items for the store
+        StoreItem::where('store_id', $store->id)->delete();
+
         return response()->json(['message' => 'Store deleted successfully']);
     }
 

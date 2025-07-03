@@ -12,13 +12,11 @@ import {
     getCoreRowModel,
     getFilteredRowModel,
     getPaginationRowModel,
-    getSortedRowModel,
     useReactTable,
     type CellContext,
     type Header,
     type HeaderGroup,
     type Row,
-    type SortingState,
 } from '@tanstack/react-table';
 import axios from 'axios';
 import { Save, Search, Settings2, Trash2 } from 'lucide-react';
@@ -39,12 +37,6 @@ export default function BarcodeShow({ barcodes: initialBarcodes }: BarcodeShowPr
 
     const [data, setData] = useState<Barcode[]>(initialBarcodes);
     const [globalFilter, setGlobalFilter] = useState('');
-    const [sorting, setSorting] = useState<SortingState>([
-        {
-            id: 'name',
-            desc: false,
-        },
-    ]);
     const [pagination, setPagination] = useState({
         pageIndex: 0,
         pageSize: 100,
@@ -334,14 +326,8 @@ export default function BarcodeShow({ barcodes: initialBarcodes }: BarcodeShowPr
 
     const columns = [
         columnHelper.accessor('name', {
-            header: ({ column }) => (
-                <div className="flex cursor-pointer items-center" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-                    NAME
-                    {column.getIsSorted() === 'asc' ? ' ↑' : column.getIsSorted() === 'desc' ? ' ↓' : ''}
-                </div>
-            ),
+            header: 'NAME',
             cell: (info) => info.getValue(),
-            sortingFn: 'alphanumeric',
             meta: {
                 className: 'sticky left-0 bg-white z-10 border-r',
             } as ColumnMeta,
@@ -427,8 +413,6 @@ export default function BarcodeShow({ barcodes: initialBarcodes }: BarcodeShowPr
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
-        getSortedRowModel: getSortedRowModel(),
-        onSortingChange: setSorting,
         onPaginationChange: setPagination,
         onColumnVisibilityChange: (updater) => {
             if (typeof updater === 'function') {
@@ -439,7 +423,6 @@ export default function BarcodeShow({ barcodes: initialBarcodes }: BarcodeShowPr
         },
         state: {
             globalFilter,
-            sorting,
             pagination,
             columnVisibility,
         },

@@ -167,26 +167,26 @@ class BMRController extends Controller
     {
         // Get the processed item IDs from session
         $processedItemIds = session('processed_barcode_items', []);
-
-        // Get the barcodes that were just processed
+    
         $barcodes = collect();
         if (!empty($processedItemIds)) {
+            // Fetch all necessary data and sort directly in the database query
             $barcodes = Barcode::join('items', 'barcodes.item_id', '=', 'items.id')
                 ->select([
                     'barcodes.*',
-                    'items.name as item_name'
+                    'items.name as item_name',
+                    'items.reorder_point',
+                    'items.m_no'
                 ])
                 ->whereIn('barcodes.item_id', $processedItemIds)
-                ->orderBy('barcodes.updated_at', 'desc')
+                ->orderBy('items.m_no', 'asc')      // Sort by m_no ascending
+                ->orderBy('items.name', 'asc')      // Then sort by item_name ascending
                 ->get();
         }
-
-        // get the reorder_point from items table of each barcode
-        $barcodes = $barcodes->map(function ($barcode) {
-            $barcode->reorder_point = Item::find($barcode->item_id)->reorder_point;
-            return $barcode;
-        });
-
+    
+        // The collection is now already sorted correctly and contains all required data.
+        // The previous `map` and `sort` calls are no longer needed.
+    
         return Inertia::render('BMR/Barcode', [
             'barcodes' => $barcodes,
         ]);

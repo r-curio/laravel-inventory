@@ -33,6 +33,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('stock-level', [StockLevelController::class, 'index'])->name('stock-level');
     Route::get('stock-level/data', [StockLevelController::class, 'show'])->name('stock-level.data');
     Route::post('stock-level/batch-update', [StockLevelController::class, 'batchUpdate'])->name('stock-level.batch-update');
+    Route::post('stock-level', [StockLevelController::class, 'store'])->name('stock-level.store');
 
     // Diser Routes - Admin only
     Route::middleware(['admin'])->group(function () {

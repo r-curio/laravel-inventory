@@ -11,7 +11,7 @@ class StockLevelController extends Controller
     public function index()
     {
         // Get unique combinations of store_name and class only
-        $uniqueCombinations = StockLevel::select('store_name', 'class')
+        $uniqueCombinations = StockLevel::select('store_name', 'class', 'co')
             ->distinct()
             ->orderBy('store_name')
             ->orderBy('class')
@@ -46,5 +46,26 @@ class StockLevelController extends Controller
         }
 
         return response()->json(['message' => 'Updated successfully']);
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'store_name' => 'required|string',
+            'class' => 'required|string',
+            'co' => 'required|string',
+            'name' => 'required|string',
+            'order' => 'required|integer',
+        ]);
+
+        $stockLevel = \App\Models\StockLevel::create([
+            'store_name' => $validated['store_name'],
+            'class' => $validated['class'],
+            'co' => $validated['co'],
+            'name' => $validated['name'],
+            'order' => $validated['order'],
+        ]);
+
+        return response()->json($stockLevel);
     }
 } 

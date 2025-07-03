@@ -12,4 +12,5 @@ export interface StockLevel {
 export interface StockLevelCombination {
     store_name: string;
     class: string;
+    co: string;
 } 

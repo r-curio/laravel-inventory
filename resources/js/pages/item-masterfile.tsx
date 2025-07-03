@@ -11,10 +11,12 @@ import {
     getCoreRowModel,
     getFilteredRowModel,
     useReactTable,
+    getSortedRowModel,
     type CellContext,
     type Header,
     type HeaderGroup,
     type Row,
+    type SortingState,
 } from '@tanstack/react-table';
 import axios from 'axios';
 import jsPDF from 'jspdf';
@@ -51,6 +53,10 @@ export default function Dashboard({ items }: DashboardProps) {
     const pendingUpdatesRef = useRef<Map<string, PendingUpdate>>(new Map());
     const batchUpdateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const [sorting, setSorting] = useState<SortingState>([
+        { id: 'name', desc: false },
+        { id: 'm_no', desc: false },
+    ]);
 
     // Debounced search effect
     useEffect(() => {
@@ -172,11 +178,15 @@ export default function Dashboard({ items }: DashboardProps) {
     // Memoized columns to prevent unnecessary re-renders
     const columns = useMemo(() => [
         columnHelper.accessor('name', {
-            header: 'Name',
+            header: ({ column }) => (
+                <div className="flex cursor-pointer items-center" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                    Name
+                    {column.getIsSorted() === 'asc' ? ' ↑' : column.getIsSorted() === 'desc' ? ' ↓' : ''}
+                </div>
+            ),
             cell: (info) => info.getValue(),
-            meta: {
-                className: 'sticky left-0 z-10 bg-white',
-            },
+            enableSorting: true,
+            sortingFn: 'alphanumeric',
         }),
         columnHelper.accessor('barcode', {
             header: 'Barcode',
@@ -187,8 +197,22 @@ export default function Dashboard({ items }: DashboardProps) {
             cell: EditableCell,
         }),
         columnHelper.accessor('m_no', {
-            header: 'M No',
+            header: ({ column }) => (
+                <div className="flex cursor-pointer items-center" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                    M No
+                    {column.getIsSorted() === 'asc' ? ' ↑' : column.getIsSorted() === 'desc' ? ' ↓' : ''}
+                </div>
+            ),
             cell: EditableCell,
+            enableSorting: true,
+            sortingFn: (rowA, rowB, columnId) => {
+                // Sort as numbers if possible
+                const a = Number(rowA.getValue(columnId));
+                const b = Number(rowB.getValue(columnId));
+                if (!isNaN(a) && !isNaN(b)) return a - b;
+                // Fallback to string comparison
+                return String(rowA.getValue(columnId)).localeCompare(String(rowB.getValue(columnId)));
+            },
         }),
         columnHelper.accessor('co', {
             header: 'CO',
@@ -254,6 +278,7 @@ export default function Dashboard({ items }: DashboardProps) {
         columns,
         getCoreRowModel: getCoreRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
+        getSortedRowModel: getSortedRowModel(),
         initialState: {
             columnVisibility: {
                 others_1: false,
@@ -262,12 +287,17 @@ export default function Dashboard({ items }: DashboardProps) {
                 damaged: false,
                 item_condition: false,
             },
+            sorting: [
+                { id: 'name', desc: false },
+                { id: 'm_no', desc: false },
+            ],
         },
         state: {
             globalFilter: debouncedFilter,
             columnVisibility,
+            sorting,
         },
-        onGlobalFilterChange: setDebouncedFilter,
+        onSortingChange: setSorting,
         onColumnVisibilityChange: setColumnVisibility,
         globalFilterFn: (row, columnId, filterValue) => {
             const searchTerm = String(filterValue).toLowerCase().trim();

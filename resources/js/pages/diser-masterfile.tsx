@@ -14,10 +14,12 @@ import {
     getCoreRowModel,
     getFilteredRowModel,
     useReactTable,
+    getSortedRowModel,
     type CellContext,
     type Header,
     type HeaderGroup,
     type Row,
+    type SortingState,
 } from '@tanstack/react-table';
 import axios from 'axios';
 import jsPDF from 'jspdf';
@@ -53,6 +55,9 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
     const [globalFilter, setGlobalFilter] = useState('');
     const [selectedView, setSelectedView] = useState<ViewKey>('all');
     const [hideZeroSales, setHideZeroSales] = useState(false);
+    const [sorting, setSorting] = useState<SortingState>([
+        { id: 'name', desc: false },
+    ]);
     const columnHelper = createColumnHelper<Diser>();
     const pendingUpdatesRef = useRef<Map<string, PendingUpdate>>(new Map());
     const batchUpdateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -187,8 +192,15 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
 
     const columns = [
         columnHelper.accessor('name', {
-            header: 'Name',
+            header: ({ column }) => (
+                <div className="flex cursor-pointer items-center" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                    Name
+                    {column.getIsSorted() === 'asc' ? ' ↑' : column.getIsSorted() === 'desc' ? ' ↓' : ''}
+                </div>
+            ),
             cell: ReadOnlyCell,
+            enableSorting: true,
+            sortingFn: 'alphanumeric',
         }),
         columnHelper.accessor('rsc_re', {
             header: 'RSC RE',
@@ -292,12 +304,18 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
         columns,
         getCoreRowModel: getCoreRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
+        getSortedRowModel: getSortedRowModel(),
         initialState: {
             columnVisibility: Object.fromEntries(PREDEFINED_VIEWS[selectedView].hiddenColumns.map((col) => [col, false])),
+            sorting: [
+                { id: 'name', desc: false },
+            ],
         },
         state: {
             globalFilter,
+            sorting,
         },
+        onSortingChange: setSorting,
         onGlobalFilterChange: setGlobalFilter,
         globalFilterFn: (row, columnId, filterValue) => {
             const searchTerm = String(filterValue).toLowerCase().trim();
@@ -337,6 +355,18 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
         // Get filtered data
         const filteredData = table.getFilteredRowModel().rows.map((row) =>
             visibleColumns.map((column) => {
+                if (column.id === 'total') {
+                    // Compute total as in ComputedTotalCell
+                    const currentFbName = row.getValue('fb_name');
+                    const total = data
+                        .filter((item) => item.fb_name === currentFbName)
+                        .reduce((sum, item) => {
+                            const rate = typeof item.rate === 'number' ? item.rate : parseFloat(item.rate) || 0;
+                            const sales = typeof item.sales === 'number' ? item.sales : parseFloat(item.sales) || 0;
+                            return sum + rate * sales;
+                        }, 0);
+                    return total.toFixed(2);
+                }
                 const value = row.getValue(column.id);
                 return value ? String(value) : '';
             }),

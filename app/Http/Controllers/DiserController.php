@@ -14,7 +14,12 @@ class DiserController extends Controller
      */
     public function index()
     {
-        $disers = Diser::all();
+        $disers = Diser::orderBy('name')->get();
+
+        // remove all disers with name null
+        $disers = $disers->filter(function ($diser) {
+            return $diser->name !== '';
+        });
 
         return Inertia::render('diser-masterfile', [
             'disers' => $disers

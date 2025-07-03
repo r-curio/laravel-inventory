@@ -6,12 +6,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Order;
 use App\Models\Store;
+use App\Models\StoreItem;
 
 class OrderController extends Controller
 {
 
-    public function getNotes(Order $order)
+    public function getNotes(Order $order = null)
     {
+        if (!$order) {
+            return response()->json([
+                'message' => 'Order not found.'
+            ], 404);
+        }
         return response()->json([
             'notes1' => $order->notes_1,
             'notes2' => $order->notes_2
@@ -49,6 +55,21 @@ class OrderController extends Controller
                     'quantity' => $item['final_order']
                 ]);
             }
+
+            // Update all relevant fields to 0 for all related store_items
+            $storeItemIds = collect($request->store_items)->pluck('id');
+            StoreItem::whereIn('id', $storeItemIds)->update([
+                'order' => 0,
+                'inventory' => 0,
+                'dr_6578' => 0,
+                'dr_958' => 0,
+                'pic_53' => 0,
+                'total' => 0,
+                's_divide_2' => 0,
+                's_order_2' => 0,
+                's_order_5' => 0,
+                'final_order' => 0,
+            ]);
 
             Store::where('id', $request->store_id)->update([
                 'is_processed' => true,

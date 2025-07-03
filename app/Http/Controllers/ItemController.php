@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
+use App\Models\Store;
+use App\Models\StoreItem;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
@@ -14,7 +16,7 @@ class ItemController extends Controller
      */
     public function index()
     {
-        $items = Item::all();
+        $items = Item::orderBy('name', 'asc')->orderBy('m_no', 'asc')->get();
         return Inertia::render('item-masterfile', [
             'items' => $items,
         ]);
@@ -26,15 +28,14 @@ class ItemController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'barcode' => 'required|string|max:255',
-            'm_no' => 'required|string|max:255',
-            'sku' => 'required|string|max:255',
+            'barcode' => 'nullable|string|max:255',
+            'sku' => 'nullable|string|max:255',
             'co' => 'required|string|max:255',
             'name' => 'required|string|max:255',
-            'barcode_name' => 'required|string|max:255',
-            'price' => 'required|numeric',
+            'barcode_name' => 'nullable|string|max:255',
+            'price' => 'nullable|numeric',
             'inactive' => 'nullable|string|max:255',
-            'reorder_point' => 'required|numeric',
+            'reorder_point' => 'nullable|numeric',
             'multiples' => 'nullable|string|max:255',
             'damaged' => 'nullable|string|max:255',
             'item_condition' => 'nullable|string|max:255',
@@ -44,7 +45,20 @@ class ItemController extends Controller
             'others_3' => 'nullable|string|max:255',
         ]);
 
+        // get the last m_no for the co
+        $lastMNo = Item::where('co', $validated['co'])->max('m_no');
+        $validated['m_no'] = $lastMNo + 1;
+
         $item = Item::create($validated);
+
+        // create a new store item for each store with matching co
+        $stores = Store::where('co', $validated['co'])->get();
+        foreach ($stores as $store) {
+            StoreItem::create([
+                'store_id' => $store->id,
+                'item_id' => $item->id,
+            ]);
+        }
 
         return response()->json([
             'message' => 'Item created successfully',
