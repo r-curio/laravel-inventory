@@ -334,7 +334,7 @@ export default function StoreShow({ store, items, storeItems: initialStoreItems 
             },
         }),
         columnHelper.accessor('order', {
-            header: 'Order',
+            header: 'ORDER',
             cell: EditableCell,
         }),
         columnHelper.accessor('inventory', {
@@ -342,19 +342,19 @@ export default function StoreShow({ store, items, storeItems: initialStoreItems 
             cell: EditableCell,
         }),
         columnHelper.accessor('dr_6578', {
-            header: 'DR 6578',
+            header: 'DR 1',
             cell: EditableCell,
         }),
         columnHelper.accessor('dr_958', {
-            header: 'DR 958',
+            header: 'DR 2',
             cell: EditableCell,
         }),
         columnHelper.accessor('pic_53', {
-            header: 'PIC 53',
+            header: 'PIC',
             cell: EditableCell,
         }),
         columnHelper.accessor('total', {
-            header: 'Total',
+            header: 'TOTAL',
             cell: EditableCell,
         }),
         columnHelper.accessor('s_divide_2', {
@@ -362,19 +362,19 @@ export default function StoreShow({ store, items, storeItems: initialStoreItems 
             cell: EditableCell,
         }),
         columnHelper.accessor('s_order_2', {
-            header: 'S Order 2',
+            header: 'S ORDER 2',
             cell: EditableCell,
         }),
         columnHelper.accessor('s_order_5', {
-            header: 'S Order 5',
+            header: 'S ORDER 5',
             cell: EditableCell,
         }),
         columnHelper.accessor('final_order', {
-            header: 'Final Order',
+            header: 'FINAL ORDER',
             cell: EditableCell,
         }),
         columnHelper.accessor('item_multiples', {
-            header: 'Multiples',
+            header: 'MULTIPLES',
             cell: EditableCell,
         }),
         columnHelper.display({

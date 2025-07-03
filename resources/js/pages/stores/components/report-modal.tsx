@@ -164,6 +164,8 @@ export default function ReportModal({
                                         poNumber={poNumber}
                                         boxNumber={boxNumber}
                                         storeLocation={storeLocation}
+                                        notes1={notes1}
+                                        notes2={notes2}
                                         storeItems={relevant_data.map((item) => ({
                                             id: item.id,
                                             item_name: item.item_name,

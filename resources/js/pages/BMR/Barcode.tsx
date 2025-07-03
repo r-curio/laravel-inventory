@@ -336,7 +336,7 @@ export default function BarcodeShow({ barcodes: initialBarcodes }: BarcodeShowPr
         columnHelper.accessor('name', {
             header: ({ column }) => (
                 <div className="flex cursor-pointer items-center" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-                    Name
+                    NAME
                     {column.getIsSorted() === 'asc' ? ' ↑' : column.getIsSorted() === 'desc' ? ' ↓' : ''}
                 </div>
             ),
@@ -347,7 +347,7 @@ export default function BarcodeShow({ barcodes: initialBarcodes }: BarcodeShowPr
             } as ColumnMeta,
         }),
         columnHelper.accessor('begbal', {
-            header: 'Beg Bal',
+            header: 'BEG BAL',
             cell: EditableCell,
         }),
         columnHelper.accessor('m30', {
@@ -355,64 +355,64 @@ export default function BarcodeShow({ barcodes: initialBarcodes }: BarcodeShowPr
             cell: EditableCell,
         }),
         columnHelper.accessor('apollo', {
-            header: 'Apollo',
+            header: 'APOLLO',
             cell: EditableCell,
         }),
         columnHelper.accessor('site3', {
-            header: 'Site3',
+            header: 'SITE3',
             cell: EditableCell,
         }),
         columnHelper.accessor('total', {
-            header: 'Total',
+            header: 'TOTAL',
             cell: (info) => info.getValue()?.toString() ?? '-',
         }),
         columnHelper.accessor('actual', {
-            header: 'Actual',
+            header: 'ACTUAL',
             cell: EditableCell,
         }),
         columnHelper.accessor('purchase', {
-            header: 'Purchase',
+            header: 'PURCHASE',
             cell: EditableCell,
         }),
         columnHelper.accessor('returns', {
-            header: 'Returns',
+            header: 'RETURNS',
             cell: EditableCell,
         }),
         columnHelper.accessor('damaged', {
-            header: 'Damaged',
+            header: 'DAMAGED',
             cell: EditableCell,
         }),
         columnHelper.accessor('endbal', {
-            header: 'End Bal',
+            header: 'END BAL',
             cell: (info) => info.getValue()?.toString() ?? '-',
         }),
         columnHelper.accessor('reorder_point', {
-            header: 'Reorder Point',
+            header: 'REORDER POINT',
             cell: (info) => info.getValue()?.toString() ?? '-',
         }),
         columnHelper.accessor('final_total', {
-            header: 'Final Total',
+            header: 'FINAL TOTAL',
             cell: (info) => info.getValue()?.toString() ?? '-',
         }),
         columnHelper.accessor('s_request', {
-            header: 'S Request',
+            header: 'S REQUEST',
             cell: (info) => info.getValue()?.toString() ?? '-',
         }),
         columnHelper.accessor('f_request', {
-            header: 'F Request',
+            header: 'F REQUEST',
             cell: EditableCell,
         }),
         columnHelper.accessor('notes', {
-            header: 'Notes',
+            header: 'NOTES',
             cell: TextCell,
         }),
         columnHelper.accessor('condition', {
-            header: 'Condition',
+            header: 'CONDITION',
             cell: TextCell,
         }),
         columnHelper.display({
             id: 'actions',
-            header: 'Actions',
+            header: 'ACTIONS',
             cell: (props: { row: Row<Barcode> }) => (
                 <Button variant="destructive" size="sm" onClick={() => handleDelete(props.row.index)}>
                     <Trash2 className="h-4 w-4" />

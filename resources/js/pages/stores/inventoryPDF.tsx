@@ -10,6 +10,8 @@ interface InventoryPDFProps {
         final_order: number;
     }>;
     storeLocation?: string | null;
+    notes1?: string;
+    notes2?: string;
 }
 
 const styles = StyleSheet.create({
@@ -108,11 +110,25 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginTop: 5,
     },
+    notesSection: {
+        marginTop: 20,
+        paddingTop: 10,
+        borderTop: 1,
+    },
+    notesTitle: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 5,
+    },
+    notesText: {
+        fontSize: 16,
+        color: '#666',
+    },
 });
 
 const ITEMS_PER_PAGE = 16;
 
-const InventoryPDF = ({ storeName, poNumber, boxNumber, storeItems, storeLocation }: InventoryPDFProps) => {
+const InventoryPDF = ({ storeName, poNumber, boxNumber, storeItems, storeLocation, notes1, notes2 }: InventoryPDFProps) => {
     // Create products object for the PDF
     const products = storeItems.reduce(
         (acc, item) => {
@@ -172,6 +188,15 @@ const InventoryPDF = ({ storeName, poNumber, boxNumber, storeItems, storeLocatio
                             </View>
                         ))}
                     </View>
+
+                    {/* Notes Section */}
+                    {(notes1 || notes2) && (
+                        <View style={styles.notesSection}>
+                            <Text style={styles.notesTitle}>Notes:</Text>
+                            {notes1 && <Text style={styles.notesText}>• {notes1}</Text>}
+                            {notes2 && <Text style={styles.notesText}>• {notes2}</Text>}
+                        </View>
+                    )}
 
                     {/* Only show signature section on the last page */}
                     {pageIndex === productPages.length - 1 && (
