@@ -49,6 +49,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Order Routes
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
+    Route::get('/orders/{order}', [OrderController::class, 'getNotes'])->name('orders.get-notes');
 
     // BMR Routes
     Route::get('/bmr/index', [BMRController::class, 'index'])->name('bmr.index');

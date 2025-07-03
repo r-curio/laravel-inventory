@@ -9,12 +9,23 @@ use App\Models\Store;
 
 class OrderController extends Controller
 {
+
+    public function getNotes(Order $order)
+    {
+        return response()->json([
+            'notes1' => $order->notes_1,
+            'notes2' => $order->notes_2
+        ]);
+    }
+
     public function store(Request $request)
     {
         $request->validate([
             'store_id' => 'required|integer|exists:stores,id',
             'store_name' => 'required|string',
             'box_number' => 'required|integer',
+            'notes1' => 'nullable|string',
+            'notes2' => 'nullable|string',
             'store_items' => 'required|array',
             'store_items.*.id' => 'required|integer|exists:store_item,id',
             'store_items.*.name' => 'required|string',
@@ -27,6 +38,8 @@ class OrderController extends Controller
             $order = Order::createWithPoNumber([
                 'store_name' => $request->store_name,
                 'box_number' => $request->box_number,
+                'notes_1' => $request->notes1,
+                'notes_2' => $request->notes2,
             ]);
 
             // Attach store items to the order with their quantities

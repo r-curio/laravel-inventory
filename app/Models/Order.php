@@ -10,7 +10,9 @@ class Order extends Model
         'po_number',
         'store_name',
         'box_number',
-        'total_orders'
+        'total_orders',
+        'notes_1',
+        'notes_2'
     ];
 
     public function storeItems()

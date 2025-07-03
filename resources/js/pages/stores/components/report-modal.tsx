@@ -52,8 +52,16 @@ export default function ReportModal({
     const [orderCreated, setOrderCreated] = useState<boolean>(false);
     const [poNumber, setPoNumber] = useState<string>('');
     const [boxNumber, setBoxNumber] = useState<number>(0);
+    const [notes1, setNotes1] = useState<string>('');
+    const [notes2, setNotes2] = useState<string>('');
 
     useEffect(() => {
+        const fetchNotes = async () => {
+            const response = await axios.get(`/orders/${storeId}`);
+            setNotes1(response.data.notes1);
+            setNotes2(response.data.notes2);
+        };
+        fetchNotes();
         setRelevantData(data.filter((item) => item.final_order !== null && item.final_order > 0));
     }, [data]);
 
@@ -68,6 +76,8 @@ export default function ReportModal({
                 store_id: storeId,
                 store_name: storeName,
                 box_number: calculatedBoxNumber,
+                notes1: notes1,
+                notes2: notes2,
                 store_items: relevant_data.map((item) => ({
                     id: item.id,
                     name: item.item_name,
@@ -116,6 +126,29 @@ export default function ReportModal({
                             </p>
                         )}
                     </div>
+                    
+                    <div className="flex flex-col gap-2">
+                        <p>Notes 1</p>
+                        <textarea 
+                            value={notes1} 
+                            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setNotes1(e.target.value)} 
+                            placeholder="Enter first set of notes..."
+                            rows={3}
+                            className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        />
+                    </div>
+                    
+                    <div className="flex flex-col gap-2">
+                        <p>Notes 2</p>
+                        <textarea 
+                            value={notes2} 
+                            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setNotes2(e.target.value)} 
+                            placeholder="Enter second set of notes..."
+                            rows={3}
+                            className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        />
+                    </div>
+                    
                     <Button onClick={handleButtonClick} disabled={isLoading}>
                         {isLoading ? 'Creating Order...' : 'Generate Report'}
                     </Button>

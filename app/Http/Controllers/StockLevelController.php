@@ -27,9 +27,11 @@ class StockLevelController extends Controller
         $storeName = $request->query('store_name');
         $class = $request->query('class');
 
-        $stockLevels = StockLevel::where('store_name', $storeName)
-            ->where('class', $class)
-            ->orderBy('name')
+        $stockLevels = StockLevel::select('stock_levels.*', 'items.m_no')
+            ->leftJoin('items', 'stock_levels.name', '=', 'items.name')
+            ->where('stock_levels.store_name', $storeName)
+            ->where('stock_levels.class', $class)
+            ->orderBy('items.m_no')
             ->get();
 
         return response()->json($stockLevels);

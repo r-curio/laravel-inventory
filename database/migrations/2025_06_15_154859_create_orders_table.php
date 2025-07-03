@@ -17,6 +17,8 @@ return new class extends Migration
             $table->integer('po_number');
             $table->string('store_name');
             $table->integer('box_number');
+            $table->string('notes_1')->nullable();
+            $table->string('notes_2')->nullable();
         });
     }
 

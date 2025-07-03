@@ -443,22 +443,37 @@ export default function StoreShow({ store, items, storeItems: initialStoreItems 
                 <div className="mb-2 rounded-lg bg-white p-2 shadow">
                     <h1 className="mb-2 text-2xl font-bold">{store.name}</h1>
                     <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-                        <div>
-                            <p className="text-sm font-medium text-gray-500">CO</p>
-                            <p className="mt-1">{store.co || '-'}</p>
-                        </div>
-                        <div>
-                            <p className="text-sm font-medium text-gray-500">DC</p>
-                            <p className="mt-1">{store.dc || '-'}</p>
-                        </div>
-                        <div>
-                            <p className="text-sm font-medium text-gray-500">Area Size</p>
-                            <p className="mt-1">{store.area_size || '-'}</p>
-                        </div>
-                        <div>
-                            <p className="text-sm font-medium text-gray-500">Class</p>
-                            <p className="mt-1">{store.class || '-'}</p>
-                        </div>
+                        {(() => {
+                            const fieldMappings = {
+                                dc: 'DC',
+                                area_size: 'Area Size',
+                                overstock: 'Overstock',
+                                ratbites: 'Ratbites',
+                                closed: 'Closed',
+                                no_diser: 'No Diser',
+                                class: 'Class',
+                                pullout_status: 'Pullout Status',
+                                dgcage_status: 'Dgcage Status',
+                                tshirt_status: 'Tshirt Status',
+                                litter_box_status: 'Litter Box Status',
+                                missing_deliveries: 'Missing Delivery',
+                                po_or_limit: 'PO or Limit',
+                                items_not_allowed: 'Items Not Allowed',
+                                items_order: 'Items Order'
+                            };
+
+                            return Object.entries(fieldMappings)
+                                .filter(([field]) => {
+                                    const value = store[field as keyof typeof store];
+                                    return value && value.toString().trim() !== '';
+                                })
+                                .map(([field, displayName]) => (
+                                    <div key={field}>
+                                        <p className="text-sm font-medium text-gray-500">{displayName}</p>
+                                        <p className="mt-1">{store[field as keyof typeof store]}</p>
+                                    </div>
+                                ));
+                        })()}
                     </div>
                 </div>
 
