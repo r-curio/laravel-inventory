@@ -102,7 +102,7 @@ class ItemController extends Controller
             'updates' => 'required|array',
             'updates.*.id' => 'required|exists:items,id',
             'updates.*.changes' => 'required|array',
-            'updates.*.changes.*' => 'string|max:255',
+            'updates.*.changes.*' => 'nullable|string|max:255',
         ]);
 
         $updates = collect($validated['updates']);
@@ -111,7 +111,13 @@ class ItemController extends Controller
         try {
             foreach ($updates as $update) {
                 $item = Item::find($update['id']);
-                $item->update($update['changes']);
+                
+                // Convert empty strings to null for consistency
+                $changes = collect($update['changes'])->map(function($value) {
+                    return $value === '' ? null : $value;
+                })->toArray();
+                
+                $item->update($changes);
             }
             DB::commit();
 

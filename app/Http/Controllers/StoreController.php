@@ -192,7 +192,7 @@ class StoreController extends Controller
             'updates' => 'required|array',
             'updates.*.id' => 'required|exists:stores,id',
             'updates.*.changes' => 'required|array',
-            'updates.*.changes.*' => 'string|max:255',
+            'updates.*.changes.*' => 'nullable|string|max:255',
         ]);
 
         $updates = collect($validated['updates']);
@@ -201,7 +201,13 @@ class StoreController extends Controller
         try {
             foreach ($updates as $update) {
                 $store = Store::find($update['id']);
-                $store->update($update['changes']);
+                
+                // Convert empty strings to null for consistency
+                $changes = collect($update['changes'])->map(function($value) {
+                    return $value === '' ? null : $value;
+                })->toArray();
+                
+                $store->update($changes);
             }
             DB::commit();
 

@@ -43,7 +43,7 @@ type Store = {
     pet_bed_status: string | null;
     gondola_dep: string | null;
     date_depo_refund: string | null;
-    missing_delivery: string | null;
+    missing_deliveries: string | null;
     items_on_order: string | null;
     po_or_limit: string | null;
     items_not_allowed: string | null;

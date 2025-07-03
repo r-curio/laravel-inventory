@@ -38,7 +38,7 @@ type DashboardProps = {
 
 type PendingUpdate = {
     id: number;
-    changes: Record<string, string | number>;
+    changes: Record<string, string | number | null>;
 };
 
 export default function Dashboard({ items }: DashboardProps) {
@@ -96,12 +96,15 @@ export default function Dashboard({ items }: DashboardProps) {
 
     const handleCellChange = useCallback(
         (rowIndex: number, columnId: string, value: string | number) => {
+            // Convert empty string to null for database storage
+            const dbValue = value === '' ? null : value;
+            
             setData((old) =>
                 old.map((row, index) => {
                     if (index === rowIndex) {
                         return {
                             ...row,
-                            [columnId]: value,
+                            [columnId]: dbValue,
                         };
                     }
                     return row;
@@ -114,11 +117,11 @@ export default function Dashboard({ items }: DashboardProps) {
             // Update or create pending update
             const existingUpdate = pendingUpdatesRef.current.get(key);
             if (existingUpdate) {
-                existingUpdate.changes[columnId] = value;
+                existingUpdate.changes[columnId] = dbValue;
             } else {
                 pendingUpdatesRef.current.set(key, {
                     id: item.id,
-                    changes: { [columnId]: value },
+                    changes: { [columnId]: dbValue },
                 });
             }
 
@@ -155,7 +158,7 @@ export default function Dashboard({ items }: DashboardProps) {
 
     const EditableCell = useCallback(({ getValue, row, column, table }: CellContext<Item, string | number>) => {
         const initialValue = getValue();
-        const [value, setValue] = useState(initialValue);
+        const [value, setValue] = useState(initialValue?.toString() || '');
 
         const onBlur = useCallback(() => {
             handleCellChange(row.index, column.id, value);
@@ -165,7 +168,7 @@ export default function Dashboard({ items }: DashboardProps) {
             setValue(e.target.value);
         }, []);
 
-        return <Input value={value} onChange={onChange} onBlur={onBlur} />;
+        return <Input value={value || ''} onChange={onChange} onBlur={onBlur} />;
     }, [handleCellChange]);
 
     // Memoized columns to prevent unnecessary re-renders
