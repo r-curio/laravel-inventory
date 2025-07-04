@@ -34,6 +34,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('stock-level/data', [StockLevelController::class, 'show'])->name('stock-level.data');
     Route::post('stock-level/batch-update', [StockLevelController::class, 'batchUpdate'])->name('stock-level.batch-update');
     Route::post('stock-level', [StockLevelController::class, 'store'])->name('stock-level.store');
+    Route::delete('stock-level/{stockLevel}', [StockLevelController::class, 'destroy'])->name('stock-level.destroy');
+    Route::post('stock-level/combination', [StockLevelController::class, 'storeCombination'])->name('stock-level.combination.store');
+    Route::delete('stock-level/combination', [StockLevelController::class, 'destroyCombination'])->name('stock-level.combination.destroy');
 
     // Diser Routes - Admin only
     Route::middleware(['admin'])->group(function () {

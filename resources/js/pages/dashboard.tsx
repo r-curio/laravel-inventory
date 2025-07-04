@@ -48,11 +48,20 @@ function groupStoresByPrefix(stores: Store[]): Record<string, Store[]> {
     );
 }
 
+function sortStoresAlphabetically(stores: Store[]): Store[] {
+    return stores.sort((a, b) => a.name.localeCompare(b.name));
+}
+
 export default function Dashboard({ stores }: DashboardProps) {
     const [search, setSearch] = useState('');
     // Filter stores by search term (case-insensitive)
     const filteredStores = stores.filter((store) => store.name.toLowerCase().includes(search.toLowerCase()));
     const grouped = groupStoresByPrefix(filteredStores);
+    
+    // Sort stores alphabetically within each group
+    Object.keys(grouped).forEach(prefix => {
+        grouped[prefix] = sortStoresAlphabetically(grouped[prefix]);
+    });
 
     // Calculate statistics
     const totalStores = stores.length;

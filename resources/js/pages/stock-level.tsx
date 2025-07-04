@@ -4,6 +4,7 @@ import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { StockLevel, StockLevelCombination } from '@/types/stockLevel';
 import { Head } from '@inertiajs/react';
+import { AddStockLevelCombinationModal } from '@/components/add-stock-level-combination-modal';
 import {
     createColumnHelper,
     flexRender,
@@ -13,7 +14,7 @@ import {
     type CellContext,
 } from '@tanstack/react-table';
 import axios from 'axios';
-import { ArrowLeft, Search, Settings2 } from 'lucide-react';
+import { ArrowLeft, Search, Settings2, Trash2 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState, useMemo } from 'react';
 import { toast } from 'sonner';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -48,6 +49,7 @@ export default function StockLevelPage({ uniqueCombinations }: StockLevelProps) 
     const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const [newStockLevel, setNewStockLevel] = useState({ name: '', order: '' });
     const [isAdding, setIsAdding] = useState(false);
+    const [combinations, setCombinations] = useState<StockLevelCombination[]>(uniqueCombinations);
 
     // Debounced search effect
     useEffect(() => {
@@ -174,6 +176,33 @@ export default function StockLevelPage({ uniqueCombinations }: StockLevelProps) 
         setError(null);
     };
 
+    const handleCombinationAdded = (newCombination: StockLevelCombination) => {
+        setCombinations(prev => [...prev, newCombination]);
+    };
+
+    const handleCombinationDeleted = async (combination: StockLevelCombination) => {
+        try {
+            await axios.delete('/stock-level/combination', {
+                data: {
+                    store_name: combination.store_name,
+                    class: combination.class,
+                    co: combination.co
+                }
+            });
+            
+            setCombinations(prev => prev.filter(c => 
+                !(c.store_name === combination.store_name && 
+                  c.class === combination.class && 
+                  c.co === combination.co)
+            ));
+            
+            toast.success('Combination deleted successfully');
+        } catch (error: any) {
+            console.error('Error deleting combination:', error);
+            toast.error(error.response?.data?.message || 'Failed to delete combination');
+        }
+    };
+
     const EditableCell = useCallback(({ getValue, row, column, table }: CellContext<StockLevel, string>) => {
         const initialValue = getValue();
         const [value, setValue] = useState(initialValue);
@@ -198,6 +227,24 @@ export default function StockLevelPage({ uniqueCombinations }: StockLevelProps) 
         columnHelper.accessor('order', {
             header: 'Order',
             cell: EditableCell,
+        }),
+        columnHelper.display({
+            id: 'actions',
+            header: 'Actions',
+            cell: (info) => (
+                <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-red-600 hover:bg-red-100 hover:text-red-700"
+                    onClick={() => {
+                        if (confirm('Are you sure you want to delete this stock level item?')) {
+                            handleDeleteStockLevel(info.row.original.id);
+                        }
+                    }}
+                >
+                    <Trash2 className="h-4 w-4" />
+                </Button>
+            ),
         }),
     ], [columnHelper, EditableCell]);
 
@@ -246,6 +293,17 @@ export default function StockLevelPage({ uniqueCombinations }: StockLevelProps) 
         }
     };
 
+    const handleDeleteStockLevel = async (stockLevelId: number) => {
+        try {
+            await axios.delete(`/stock-level/${stockLevelId}`);
+            setStockLevels((prev) => prev.filter(item => item.id !== stockLevelId));
+            toast.success('Stock level deleted successfully');
+        } catch (error: any) {
+            console.error('Error deleting stock level:', error);
+            toast.error(error.response?.data?.message || 'Failed to delete stock level');
+        }
+    };
+
     // Show loading or error states
     if (error) {
         return (
@@ -282,32 +340,52 @@ export default function StockLevelPage({ uniqueCombinations }: StockLevelProps) 
                 </div>
 
                 {!selectedCombination ? (
-                    // Show cards for unique combinations
-                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                        {uniqueCombinations.map((combination, index) => (
-                            <Card 
-                                key={`${combination.store_name}-${combination.class}`}
-                                className="cursor-pointer transition-all hover:shadow-lg"
-                                onClick={() => handleCardClick(combination)}
-                            >
-                                <CardHeader className="pb-3">
-                                    <CardTitle className="text-lg">{combination.store_name}</CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="space-y-2">
-                                        <div className="flex justify-between">
-                                            <span className="text-sm font-medium text-gray-600">Class:</span>
-                                            <span className="text-sm">{combination.class}</span>
+                    <>
+                        {/* Show cards for unique combinations */}
+                        <div className="mb-4 flex justify-end">
+                            <AddStockLevelCombinationModal onCombinationAdded={handleCombinationAdded} />
+                        </div>
+                        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                            {combinations.map((combination, index) => (
+                                <Card 
+                                    key={`${combination.store_name}-${combination.class}`}
+                                    className="group relative cursor-pointer transition-all hover:shadow-lg"
+                                    onClick={() => handleCardClick(combination)}
+                                >
+                                    <CardHeader className="pb-3">
+                                        <div className="flex items-center justify-between">
+                                            <CardTitle className="text-lg">{combination.store_name}</CardTitle>
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                className="opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-100 hover:text-red-600"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    if (confirm('Are you sure you want to delete this combination? This will remove all associated stock level items.')) {
+                                                        handleCombinationDeleted(combination);
+                                                    }
+                                                }}
+                                            >
+                                                <Trash2 className="h-4 w-4" />
+                                            </Button>
                                         </div>
-                                    </div>
-                                    <div className="flex justify-between">
-                                        <span className="text-sm font-medium text-gray-600">CO:</span>
-                                        <span className="text-sm">{combination.co}</span>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        ))}
-                    </div>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="space-y-2">
+                                            <div className="flex justify-between">
+                                                <span className="text-sm font-medium text-gray-600">Class:</span>
+                                                <span className="text-sm">{combination.class}</span>
+                                            </div>
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <span className="text-sm font-medium text-gray-600">CO:</span>
+                                            <span className="text-sm">{combination.co}</span>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            ))}
+                        </div>
+                    </>
                 ) : (
                     // Show editable table for selected combination
                     <div>
