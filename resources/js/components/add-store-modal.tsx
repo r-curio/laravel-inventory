@@ -196,17 +196,18 @@ export function AddStoreModal({ onStoreAdded }: AddStoreModalProps) {
 
                             <div>
                                 <Label htmlFor="co" className="text-sm font-medium">
-                                    CO
+                                    CO *
                                 </Label>
                                 <Input
                                     id="co"
                                     value={formData.co}
                                     onChange={(e) => handleInputChange('co', e.target.value)}
                                     placeholder="Enter CO"
+                                    required
                                 />
                             </div>
 
-                            <div>
+                            <div>   
                                 <Label htmlFor="dc" className="text-sm font-medium">
                                     DC
                                 </Label>
