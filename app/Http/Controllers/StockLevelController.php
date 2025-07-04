@@ -110,6 +110,56 @@ class StockLevelController extends Controller
         ]);
     }
 
+    public function updateCombination(Request $request)
+    {
+        $validated = $request->validate([
+            'original_store_name' => 'required|string',
+            'original_class' => 'required|string',
+            'original_co' => 'required|string',
+            'new_store_name' => 'required|string',
+            'new_class' => 'required|string',
+            'new_co' => 'required|string',
+        ]);
+
+        // Check if the new combination already exists (excluding the current one)
+        $existingCombination = StockLevel::where('store_name', $validated['new_store_name'])
+            ->where('class', $validated['new_class'])
+            ->where('co', $validated['new_co'])
+            ->whereNot(function ($query) use ($validated) {
+                $query->where('store_name', $validated['original_store_name'])
+                    ->where('class', $validated['original_class'])
+                    ->where('co', $validated['original_co']);
+            })
+            ->first();
+
+        if ($existingCombination) {
+            return response()->json([
+                'message' => 'This combination already exists'
+            ], 422);
+        }
+
+        // Update all stock levels for this combination
+        $updatedCount = StockLevel::where('store_name', $validated['original_store_name'])
+            ->where('class', $validated['original_class'])
+            ->where('co', $validated['original_co'])
+            ->update([
+                'store_name' => $validated['new_store_name'],
+                'class' => $validated['new_class'],
+                'co' => $validated['new_co'],
+            ]);
+
+        if ($updatedCount === 0) {
+            return response()->json([
+                'message' => 'Combination not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'message' => 'Combination updated successfully',
+            'updated_count' => $updatedCount
+        ]);
+    }
+
     public function destroyCombination(Request $request)
     {
         $validated = $request->validate([

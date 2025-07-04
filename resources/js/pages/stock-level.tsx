@@ -14,7 +14,7 @@ import {
     type CellContext,
 } from '@tanstack/react-table';
 import axios from 'axios';
-import { ArrowLeft, Search, Settings2, Trash2 } from 'lucide-react';
+import { ArrowLeft, Search, Settings2, Trash2, Edit2, Check, X } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState, useMemo } from 'react';
 import { toast } from 'sonner';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -50,6 +50,12 @@ export default function StockLevelPage({ uniqueCombinations }: StockLevelProps) 
     const [newStockLevel, setNewStockLevel] = useState({ name: '', order: '' });
     const [isAdding, setIsAdding] = useState(false);
     const [combinations, setCombinations] = useState<StockLevelCombination[]>(uniqueCombinations);
+    const [editingCombination, setEditingCombination] = useState<string | null>(null);
+    const [editFormData, setEditFormData] = useState({
+        store_name: '',
+        class: '',
+        co: '',
+    });
 
     // Debounced search effect
     useEffect(() => {
@@ -203,6 +209,65 @@ export default function StockLevelPage({ uniqueCombinations }: StockLevelProps) 
         }
     };
 
+    const handleStartEditing = (combination: StockLevelCombination) => {
+        const key = `${combination.store_name}-${combination.class}-${combination.co}`;
+        setEditingCombination(key);
+        setEditFormData({
+            store_name: combination.store_name,
+            class: combination.class,
+            co: combination.co,
+        });
+    };
+
+    const handleCancelEditing = () => {
+        setEditingCombination(null);
+        setEditFormData({
+            store_name: '',
+            class: '',
+            co: '',
+        });
+    };
+
+    const handleSaveEditing = async () => {
+        if (!editingCombination) return;
+
+        try {
+            // Find the original combination
+            const originalCombination = combinations.find(c => 
+                `${c.store_name}-${c.class}-${c.co}` === editingCombination
+            );
+
+            if (!originalCombination) return;
+
+            await axios.put('/stock-level/combination', {
+                original_store_name: originalCombination.store_name,
+                original_class: originalCombination.class,
+                original_co: originalCombination.co,
+                new_store_name: editFormData.store_name,
+                new_class: editFormData.class,
+                new_co: editFormData.co,
+            });
+
+            // Update the combinations list
+            setCombinations(prev => prev.map(c => {
+                if (`${c.store_name}-${c.class}-${c.co}` === editingCombination) {
+                    return {
+                        store_name: editFormData.store_name,
+                        class: editFormData.class,
+                        co: editFormData.co,
+                    };
+                }
+                return c;
+            }));
+
+            toast.success('Combination updated successfully');
+            handleCancelEditing();
+        } catch (error: any) {
+            console.error('Error updating combination:', error);
+            toast.error(error.response?.data?.message || 'Failed to update combination');
+        }
+    };
+
     const EditableCell = useCallback(({ getValue, row, column, table }: CellContext<StockLevel, string>) => {
         const initialValue = getValue();
         const [value, setValue] = useState(initialValue);
@@ -222,7 +287,7 @@ export default function StockLevelPage({ uniqueCombinations }: StockLevelProps) 
     const columns = useMemo(() => [
         columnHelper.accessor('name', {
             header: 'Name',
-            cell: (info) => info.getValue(),
+            cell: EditableCell,
         }),
         columnHelper.accessor('order', {
             header: 'Order',
@@ -346,44 +411,120 @@ export default function StockLevelPage({ uniqueCombinations }: StockLevelProps) 
                             <AddStockLevelCombinationModal onCombinationAdded={handleCombinationAdded} />
                         </div>
                         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                            {combinations.map((combination, index) => (
-                                <Card 
-                                    key={`${combination.store_name}-${combination.class}`}
-                                    className="group relative cursor-pointer transition-all hover:shadow-lg"
-                                    onClick={() => handleCardClick(combination)}
-                                >
-                                    <CardHeader className="pb-3">
-                                        <div className="flex items-center justify-between">
-                                            <CardTitle className="text-lg">{combination.store_name}</CardTitle>
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                className="opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-100 hover:text-red-600"
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    if (confirm('Are you sure you want to delete this combination? This will remove all associated stock level items.')) {
-                                                        handleCombinationDeleted(combination);
-                                                    }
-                                                }}
-                                            >
-                                                <Trash2 className="h-4 w-4" />
-                                            </Button>
-                                        </div>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <div className="space-y-2">
-                                            <div className="flex justify-between">
-                                                <span className="text-sm font-medium text-gray-600">Class:</span>
-                                                <span className="text-sm">{combination.class}</span>
+                            {combinations.map((combination, index) => {
+                                const combinationKey = `${combination.store_name}-${combination.class}-${combination.co}`;
+                                const isEditing = editingCombination === combinationKey;
+                                
+                                return (
+                                    <Card 
+                                        key={combinationKey}
+                                        className="group relative cursor-pointer transition-all hover:shadow-lg"
+                                        onClick={() => !isEditing && handleCardClick(combination)}
+                                    >
+                                        <CardHeader className="pb-3">
+                                            <div className="flex items-center justify-between">
+                                                {isEditing ? (
+                                                    <div className="flex-1 mr-2">
+                                                        <Input
+                                                            value={editFormData.store_name}
+                                                            onChange={(e) => setEditFormData(prev => ({ ...prev, store_name: e.target.value }))}
+                                                            className="text-lg font-semibold"
+                                                            onClick={(e) => e.stopPropagation()}
+                                                        />
+                                                    </div>
+                                                ) : (
+                                                    <CardTitle className="text-lg">{combination.store_name}</CardTitle>
+                                                )}
+                                                <div className="flex items-center gap-1">
+                                                    {isEditing ? (
+                                                        <>
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="sm"
+                                                                className="hover:bg-green-100 hover:text-green-600"
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    handleSaveEditing();
+                                                                }}
+                                                            >
+                                                                <Check className="h-4 w-4" />
+                                                            </Button>
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="sm"
+                                                                className="hover:bg-gray-100 hover:text-gray-600"
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    handleCancelEditing();
+                                                                }}
+                                                            >
+                                                                <X className="h-4 w-4" />
+                                                            </Button>
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="sm"
+                                                                className="opacity-0 group-hover:opacity-100 transition-opacity hover:bg-blue-100 hover:text-blue-600"
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    handleStartEditing(combination);
+                                                                }}
+                                                            >
+                                                                <Edit2 className="h-4 w-4" />
+                                                            </Button>
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="sm"
+                                                                className="opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-100 hover:text-red-600"
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    if (confirm('Are you sure you want to delete this combination? This will remove all associated stock level items.')) {
+                                                                        handleCombinationDeleted(combination);
+                                                                    }
+                                                                }}
+                                                            >
+                                                                <Trash2 className="h-4 w-4" />
+                                                            </Button>
+                                                        </>
+                                                    )}
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div className="flex justify-between">
-                                            <span className="text-sm font-medium text-gray-600">CO:</span>
-                                            <span className="text-sm">{combination.co}</span>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            ))}
+                                        </CardHeader>
+                                        <CardContent>
+                                            <div className="space-y-2">
+                                                <div className="flex justify-between">
+                                                    <span className="text-sm font-medium text-gray-600">Class:</span>
+                                                    {isEditing ? (
+                                                        <Input
+                                                            value={editFormData.class}
+                                                            onChange={(e) => setEditFormData(prev => ({ ...prev, class: e.target.value }))}
+                                                            className="w-20 text-sm"
+                                                            onClick={(e) => e.stopPropagation()}
+                                                        />
+                                                    ) : (
+                                                        <span className="text-sm">{combination.class}</span>
+                                                    )}
+                                                </div>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span className="text-sm font-medium text-gray-600">CO:</span>
+                                                {isEditing ? (
+                                                    <Input
+                                                        value={editFormData.co}
+                                                        onChange={(e) => setEditFormData(prev => ({ ...prev, co: e.target.value }))}
+                                                        className="w-20 text-sm"
+                                                        onClick={(e) => e.stopPropagation()}
+                                                    />
+                                                ) : (
+                                                    <span className="text-sm">{combination.co}</span>
+                                                )}
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                );
+                            })}
                         </div>
                     </>
                 ) : (
