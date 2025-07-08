@@ -310,8 +310,8 @@ export default function Dashboard({ stores }: DashboardProps) {
             header: 'Missing Delivery',
             cell: EditableCell,
         }),
-        columnHelper.accessor('items_on_order', {
-            header: 'Items On Order',
+        columnHelper.accessor('items_overstock', {
+            header: 'Items Overstock',
             cell: EditableCell,
         }),
         columnHelper.accessor('po_or_limit', {
