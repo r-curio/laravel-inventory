@@ -117,14 +117,7 @@ export default function ReportModal({
                             type="number" 
                             value={boxCapacity} 
                             onChange={(e) => setBoxCapacity(Number(e.target.value))} 
-                            disabled={!isAdmin}
-                            className={!isAdmin ? 'opacity-50 cursor-not-allowed' : ''}
                         />
-                        {!isAdmin && (
-                            <p className="text-sm text-muted-foreground">
-                                Only administrators can modify box capacity settings.
-                            </p>
-                        )}
                     </div>
                     
                     <div className="flex flex-col gap-2">

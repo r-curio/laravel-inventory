@@ -115,18 +115,13 @@ export function AddStockLevelCombinationModal({ onCombinationAdded }: AddStockLe
                         <Label htmlFor="co" className="text-sm font-medium">
                             Company *
                         </Label>
-                        <Select value={formData.co} onValueChange={(value) => handleInputChange('co', value)}>
-                            <SelectTrigger>
-                                <SelectValue placeholder="Select company" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {coOptions.map((option) => (
-                                    <SelectItem key={option.value} value={option.value}>
-                                        {option.label}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
+                        <Input
+                            id="co"
+                            value={formData.co}
+                            onChange={(e) => handleInputChange('co', e.target.value)}
+                            placeholder="Enter company"
+                            required
+                        />
                     </div>
 
                     <DialogFooter>

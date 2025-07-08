@@ -15,6 +15,9 @@ Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
 
+Route::delete('stock-level/combination', [StockLevelController::class, 'destroyCombination'])->name('stock-level.combination.destroy');
+
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [IndexController::class, 'index'])->name('dashboard');
 
@@ -37,7 +40,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('stock-level/{stockLevel}', [StockLevelController::class, 'destroy'])->name('stock-level.destroy');
     Route::post('stock-level/combination', [StockLevelController::class, 'storeCombination'])->name('stock-level.combination.store');
     Route::put('stock-level/combination', [StockLevelController::class, 'updateCombination'])->name('stock-level.combination.update');
-    Route::delete('stock-level/combination', [StockLevelController::class, 'destroyCombination'])->name('stock-level.combination.destroy');
 
     // Diser Routes - Admin only
     Route::middleware(['admin'])->group(function () {

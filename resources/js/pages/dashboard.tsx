@@ -22,30 +22,13 @@ type DashboardProps = {
     stores: Store[];
 };
 
-function getPrefix(co: string): string {
-    // Adjust this logic as needed for your prefixes
-    if (co === 'TV') return 'TV-';
-    if (co === 'RSC') return 'RSC-';
-    if (co === 'SM') return 'SM-';
-    if (co === 'HMN') return 'HMN-';
-    if (co === 'GAI') return 'G-';
-    if (co === 'PET') return 'PET-';
-    if (co === 'HX') return 'HX-';
-    if (co === 'WM') return 'WM-';
-    if (co === 'LM') return 'LM-';
-    return 'Other';
-}
-
-function groupStoresByPrefix(stores: Store[]): Record<string, Store[]> {
-    return stores.reduce(
-        (groups, store) => {
-            const prefix = getPrefix(store.co);
-            if (!groups[prefix]) groups[prefix] = [];
-            groups[prefix].push(store);
-            return groups;
-        },
-        {} as Record<string, Store[]>,
-    );
+function groupStoresByCo(stores: Store[]): Record<string, Store[]> {
+    return stores.reduce((groups, store) => {
+        const prefix = store.co || 'Other';
+        if (!groups[prefix]) groups[prefix] = [];
+        groups[prefix].push(store);
+        return groups;
+    }, {} as Record<string, Store[]>);
 }
 
 function sortStoresAlphabetically(stores: Store[]): Store[] {
@@ -56,10 +39,13 @@ export default function Dashboard({ stores }: DashboardProps) {
     const [search, setSearch] = useState('');
     // Filter stores by search term (case-insensitive)
     const filteredStores = stores.filter((store) => store.name.toLowerCase().includes(search.toLowerCase()));
-    const grouped = groupStoresByPrefix(filteredStores);
-    
+    const grouped = groupStoresByCo(filteredStores);
+
+    // Sort prefixes alphabetically
+    const sortedPrefixes = Object.keys(grouped).sort((a, b) => a.localeCompare(b));
+
     // Sort stores alphabetically within each group
-    Object.keys(grouped).forEach(prefix => {
+    sortedPrefixes.forEach(prefix => {
         grouped[prefix] = sortStoresAlphabetically(grouped[prefix]);
     });
 
@@ -128,11 +114,11 @@ export default function Dashboard({ stores }: DashboardProps) {
                     </Link>
                 </div>
 
-                {Object.entries(grouped).map(([prefix, groupStores]) => (
+                {sortedPrefixes.map(prefix => (
                     <div key={prefix} className="mb-8">
                         <h3 className="mb-4 border-b border-gray-200 pb-2 text-lg font-semibold text-gray-800">{prefix}</h3>
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                            {groupStores.map((store) => (
+                            {grouped[prefix].map((store) => (
                                 <Link
                                     key={store.id}
                                     href={`/stores/${store.id}`}

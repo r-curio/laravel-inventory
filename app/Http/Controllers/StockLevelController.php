@@ -6,6 +6,7 @@ use App\Models\Item;
 use App\Models\StockLevel;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Log;
 
 class StockLevelController extends Controller
 {
@@ -112,6 +113,8 @@ class StockLevelController extends Controller
 
     public function updateCombination(Request $request)
     {
+        Log::info($request->all());
+        
         $validated = $request->validate([
             'original_store_name' => 'required|string',
             'original_class' => 'required|string',
@@ -162,16 +165,17 @@ class StockLevelController extends Controller
 
     public function destroyCombination(Request $request)
     {
+
+        
+
         $validated = $request->validate([
             'store_name' => 'required|string',
             'class' => 'required|string',
-            'co' => 'required|string',
         ]);
 
-        // Delete all stock levels for this combination
+        // Delete all stock levels for this combination, matching both co = value and co IS NULL
         $deletedCount = StockLevel::where('store_name', $validated['store_name'])
             ->where('class', $validated['class'])
-            ->where('co', $validated['co'])
             ->delete();
 
         if ($deletedCount === 0) {
@@ -179,7 +183,6 @@ class StockLevelController extends Controller
                 'message' => 'Combination not found'
             ], 404);
         }
-
         return response()->json([
             'message' => 'Combination deleted successfully',
             'deleted_count' => $deletedCount

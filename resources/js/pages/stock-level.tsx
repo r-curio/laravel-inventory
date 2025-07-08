@@ -56,6 +56,8 @@ export default function StockLevelPage({ uniqueCombinations }: StockLevelProps) 
         class: '',
         co: '',
     });
+    const [deletingCombinationKeys, setDeletingCombinationKeys] = useState<string[]>([]);
+    const [deletingRowIds, setDeletingRowIds] = useState<number[]>([]);
 
     // Debounced search effect
     useEffect(() => {
@@ -186,28 +188,6 @@ export default function StockLevelPage({ uniqueCombinations }: StockLevelProps) 
         setCombinations(prev => [...prev, newCombination]);
     };
 
-    const handleCombinationDeleted = async (combination: StockLevelCombination) => {
-        try {
-            await axios.delete('/stock-level/combination', {
-                data: {
-                    store_name: combination.store_name,
-                    class: combination.class,
-                    co: combination.co
-                }
-            });
-            
-            setCombinations(prev => prev.filter(c => 
-                !(c.store_name === combination.store_name && 
-                  c.class === combination.class && 
-                  c.co === combination.co)
-            ));
-            
-            toast.success('Combination deleted successfully');
-        } catch (error: any) {
-            console.error('Error deleting combination:', error);
-            toast.error(error.response?.data?.message || 'Failed to delete combination');
-        }
-    };
 
     const handleStartEditing = (combination: StockLevelCombination) => {
         const key = `${combination.store_name}-${combination.class}-${combination.co}`;
@@ -268,6 +248,27 @@ export default function StockLevelPage({ uniqueCombinations }: StockLevelProps) 
         }
     };
 
+    const handleCombinationDeleted = async (combination: StockLevelCombination) => {
+        const combinationKey = `${combination.store_name}-${combination.class}-${combination.co}`;
+        setDeletingCombinationKeys(prev => [...prev, combinationKey]);
+        try {
+            await axios.delete('/stock-level/combination', {
+                data: {
+                    store_name: combination.store_name,
+                    class: combination.class,
+                    co: combination.co,
+                },
+            });
+            setCombinations(prev => prev.filter(c => `${c.store_name}-${c.class}-${c.co}` !== combinationKey));
+            toast.success('Combination deleted successfully');
+        } catch (error: any) {
+            console.error('Error deleting combination:', error);
+            toast.error(error.response?.data?.message || 'Failed to delete combination');
+        } finally {
+            setDeletingCombinationKeys(prev => prev.filter(key => key !== combinationKey));
+        }
+    };
+
     const EditableCell = useCallback(({ getValue, row, column, table }: CellContext<StockLevel, string>) => {
         const initialValue = getValue();
         const [value, setValue] = useState(initialValue);
@@ -296,22 +297,31 @@ export default function StockLevelPage({ uniqueCombinations }: StockLevelProps) 
         columnHelper.display({
             id: 'actions',
             header: 'Actions',
-            cell: (info) => (
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-red-600 hover:bg-red-100 hover:text-red-700"
-                    onClick={() => {
-                        if (confirm('Are you sure you want to delete this stock level item?')) {
-                            handleDeleteStockLevel(info.row.original.id);
-                        }
-                    }}
-                >
-                    <Trash2 className="h-4 w-4" />
-                </Button>
-            ),
+            cell: (info) => {
+                const rowId = info.row.original.id;
+                const isDeleting = deletingRowIds.includes(rowId);
+                return (
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-red-600 hover:bg-red-100 hover:text-red-700"
+                        onClick={() => {
+                            if (!isDeleting && confirm('Are you sure you want to delete this stock level item?')) {
+                                handleDeleteStockLevel(rowId);
+                            }
+                        }}
+                        disabled={isDeleting}
+                    >
+                        {isDeleting ? (
+                            <span className="flex items-center"><div className="mr-1 h-3 w-3 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>Deleting...</span>
+                        ) : (
+                            <Trash2 className="h-4 w-4" />
+                        )}
+                    </Button>
+                );
+            },
         }),
-    ], [columnHelper, EditableCell]);
+    ], [columnHelper, EditableCell, deletingRowIds]);
 
     const table = useReactTable({
         data: stockLevels,
@@ -359,6 +369,7 @@ export default function StockLevelPage({ uniqueCombinations }: StockLevelProps) 
     };
 
     const handleDeleteStockLevel = async (stockLevelId: number) => {
+        setDeletingRowIds((prev) => [...prev, stockLevelId]);
         try {
             await axios.delete(`/stock-level/${stockLevelId}`);
             setStockLevels((prev) => prev.filter(item => item.id !== stockLevelId));
@@ -366,6 +377,8 @@ export default function StockLevelPage({ uniqueCombinations }: StockLevelProps) 
         } catch (error: any) {
             console.error('Error deleting stock level:', error);
             toast.error(error.response?.data?.message || 'Failed to delete stock level');
+        } finally {
+            setDeletingRowIds((prev) => prev.filter(id => id !== stockLevelId));
         }
     };
 
@@ -414,12 +427,12 @@ export default function StockLevelPage({ uniqueCombinations }: StockLevelProps) 
                             {combinations.map((combination, index) => {
                                 const combinationKey = `${combination.store_name}-${combination.class}-${combination.co}`;
                                 const isEditing = editingCombination === combinationKey;
-                                
+                                const isDeleting = deletingCombinationKeys.includes(combinationKey);
                                 return (
                                     <Card 
                                         key={combinationKey}
                                         className="group relative cursor-pointer transition-all hover:shadow-lg"
-                                        onClick={() => !isEditing && handleCardClick(combination)}
+                                        onClick={() => !isEditing && !isDeleting && handleCardClick(combination)}
                                     >
                                         <CardHeader className="pb-3">
                                             <div className="flex items-center justify-between">
@@ -471,6 +484,7 @@ export default function StockLevelPage({ uniqueCombinations }: StockLevelProps) 
                                                                     e.stopPropagation();
                                                                     handleStartEditing(combination);
                                                                 }}
+                                                                disabled={isDeleting}
                                                             >
                                                                 <Edit2 className="h-4 w-4" />
                                                             </Button>
@@ -480,12 +494,17 @@ export default function StockLevelPage({ uniqueCombinations }: StockLevelProps) 
                                                                 className="opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-100 hover:text-red-600"
                                                                 onClick={(e) => {
                                                                     e.stopPropagation();
-                                                                    if (confirm('Are you sure you want to delete this combination? This will remove all associated stock level items.')) {
+                                                                    if (!isDeleting && confirm('Are you sure you want to delete this combination? This will remove all associated stock level items.')) {
                                                                         handleCombinationDeleted(combination);
                                                                     }
                                                                 }}
+                                                                disabled={isDeleting}
                                                             >
-                                                                <Trash2 className="h-4 w-4" />
+                                                                {isDeleting ? (
+                                                                    <span className="flex items-center"><div className="mr-1 h-3 w-3 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>Deleting...</span>
+                                                                ) : (
+                                                                    <Trash2 className="h-4 w-4" />
+                                                                )}
                                                             </Button>
                                                         </>
                                                     )}

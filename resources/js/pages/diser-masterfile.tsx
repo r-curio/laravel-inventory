@@ -53,28 +53,56 @@ type PendingUpdate = {
 export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
     const [data, setData] = useState<Diser[]>(disers);
     const [globalFilter, setGlobalFilter] = useState('');
+    const [debouncedFilter, setDebouncedFilter] = useState('');
     const [selectedView, setSelectedView] = useState<ViewKey>('all');
     const [hideZeroSales, setHideZeroSales] = useState(false);
     const [sorting, setSorting] = useState<SortingState>([
         { id: 'name', desc: false },
     ]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const columnHelper = createColumnHelper<Diser>();
     const pendingUpdatesRef = useRef<Map<string, PendingUpdate>>(new Map());
     const batchUpdateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    // Add columnVisibility state
+    const [columnVisibility, setColumnVisibility] = useState(() =>
+        Object.fromEntries(PREDEFINED_VIEWS[selectedView].hiddenColumns.map((col) => [col, false]))
+    );
+
+    // Debounced search effect
+    useEffect(() => {
+        if (searchTimeoutRef.current) {
+            clearTimeout(searchTimeoutRef.current);
+        }
+        searchTimeoutRef.current = setTimeout(() => {
+            setDebouncedFilter(globalFilter);
+        }, 300);
+        return () => {
+            if (searchTimeoutRef.current) {
+                clearTimeout(searchTimeoutRef.current);
+            }
+        };
+    }, [globalFilter]);
 
     const processBatchUpdate = useCallback(async () => {
         const updates = Array.from(pendingUpdatesRef.current.values());
         if (updates.length === 0) return;
-
+        setIsLoading(true);
+        setError(null);
         try {
             await axios.post('/disers/batch-update', { updates });
             toast.success(`Successfully updated ${updates.length} changes`);
             pendingUpdatesRef.current.clear();
         } catch (error) {
-            toast.error('Failed to save changes');
+            const errorMessage = 'Failed to save changes';
+            toast.error(errorMessage);
+            setError(errorMessage);
             // Revert all pending changes
             setData(disers);
             pendingUpdatesRef.current.clear();
+        } finally {
+            setIsLoading(false);
         }
     }, [disers]);
 
@@ -91,10 +119,8 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
                     return row;
                 }),
             );
-
             const diser = data[rowIndex];
             const key = `${diser.id}-${columnId}`;
-
             // Update or create pending update
             const existingUpdate = pendingUpdatesRef.current.get(key);
             if (existingUpdate) {
@@ -105,12 +131,10 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
                     changes: { [columnId]: value },
                 });
             }
-
             // Clear existing timeout
             if (batchUpdateTimeoutRef.current) {
                 clearTimeout(batchUpdateTimeoutRef.current);
             }
-
             // Set new timeout
             batchUpdateTimeoutRef.current = setTimeout(processBatchUpdate, 3000);
         },
@@ -126,6 +150,13 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
         };
     }, []);
 
+    // Update columnVisibility when selectedView changes
+    useEffect(() => {
+        setColumnVisibility(
+            Object.fromEntries(PREDEFINED_VIEWS[selectedView].hiddenColumns.map((col) => [col, false]))
+        );
+    }, [selectedView]);
+
     const handleDelete = async (rowIndex: number) => {
         const diser = data[rowIndex];
         try {
@@ -137,47 +168,35 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
         }
     };
 
-    const EditableCell = ({ getValue, row, column, table }: CellContext<Diser, string>) => {
-        const initialValue = getValue();
-        const [value, setValue] = useState(initialValue);
+    // Memoized ReadOnlyCell
+    const ReadOnlyCell = useCallback(({ getValue }: CellContext<Diser, string>) => {
+        const value = getValue();
+        return <div className="px-2 py-1">{value}</div>;
+    }, []);
 
-        const onBlur = () => {
-            handleCellChange(row.index, column.id, value);
-        };
-
-        return <Input value={value} onChange={(e) => setValue(e.target.value)} onBlur={onBlur} />;
-    };
-
-    const NumberCell = ({ getValue, row, column, table }: CellContext<Diser, number>) => {
+    // Memoized NumberCell
+    const NumberCell = useCallback(({ getValue, row, column, table }: CellContext<Diser, number>) => {
         const initialValue = getValue();
         const [value, setValue] = useState(initialValue?.toString() || '');
-
-        const onBlur = () => {
+        const onBlur = useCallback(() => {
             // Only allow numbers and decimal points
             const numericValue = value.replace(/[^0-9.]/g, '');
             const numValue = parseFloat(numericValue) || 0;
             handleCellChange(row.index, column.id, numValue.toString());
-        };
-
-        const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        }, [row.index, column.id, value]);
+        const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
             const inputValue = e.target.value;
             // Allow typing numbers, decimal points, and backspace
             if (inputValue === '' || /^[0-9]*\.?[0-9]*$/.test(inputValue)) {
                 setValue(inputValue);
             }
-        };
-
+        }, []);
         return <Input type="number" step="0.01" min="0" value={value} onChange={handleChange} onBlur={onBlur} className="text-right" />;
-    };
+    }, [handleCellChange]);
 
-    const ReadOnlyCell = ({ getValue }: CellContext<Diser, string>) => {
-        const value = getValue();
-        return <div className="px-2 py-1">{value}</div>;
-    };
-
-    const ComputedTotalCell = ({ row }: { row: Row<Diser> }) => {
+    // Memoized ComputedTotalCell
+    const ComputedTotalCell = useCallback(({ row }: { row: Row<Diser> }) => {
         const currentFbName = row.getValue('fb_name') as string;
-
         // Calculate total for all rows with the same fb_name
         const total = data
             .filter((item) => item.fb_name === currentFbName)
@@ -186,11 +205,24 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
                 const sales = typeof item.sales === 'number' ? item.sales : parseFloat(item.sales) || 0;
                 return sum + rate * sales;
             }, 0);
-
         return <div className="px-2 py-1 text-right font-medium">{total.toFixed(2)}</div>;
-    };
+    }, [data]);
 
-    const columns = [
+    // Memoized EditableCell
+    const EditableCell = useCallback(({ getValue, row, column, table }: CellContext<Diser, string>) => {
+        const initialValue = getValue();
+        const [value, setValue] = useState(initialValue);
+        const onBlur = useCallback(() => {
+            handleCellChange(row.index, column.id, value);
+        }, [row.index, column.id, value]);
+        const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+            setValue(e.target.value);
+        }, []);
+        return <Input value={value} onChange={onChange} onBlur={onBlur} />;
+    }, [handleCellChange]);
+
+    // Memoized columns
+    const columns = useMemo(() => [
         columnHelper.accessor('name', {
             header: ({ column }) => (
                 <div className="flex cursor-pointer items-center" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
@@ -264,12 +296,11 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
                 </Button>
             ),
         }),
-    ];
+    ], [columnHelper, EditableCell, handleDelete, ReadOnlyCell, NumberCell, ComputedTotalCell]);
 
     // Apply zero sales filter using a custom filter function
     const filteredData = useMemo(() => {
         if (!hideZeroSales) return data;
-
         return data.filter((item) => {
             const sales = typeof item.sales === 'number' ? item.sales : parseFloat(String(item.sales)) || 0;
             return sales > 0;
@@ -281,18 +312,8 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
         setData(disers);
     }, [disers]);
 
-    // Handle view change
     const handleViewChange = (viewKey: string) => {
         setSelectedView(viewKey as ViewKey);
-        const view = PREDEFINED_VIEWS[viewKey as ViewKey];
-
-        // Update column visibility
-        table.getAllColumns().forEach((column) => {
-            if (column.id !== 'actions') {
-                const shouldBeHidden = view.hiddenColumns.includes(column.id);
-                column.toggleVisibility(!shouldBeHidden);
-            }
-        });
     };
 
     const handleDiserAdded = (newDiser: Diser) => {
@@ -300,7 +321,7 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
     };
 
     const table = useReactTable({
-        data: filteredData, // Use filtered data instead of original data
+        data: filteredData,
         columns,
         getCoreRowModel: getCoreRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
@@ -312,11 +333,13 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
             ],
         },
         state: {
-            globalFilter,
+            globalFilter: debouncedFilter,
+            columnVisibility,
             sorting,
         },
         onSortingChange: setSorting,
-        onGlobalFilterChange: setGlobalFilter,
+        onGlobalFilterChange: setDebouncedFilter,
+        onColumnVisibilityChange: setColumnVisibility,
         globalFilterFn: (row, columnId, filterValue) => {
             const searchTerm = String(filterValue).toLowerCase().trim();
             if (!searchTerm) return true;
@@ -403,6 +426,27 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
         doc.save('diser-masterfile.pdf');
     };
 
+    // Show loading or error states
+    if (error) {
+        return (
+            <AppLayout breadcrumbs={breadcrumbs}>
+                <Head title="Diser Masterfile" />
+                <div className="container mx-auto px-2 py-6">
+                    <div className="rounded-md border border-red-200 bg-red-50 p-4">
+                        <p className="text-red-800">Error: {error}</p>
+                        <Button 
+                            onClick={() => setError(null)} 
+                            className="mt-2"
+                            variant="outline"
+                        >
+                            Dismiss
+                        </Button>
+                    </div>
+                </div>
+            </AppLayout>
+        );
+    }
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Diser Masterfile" />
@@ -410,6 +454,12 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
                 <div className="mb-4 flex items-center justify-between">
                     <h1 className="text-2xl font-bold">Diser Masterfile</h1>
                     <div className="flex gap-2">
+                        {isLoading && (
+                            <div className="flex items-center text-sm text-muted-foreground">
+                                <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+                                Saving...
+                            </div>
+                        )}
                         <Select value={selectedView} onValueChange={handleViewChange}>
                             <SelectTrigger className="w-[180px]">
                                 <Eye className="mr-2 h-4 w-4" />
@@ -438,7 +488,7 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
                                 </Label>
                             </div>
                         </div>
-                        <Button variant="outline" size="sm" onClick={exportToPDF}>
+                        <Button variant="outline" size="sm" onClick={exportToPDF} disabled={isLoading}>
                             <FileDown className="mr-2 h-4 w-4" />
                             Export PDF
                         </Button>
@@ -467,7 +517,6 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
                         <AddDiserModal onDiserAdded={handleDiserAdded} />
                     </div>
                 </div>
-
                 <div className="rounded-md border">
                     <div className="p-4">
                         <div className="mb-4 flex items-center gap-2">
