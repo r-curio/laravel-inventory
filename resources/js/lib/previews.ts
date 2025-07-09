@@ -4,12 +4,6 @@ export const STORE_VIEWS = {
         name: 'All Columns',
         description: 'Show all available columns',
         hiddenColumns: [
-            'diser_fb_name',
-            'diser_company_sv',
-            'diser_hold_stop_allow',
-            'others_2',
-            'others_3',
-            'date',
             'dgcage_comment',
             'tshirt_comment',
             'litter_box_comment',

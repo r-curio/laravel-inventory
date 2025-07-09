@@ -117,6 +117,11 @@ class StoreController extends Controller
                   ->orderBy('store_item.order');
         }]);
 
+        // get the fb name from diser masterfile with the associated store
+        $fbName = Diser::where('name', $store->name)->first()->fb_name;
+
+        $store->fb_name = $fbName;
+
         // Get all the stock levels that match the store's co and class
         $stockLevels = StockLevel::where('co', $store->co)
             ->where('class', $store->class)

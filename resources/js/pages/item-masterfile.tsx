@@ -388,10 +388,11 @@ export default function Dashboard({ items }: DashboardProps) {
                 cellPadding: 1,
             },
             headStyles: {
-                fillColor: [41, 128, 185],
-                textColor: 255,
+                fillColor: [255, 255, 255],
+                textColor: 20,
                 fontSize: 9,
                 fontStyle: 'bold',
+                lineWidth: 0.1,
             },
             alternateRowStyles: {
                 fillColor: [245, 245, 245],

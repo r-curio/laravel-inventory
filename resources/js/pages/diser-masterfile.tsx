@@ -29,6 +29,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { DISER_VIEWS as PREDEFINED_VIEWS } from '@/lib/previews';
 import { AddDiserModal } from '@/components/add-diser-modal';
+import * as XLSX from 'xlsx';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -239,40 +240,40 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
             cell: EditableCell,
         }),
         columnHelper.accessor('fb_name', {
-            header: 'FB Name',
+            header: 'FB NAME',
             cell: EditableCell,
         }),
         columnHelper.accessor('rate', {
-            header: 'Rate',
+            header: 'RATE',
             cell: NumberCell,
         }),
         columnHelper.accessor('sales', {
-            header: 'Sales',
+            header: 'SALES',
             cell: NumberCell,
         }),
         columnHelper.display({
             id: 'total',
-            header: 'Total',
+            header: 'TOTAL',
             cell: ComputedTotalCell,
         }),
         columnHelper.accessor('others_1', {
-            header: 'Others 1',
+            header: 'Others-4',
             cell: EditableCell,
         }),
         columnHelper.accessor('hold_stop_allow', {
-            header: 'Hold Stop Allow',
+            header: 'HOLD STOP ALLOW',
             cell: EditableCell,
         }),
         columnHelper.accessor('gcash_number', {
-            header: 'GCash Number',
+            header: 'GCASH NUMBER',
             cell: EditableCell,
         }),
         columnHelper.accessor('gcash_name', {
-            header: 'GCash Name',
+            header: 'GCASH NAME',
             cell: EditableCell,
         }),
         columnHelper.accessor('sv_only', {
-            header: 'SV Only',
+            header: 'OTHERS-2',
             cell: EditableCell,
         }),
         columnHelper.accessor('company_sv', {
@@ -280,11 +281,11 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
             cell: EditableCell,
         }),
         columnHelper.accessor('others_2', {
-            header: 'Others 2',
+            header: 'OTHERS-6',
             cell: EditableCell,
         }),
         columnHelper.accessor('others_3', {
-            header: 'Others 3',
+            header: 'OTHERS-7',
             cell: EditableCell,
         }),
         columnHelper.display({
@@ -405,10 +406,11 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
                 cellPadding: 1,
             },
             headStyles: {
-                fillColor: [41, 128, 185],
-                textColor: 255,
+                fillColor: [255, 255, 255],
+                textColor: 20,
                 fontSize: 9,
                 fontStyle: 'bold',
+                lineWidth: 0.1,
             },
             alternateRowStyles: {
                 fillColor: [245, 245, 245],
@@ -424,6 +426,42 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
 
         // Save the PDF
         doc.save('diser-masterfile.pdf');
+    };
+
+    const exportToExcel = () => {
+        // Get visible columns (excluding actions)
+        const visibleColumns = table.getAllColumns().filter((column) => column.getIsVisible() && column.id !== 'actions');
+        const headers = visibleColumns.map((column) => column.id.charAt(0).toUpperCase() + column.id.slice(1).replace(/_/g, ' '));
+
+        // Get filtered data
+        const filteredData = table.getFilteredRowModel().rows.map((row) =>
+            Object.fromEntries(
+                visibleColumns.map((column) => [
+                    headers[visibleColumns.indexOf(column)],
+                    column.id === 'total'
+                        ? (() => {
+                            const currentFbName = row.getValue('fb_name');
+                            const total = data
+                                .filter((item) => item.fb_name === currentFbName)
+                                .reduce((sum, item) => {
+                                    const rate = typeof item.rate === 'number' ? item.rate : parseFloat(item.rate) || 0;
+                                    const sales = typeof item.sales === 'number' ? item.sales : parseFloat(item.sales) || 0;
+                                    return sum + rate * sales;
+                                }, 0);
+                            return total.toFixed(2);
+                        })()
+                        : row.getValue(column.id) ?? ''
+                ])
+            )
+        );
+
+        // Create worksheet and workbook
+        const ws = XLSX.utils.json_to_sheet(filteredData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Diser Masterfile');
+
+        // Export to file
+        XLSX.writeFile(wb, 'diser-masterfile.xlsx');
     };
 
     // Show loading or error states
@@ -491,6 +529,10 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
                         <Button variant="outline" size="sm" onClick={exportToPDF} disabled={isLoading}>
                             <FileDown className="mr-2 h-4 w-4" />
                             Export PDF
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={exportToExcel} disabled={isLoading}>
+                            <FileDown className="mr-2 h-4 w-4" />
+                            Export Excel
                         </Button>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>

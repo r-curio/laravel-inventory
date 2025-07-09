@@ -49,6 +49,7 @@ type Store = {
     items_not_allowed: string | null;
     items_order: string | null;
     others: string | null;
+    fb_name: string | null;
 };
 
 type StoreItem = {
@@ -461,7 +462,8 @@ export default function StoreShow({ store, storeItems: initialStoreItems }: Stor
                                 missing_deliveries: 'Missing Delivery',
                                 po_or_limit: 'PO or Limit',
                                 items_not_allowed: 'Items Not Allowed',
-                                items_order: 'Items Order'
+                                items_order: 'Items Order',
+                                fb_name: 'FB Name',
                             };
 
                             return Object.entries(fieldMappings)
@@ -526,9 +528,14 @@ export default function StoreShow({ store, storeItems: initialStoreItems }: Stor
                                             {headerGroup.headers.map((header: Header<StoreItem, unknown>) => (
                                                 <th
                                                     key={header.id}
-                                                    className={`border-b px-4 py-2 text-left font-medium whitespace-normal ${
-                                                        header.column.id === 'name' ? 'sticky left-0 z-10 bg-white' : ''
+                                                    className={`border-b px-4 py-2 text-left font-medium whitespace-normal sticky top-0 z-40 bg-white ${
+                                                        header.column.id === 'item_name' ? 'sticky left-0 z-50 bg-white min-w-[200px]' : 'min-w-[150px]'
                                                     }`}
+                                                    style={{
+                                                        width: header.column.id === 'item_name' ? '200px' : 'auto',
+                                                        minWidth: header.column.id === 'item_name' ? '200px' : '150px',
+                                                        maxWidth: header.column.id === 'item_name' ? '200px' : '250px',
+                                                    }}
                                                 >
                                                     {flexRender(header.column.columnDef.header, header.getContext())}
                                                 </th>

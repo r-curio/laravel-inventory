@@ -46,7 +46,7 @@ export default function ReportModal({
     const { auth } = usePage<SharedData>().props;
     const isAdmin = auth.user?.role === 'admin';
     
-    const [boxCapacity, setBoxCapacity] = useState<number>(255);
+    const [boxCapacity, setBoxCapacity] = useState<number>(290);
     const [relevant_data, setRelevantData] = useState<StoreItem[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [orderCreated, setOrderCreated] = useState<boolean>(false);

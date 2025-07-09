@@ -184,8 +184,8 @@ class BMRController extends Controller
                     'items.m_no'
                 ])
                 ->whereIn('barcodes.item_id', $processedItemIds)
-                ->orderBy('items.m_no', 'asc')      // Sort by m_no ascending
-                ->orderBy('items.name', 'asc')      // Then sort by item_name ascending
+                ->orderByRaw('SUBSTRING_INDEX(items.name, "-", 1) ASC')  // Sort by prefix first
+                ->orderBy('items.m_no', 'asc')      // Then sort by m_no ascending      
                 ->get();
         }
     

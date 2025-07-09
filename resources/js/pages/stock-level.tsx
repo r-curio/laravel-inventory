@@ -607,7 +607,7 @@ export default function StockLevelPage({ uniqueCombinations }: StockLevelProps) 
                                         <span className="ml-2">Loading...</span>
                                     </div>
                                 ) : (
-                                    <div className="overflow-x-auto">
+                                    <div className="overflow-x-auto max-h-[700px] overflow-y-auto">
                                         <table className="min-w-full">
                                             <thead>
                                                 {table.getHeaderGroups().map((headerGroup) => (
@@ -615,7 +615,7 @@ export default function StockLevelPage({ uniqueCombinations }: StockLevelProps) 
                                                         {headerGroup.headers.map((header) => (
                                                             <th
                                                                 key={header.id}
-                                                                className="border-b px-4 py-2 text-left font-medium"
+                                                                className="border-b px-4 py-2 text-left font-medium sticky top-0 z-40 bg-white"
                                                             >
                                                                 {flexRender(header.column.columnDef.header, header.getContext())}
                                                             </th>

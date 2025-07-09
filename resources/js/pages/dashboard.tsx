@@ -25,9 +25,9 @@ type DashboardProps = {
 function groupStoresByCo(stores: Store[]): Record<string, Store[]> {
     return stores.reduce((groups, store) => {
         const prefix = store.co || 'Other';
-        if (!groups[prefix]) groups[prefix] = [];
-        groups[prefix].push(store);
-        return groups;
+            if (!groups[prefix]) groups[prefix] = [];
+            groups[prefix].push(store);
+            return groups;
     }, {} as Record<string, Store[]>);
 }
 
@@ -43,7 +43,7 @@ export default function Dashboard({ stores }: DashboardProps) {
 
     // Sort prefixes alphabetically
     const sortedPrefixes = Object.keys(grouped).sort((a, b) => a.localeCompare(b));
-
+    
     // Sort stores alphabetically within each group
     sortedPrefixes.forEach(prefix => {
         grouped[prefix] = sortStoresAlphabetically(grouped[prefix]);

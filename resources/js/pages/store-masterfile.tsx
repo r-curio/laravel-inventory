@@ -255,7 +255,7 @@ export default function Dashboard({ stores }: DashboardProps) {
             cell: EditableCell,
         }),
         columnHelper.accessor('no_diser', {
-            header: 'No Diser',
+            header: 'LAST DLVR DATE',
             cell: EditableCell,
         }),
         columnHelper.accessor('class', {
@@ -307,7 +307,7 @@ export default function Dashboard({ stores }: DashboardProps) {
             cell: EditableCell,
         }),
         columnHelper.accessor('missing_deliveries', {
-            header: 'Missing Delivery',
+            header: 'TEMP STOP',
             cell: EditableCell,
         }),
         columnHelper.accessor('items_overstock', {
@@ -327,15 +327,15 @@ export default function Dashboard({ stores }: DashboardProps) {
             cell: EditableCell,
         }),
         columnHelper.accessor('others', {
-            header: 'Notes',
+            header: 'OTHERS-1',
             cell: EditableCell,
         }),
         columnHelper.accessor('others_2', {
-            header: 'Notes',
+            header: 'OTHERS-2',
             cell: EditableCell,
         }),
         columnHelper.accessor('others_3', {
-            header: 'Notes',
+            header: 'OTHERS-3',
             cell: EditableCell,
         }),
         columnHelper.accessor('date', {
@@ -343,7 +343,7 @@ export default function Dashboard({ stores }: DashboardProps) {
             cell: EditableCell,
         }),
         columnHelper.accessor('diser_company_sv', {
-            header: 'SV Only',
+            header: 'OTHERS-5',
             cell: (info) => info.getValue(),
         }),
         columnHelper.accessor('diser_hold_stop_allow', {
@@ -457,10 +457,11 @@ export default function Dashboard({ stores }: DashboardProps) {
                 cellPadding: 1,
             },
             headStyles: {
-                fillColor: [41, 128, 185],
-                textColor: 255,
+                fillColor: [255, 255, 255],
+                textColor: 20,
                 fontSize: 9,
                 fontStyle: 'bold',
+                lineWidth: 0.1,
             },
             alternateRowStyles: {
                 fillColor: [245, 245, 245],
