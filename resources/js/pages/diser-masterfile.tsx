@@ -29,7 +29,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { DISER_VIEWS as PREDEFINED_VIEWS } from '@/lib/previews';
 import { AddDiserModal } from '@/components/add-diser-modal';
-import * as XLSX from 'xlsx';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -428,41 +427,6 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
         doc.save('diser-masterfile.pdf');
     };
 
-    const exportToExcel = () => {
-        // Get visible columns (excluding actions)
-        const visibleColumns = table.getAllColumns().filter((column) => column.getIsVisible() && column.id !== 'actions');
-        const headers = visibleColumns.map((column) => column.id.charAt(0).toUpperCase() + column.id.slice(1).replace(/_/g, ' '));
-
-        // Get filtered data
-        const filteredData = table.getFilteredRowModel().rows.map((row) =>
-            Object.fromEntries(
-                visibleColumns.map((column) => [
-                    headers[visibleColumns.indexOf(column)],
-                    column.id === 'total'
-                        ? (() => {
-                            const currentFbName = row.getValue('fb_name');
-                            const total = data
-                                .filter((item) => item.fb_name === currentFbName)
-                                .reduce((sum, item) => {
-                                    const rate = typeof item.rate === 'number' ? item.rate : parseFloat(item.rate) || 0;
-                                    const sales = typeof item.sales === 'number' ? item.sales : parseFloat(item.sales) || 0;
-                                    return sum + rate * sales;
-                                }, 0);
-                            return total.toFixed(2);
-                        })()
-                        : row.getValue(column.id) ?? ''
-                ])
-            )
-        );
-
-        // Create worksheet and workbook
-        const ws = XLSX.utils.json_to_sheet(filteredData);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Diser Masterfile');
-
-        // Export to file
-        XLSX.writeFile(wb, 'diser-masterfile.xlsx');
-    };
 
     // Show loading or error states
     if (error) {
@@ -529,10 +493,6 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
                         <Button variant="outline" size="sm" onClick={exportToPDF} disabled={isLoading}>
                             <FileDown className="mr-2 h-4 w-4" />
                             Export PDF
-                        </Button>
-                        <Button variant="outline" size="sm" onClick={exportToExcel} disabled={isLoading}>
-                            <FileDown className="mr-2 h-4 w-4" />
-                            Export Excel
                         </Button>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
