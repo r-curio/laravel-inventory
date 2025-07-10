@@ -287,11 +287,11 @@ export default function StockLevelPage({ uniqueCombinations }: StockLevelProps) 
     // Memoized columns to prevent unnecessary re-renders
     const columns = useMemo(() => [
         columnHelper.accessor('name', {
-            header: 'Name',
+            header: 'NAME',
             cell: EditableCell,
         }),
         columnHelper.accessor('order', {
-            header: 'Order',
+            header: 'ORDER',
             cell: EditableCell,
         }),
         columnHelper.display({

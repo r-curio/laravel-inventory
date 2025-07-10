@@ -200,7 +200,7 @@ export default function Dashboard({ stores }: DashboardProps) {
                     className="flex cursor-pointer items-center gap-1 select-none" 
                     onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
                 >
-                    <span>Store Name</span>
+                    <span>STORE NAME</span>
                     <div className="flex flex-col">
                         {column.getIsSorted() === 'asc' ? (
                             <ChevronUp className="h-4 w-4" />
@@ -223,7 +223,7 @@ export default function Dashboard({ stores }: DashboardProps) {
             },
         }),
         columnHelper.accessor('diser_fb_name', {
-            header: 'FB Name',
+            header: 'FB NAME',
             cell: (info) => info.getValue(),
         }),
         columnHelper.accessor('co', {
@@ -235,23 +235,23 @@ export default function Dashboard({ stores }: DashboardProps) {
             cell: EditableCell,
         }),
         columnHelper.accessor('dr_stamped', {
-            header: 'DR Stamped',
+            header: 'DR STAMPED',
             cell: EditableCell,
         }),
         columnHelper.accessor('area_size', {
-            header: 'Area Size',
+            header: 'AREA SIZE',
             cell: EditableCell,
         }),
         columnHelper.accessor('overstock', {
-            header: 'Overstock',
+            header: 'OVERSTOCK',
             cell: EditableCell,
         }),
         columnHelper.accessor('ratbites', {
-            header: 'Ratbites',
+            header: 'RATBITES',
             cell: EditableCell,
         }),
         columnHelper.accessor('closed', {
-            header: 'Closed',
+            header: 'CLOSED',
             cell: EditableCell,
         }),
         columnHelper.accessor('no_diser', {
@@ -259,51 +259,51 @@ export default function Dashboard({ stores }: DashboardProps) {
             cell: EditableCell,
         }),
         columnHelper.accessor('class', {
-            header: 'Class',
+            header: 'CLASS',
             cell: EditableCell,
         }),
         columnHelper.accessor('pullout_status', {
-            header: 'Pullout Status',
+            header: 'PULLOUT STATUS',
             cell: EditableCell,
         }),
         columnHelper.accessor('dgcage_status', {
-            header: 'Dgcage Status',
+            header: 'DGCAGE STATUS',
             cell: EditableCell,
         }),
         columnHelper.accessor('dgcage_comment', {
-            header: 'Dgcage Comment',
+            header: 'DGCAGE COMMENT',
             cell: EditableCell,
         }),
         columnHelper.accessor('tshirt_status', {
-            header: 'Tshirt Status',
+            header: 'TSHIRT STATUS',
             cell: EditableCell,
         }),
         columnHelper.accessor('tshirt_comment', {
-            header: 'Tshirt Comment',
+            header: 'TSHIRT COMMENT',
             cell: EditableCell,
         }),
         columnHelper.accessor('litter_box_status', {
-            header: 'Litter Box Status',
+            header: 'LITTER BOX STATUS',
             cell: EditableCell,
         }),
         columnHelper.accessor('litter_box_comment', {
-            header: 'Litter Box Comment',
+            header: 'LITTER BOX COMMENT',
             cell: EditableCell,
         }),
         columnHelper.accessor('pet_bed_status', {
-            header: 'Pet Bed Status',
+            header: 'PET BED STATUS',
             cell: EditableCell,
         }),
         columnHelper.accessor('pet_bed_comment', {
-            header: 'Pet Bed Comment',
+            header: 'PET BED COMMENT',
             cell: EditableCell,
         }),
         columnHelper.accessor('gondola_dep', {
-            header: 'Gondola Dep',
+            header: 'GONDOLA DEP',
             cell: EditableCell,
         }),
         columnHelper.accessor('date_depo_refund', {
-            header: 'Date Depo Refund',
+            header: 'DATE DEPO REFUND',
             cell: EditableCell,
         }),
         columnHelper.accessor('missing_deliveries', {
@@ -311,19 +311,19 @@ export default function Dashboard({ stores }: DashboardProps) {
             cell: EditableCell,
         }),
         columnHelper.accessor('items_overstock', {
-            header: 'Items Overstock',
+            header: 'ITEMS OVERSTOCK',
             cell: EditableCell,
         }),
         columnHelper.accessor('po_or_limit', {
-            header: 'PO or Limit',
+            header: 'PO OR LIMIT',
             cell: EditableCell,
         }),
         columnHelper.accessor('items_not_allowed', {
-            header: 'Items Not Allowed',
+            header: 'ITEMS NOT ALLOWED',
             cell: EditableCell,
         }),
         columnHelper.accessor('items_order', {
-            header: 'Items Order',
+            header: 'ITEMS ORDER',
             cell: EditableCell,
         }),
         columnHelper.accessor('others', {
@@ -339,7 +339,7 @@ export default function Dashboard({ stores }: DashboardProps) {
             cell: EditableCell,
         }),
         columnHelper.accessor('date', {
-            header: 'Date',
+            header: 'DATE',
             cell: EditableCell,
         }),
         columnHelper.accessor('diser_company_sv', {
@@ -347,7 +347,7 @@ export default function Dashboard({ stores }: DashboardProps) {
             cell: (info) => info.getValue(),
         }),
         columnHelper.accessor('diser_hold_stop_allow', {
-            header: 'Hold Stop Allow',
+            header: 'HOLD STOP ALLOW',
             cell: (info) => info.getValue(),
         }),
         columnHelper.display({
@@ -436,8 +436,15 @@ export default function Dashboard({ stores }: DashboardProps) {
 
         // Get visible columns and their headers
         const visibleColumns = table.getAllColumns().filter((column) => column.getIsVisible() && column.id !== 'actions');
-
-        const headers = visibleColumns.map((column) => column.id.charAt(0).toUpperCase() + column.id.slice(1).replace(/_/g, ' '));
+        const headerGroup = table.getHeaderGroups()[0];
+        const headers = visibleColumns.map((column) => {
+            const headerObj = headerGroup.headers.find(h => h.column.id === column.id);
+            if (headerObj) {
+                const rendered = flexRender(column.columnDef.header, headerObj.getContext());
+                return typeof rendered === 'string' ? rendered : column.id;
+            }
+            return typeof column.columnDef.header === 'string' ? column.columnDef.header : column.id;
+        }).filter(header => header !== undefined) as string[];
 
         // Get filtered data
         const filteredData = table.getRowModel().rows.map((row) =>
@@ -454,7 +461,7 @@ export default function Dashboard({ stores }: DashboardProps) {
             startY: 30,
             styles: {
                 fontSize: 8,
-                cellPadding: 1,
+                cellPadding: 0.5,
             },
             headStyles: {
                 fillColor: [255, 255, 255],
@@ -463,10 +470,7 @@ export default function Dashboard({ stores }: DashboardProps) {
                 fontStyle: 'bold',
                 lineWidth: 0.1,
             },
-            alternateRowStyles: {
-                fillColor: [245, 245, 245],
-            },
-            margin: { top: 30, left: 1, right: 1, bottom: 10 },
+            margin: { top: 30, left: 0.5, right: 0.5, bottom: 10 },
             theme: 'grid',
             didDrawPage: function (data) {
                 // Add page numbers

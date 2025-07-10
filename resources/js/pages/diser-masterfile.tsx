@@ -226,7 +226,7 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
         columnHelper.accessor('name', {
             header: ({ column }) => (
                 <div className="flex cursor-pointer items-center" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-                    Name
+                    NAME
                     {column.getIsSorted() === 'asc' ? ' ↑' : column.getIsSorted() === 'desc' ? ' ↓' : ''}
                 </div>
             ),
@@ -372,8 +372,15 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
 
         // Get visible columns and their headers
         const visibleColumns = table.getAllColumns().filter((column) => column.getIsVisible() && column.id !== 'actions');
-
-        const headers = visibleColumns.map((column) => column.id.charAt(0).toUpperCase() + column.id.slice(1).replace(/_/g, ' '));
+        const headerGroup = table.getHeaderGroups()[0];
+        const headers = visibleColumns.map((column) => {
+            const headerObj = headerGroup.headers.find(h => h.column.id === column.id);
+            if (headerObj) {
+                const rendered = flexRender(column.columnDef.header, headerObj.getContext());
+                return typeof rendered === 'string' ? rendered : column.id;
+            }
+            return typeof column.columnDef.header === 'string' ? column.columnDef.header : column.id;
+        }).filter(header => header !== undefined) as string[];
 
         // Get filtered data
         const filteredData = table.getFilteredRowModel().rows.map((row) =>
@@ -410,9 +417,6 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
                 fontSize: 9,
                 fontStyle: 'bold',
                 lineWidth: 0.1,
-            },
-            alternateRowStyles: {
-                fillColor: [245, 245, 245],
             },
             margin: { top: 30, left: 1, right: 1, bottom: 10 },
             theme: 'grid',

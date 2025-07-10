@@ -181,7 +181,7 @@ export default function Dashboard({ items }: DashboardProps) {
         columnHelper.accessor('name', {
             header: ({ column }) => (
                 <div className="flex cursor-pointer items-center" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-                    Name
+                    NAME
                     {column.getIsSorted() === 'asc' ? ' ↑' : column.getIsSorted() === 'desc' ? ' ↓' : ''}
                 </div>
             ),
@@ -190,7 +190,7 @@ export default function Dashboard({ items }: DashboardProps) {
             sortingFn: 'alphanumeric',
         }),
         columnHelper.accessor('barcode', {
-            header: 'Barcode',
+            header: 'BARCODE',
             cell: EditableCell,
         }),
         columnHelper.accessor('sku', {
@@ -222,53 +222,53 @@ export default function Dashboard({ items }: DashboardProps) {
             },
         }),
         columnHelper.accessor('barcode_name', {
-            header: 'Barcode Name',
+            header: 'BARCODE NAME',
             cell: EditableCell,
         }),
         columnHelper.accessor('price', {
-            header: 'Price',
+            header: 'PRICE',
             cell: EditableCell,
         }),
         columnHelper.accessor('inactive', {
-            header: 'Inactive',
+            header: 'INACTIVE',
             cell: EditableCell,
         }),
         columnHelper.accessor('reorder_point', {
-            header: 'Reorder Point',
+            header: 'REORDER POINT',
             cell: EditableCell,
         }),
         columnHelper.accessor('multiples', {
-            header: 'Multiples',
+            header: 'MULTIPLES',
             cell: EditableCell,
         }),
         columnHelper.accessor('damaged', {
-            header: 'Damaged',
+            header: 'DAMAGED',
             cell: EditableCell,
         }),
         columnHelper.accessor('item_condition', {
-            header: 'Item Condition',
+            header: 'ITEM CONDITION',
             cell: EditableCell,
         }),
         columnHelper.accessor('category', {
-            header: 'Category',
+            header: 'CATEGORY',
             cell: EditableCell,
         }),
         columnHelper.accessor('others_1', {
-            header: 'Others 1',
+            header: 'OTHERS 1',
             cell: EditableCell,
         }),
         columnHelper.accessor('others_2', {
-            header: 'Others 2',
+            header: 'OTHERS 2',
             cell: EditableCell,
         }),
         columnHelper.accessor('others_3', {
-            header: 'Others 3',
+            header: 'OTHERS 3',
             cell: EditableCell,
         }),
         columnHelper.accessor('m_no', {
             header: ({ column }) => (
                 <div className="flex cursor-pointer items-center" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-                    M No
+                    M NO
                     {column.getIsSorted() === 'asc' ? ' ↑' : column.getIsSorted() === 'desc' ? ' ↓' : ''}
                 </div>
             ),
@@ -367,8 +367,15 @@ export default function Dashboard({ items }: DashboardProps) {
 
         // Get visible columns and their headers
         const visibleColumns = table.getAllColumns().filter((column) => column.getIsVisible() && column.id !== 'actions');
-
-        const headers = visibleColumns.map((column) => column.id.charAt(0).toUpperCase() + column.id.slice(1).replace(/_/g, ' '));
+        const headerGroup = table.getHeaderGroups()[0];
+        const headers = visibleColumns.map((column) => {
+            const headerObj = headerGroup.headers.find(h => h.column.id === column.id);
+            if (headerObj) {
+                const rendered = flexRender(column.columnDef.header, headerObj.getContext());
+                return typeof rendered === 'string' ? rendered : column.id;
+            }
+            return typeof column.columnDef.header === 'string' ? column.columnDef.header : column.id;
+        }).filter(header => header !== undefined) as string[];
 
         // Get filtered data
         const filteredData = table.getRowModel().rows.map((row) =>
@@ -393,9 +400,6 @@ export default function Dashboard({ items }: DashboardProps) {
                 fontSize: 9,
                 fontStyle: 'bold',
                 lineWidth: 0.1,
-            },
-            alternateRowStyles: {
-                fillColor: [245, 245, 245],
             },
             margin: { top: 30, left: 1, right: 1, bottom: 10 },
             theme: 'grid',

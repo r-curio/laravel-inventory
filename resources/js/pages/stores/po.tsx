@@ -321,7 +321,7 @@ export default function StoreShow({ store, storeItems: initialStoreItems }: Stor
         columnHelper.accessor('m_no', {
             header: ({ column }) => (
                 <div className="flex cursor-pointer items-center" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-                    M No
+                    M NO
                     {column.getIsSorted() === 'asc' ? ' ↑' : column.getIsSorted() === 'desc' ? ' ↓' : ''}
                 </div>
             ),
@@ -329,7 +329,7 @@ export default function StoreShow({ store, storeItems: initialStoreItems }: Stor
             sortingFn: 'alphanumeric',
         }),
         columnHelper.accessor('item_name', {
-            header: 'Item Name',
+            header: 'ITEM NAME',
             cell: (info) => info.getValue(),
             meta: {
                 className: 'sticky left-0 z-10 bg-white',
@@ -340,7 +340,7 @@ export default function StoreShow({ store, storeItems: initialStoreItems }: Stor
             cell: EditableCell,
         }),
         columnHelper.accessor('inventory', {
-            header: 'Inventory',
+            header: 'INVENTORY',
             cell: EditableCell,
         }),
         columnHelper.accessor('dr_6578', {

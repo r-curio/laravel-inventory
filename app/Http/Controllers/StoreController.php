@@ -118,7 +118,8 @@ class StoreController extends Controller
         }]);
 
         // get the fb name from diser masterfile with the associated store
-        $fbName = Diser::where('name', $store->name)->first()->fb_name;
+        $diser = Diser::where('name', $store->name)->first();
+        $fbName = $diser ? $diser->fb_name : null;
 
         $store->fb_name = $fbName;
 
