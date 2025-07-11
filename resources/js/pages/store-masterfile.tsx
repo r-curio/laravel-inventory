@@ -343,11 +343,11 @@ export default function Dashboard({ stores }: DashboardProps) {
             cell: EditableCell,
         }),
         columnHelper.accessor('diser_company_sv', {
-            header: 'OTHERS-5',
+            header: 'SV-CON',
             cell: (info) => info.getValue(),
         }),
         columnHelper.accessor('diser_hold_stop_allow', {
-            header: 'HOLD STOP ALLOW',
+            header: 'HOLD STOP ALLOW-CON',
             cell: (info) => info.getValue(),
         }),
         columnHelper.display({
@@ -543,19 +543,36 @@ export default function Dashboard({ stores }: DashboardProps) {
                                     Columns
                                 </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                                {table
-                                    .getAllColumns()
-                                    .filter((column) => column.id !== 'actions')
-                                    .map((column) => (
-                                        <DropdownMenuCheckboxItem
-                                            key={column.id}
-                                            checked={column.getIsVisible()}
-                                            onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                                        >
-                                            {column.id.charAt(0).toUpperCase() + column.id.slice(1).replace(/_/g, ' ')}
-                                        </DropdownMenuCheckboxItem>
-                                    ))}
+                            <DropdownMenuContent align="end" className="max-h-[300px] overflow-y-auto">
+                                {(() => {
+                                    const headerGroup = table.getHeaderGroups()[0];
+                                    return table
+                                        .getAllColumns()
+                                        .filter((column) => column.id !== 'actions')
+                                        .map((column) => {
+                                            let headerText = column.id.charAt(0).toUpperCase() + column.id.slice(1).replace(/_/g, ' ');
+                                            
+                                            if (headerGroup) {
+                                                const headerObj = headerGroup.headers.find(h => h.column.id === column.id);
+                                                if (headerObj) {
+                                                    const rendered = flexRender(column.columnDef.header, headerObj.getContext());
+                                                    if (typeof rendered === 'string') {
+                                                        headerText = rendered;
+                                                    }
+                                                }
+                                            }
+                                            
+                                            return (
+                                                <DropdownMenuCheckboxItem
+                                                    key={column.id}
+                                                    checked={column.getIsVisible()}
+                                                    onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                                                >
+                                                    {headerText}
+                                                </DropdownMenuCheckboxItem>
+                                            );
+                                        });
+                                })()}
                             </DropdownMenuContent>
                         </DropdownMenu>
                         <AddStoreModal onStoreAdded={handleStoreAdded} />

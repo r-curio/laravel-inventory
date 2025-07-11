@@ -459,19 +459,32 @@ export default function Dashboard({ items }: DashboardProps) {
                                     Columns
                                 </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
+                            <DropdownMenuContent align="end" className="max-h-[300px] overflow-y-auto">
                                 {table
                                     .getAllColumns()
                                     .filter((column) => column.id !== 'actions')
-                                    .map((column) => (
-                                        <DropdownMenuCheckboxItem
-                                            key={column.id}
-                                            checked={column.getIsVisible()}
-                                            onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                                        >
-                                            {column.id.charAt(0).toUpperCase() + column.id.slice(1).replace(/_/g, ' ')}
-                                        </DropdownMenuCheckboxItem>
-                                    ))}
+                                    .map((column) => {
+                                        const headerGroup = table.getHeaderGroups()[0];
+                                        const headerObj = headerGroup.headers.find(h => h.column.id === column.id);
+                                        let headerText = column.id;
+                                        
+                                        if (headerObj) {
+                                            const rendered = flexRender(column.columnDef.header, headerObj.getContext());
+                                            headerText = typeof rendered === 'string' ? rendered : column.id;
+                                        } else if (typeof column.columnDef.header === 'string') {
+                                            headerText = column.columnDef.header;
+                                        }
+                                        
+                                        return (
+                                            <DropdownMenuCheckboxItem
+                                                key={column.id}
+                                                checked={column.getIsVisible()}
+                                                onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                                            >
+                                                {headerText}
+                                            </DropdownMenuCheckboxItem>
+                                        );
+                                    })}
                             </DropdownMenuContent>
                         </DropdownMenu>
                         <AddItemModal onItemAdded={handleItemAdded} />

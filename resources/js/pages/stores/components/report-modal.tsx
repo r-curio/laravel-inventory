@@ -66,8 +66,21 @@ export default function ReportModal({
     }, [data]);
 
     const handleButtonClick = async () => {
-        const calculatedTotalOrder = Number(relevant_data.reduce((acc, item) => acc + (item.final_order || 0), 0));
+
+        console.log('All items with final_order > 0:');
+        relevant_data.forEach((item, index) => {
+            console.log(`Item ${index + 1}: ${item.item_name} - final_order: ${item.final_order}`);
+        });
+
+        const calculatedTotalOrder = relevant_data.reduce((acc, item, index) => {
+            const currentValue = parseInt(String(item.final_order || 0), 10);
+            const newAcc = acc + currentValue;
+            console.log(`Step ${index + 1}: ${acc} + ${currentValue} = ${newAcc}`);
+            return newAcc;
+        }, 0);
+        
         const calculatedBoxNumber = Math.ceil(calculatedTotalOrder / boxCapacity);
+        console.log(calculatedBoxNumber);
 
         setIsLoading(true);
 

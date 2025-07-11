@@ -173,6 +173,7 @@ const InventoryPDF = ({ storeName, poNumber, boxNumber, storeItems, storeLocatio
                     </View>
 
                     <View style={styles.table}>
+                        {/* Show table header on every page */}
                         <View style={styles.tableHeader}>
                             <Text style={styles.productColumn}>Product Name</Text>
                             <Text style={styles.quantityColumn}>Quantity</Text>
@@ -189,27 +190,30 @@ const InventoryPDF = ({ storeName, poNumber, boxNumber, storeItems, storeLocatio
                         ))}
                     </View>
 
-                    {/* Notes Section */}
-                    {(notes1 || notes2) && (
-                        <View style={styles.notesSection}>
-                            <Text style={styles.notesTitle}>Notes:</Text>
-                            {notes1 && <Text style={styles.notesText}>• {notes1}</Text>}
-                            {notes2 && <Text style={styles.notesText}>• {notes2}</Text>}
-                        </View>
-                    )}
-
-                    {/* Only show signature section on the last page */}
+                    {/* Only show notes and signature section on the last page */}
                     {pageIndex === productPages.length - 1 && (
-                        <View style={styles.signatureSection}>
-                            <View style={styles.signatureBlock}>
-                                <View style={styles.signatureLine} />
-                                <Text style={styles.signatureLabel}>Encoded by</Text>
+                        <>
+                            {/* Notes Section */}
+                            {(notes1 || notes2) && (
+                                <View style={styles.notesSection}>
+                                    <Text style={styles.notesTitle}>Notes:</Text>
+                                    {notes1 && <Text style={styles.notesText}>• {notes1}</Text>}
+                                    {notes2 && <Text style={styles.notesText}>• {notes2}</Text>}
+                                </View>
+                            )}
+
+                            {/* Signature Section */}
+                            <View style={styles.signatureSection}>
+                                <View style={styles.signatureBlock}>
+                                    <View style={styles.signatureLine} />
+                                    <Text style={styles.signatureLabel}>Encoded by</Text>
+                                </View>
+                                <View style={styles.signatureBlock}>
+                                    <View style={styles.signatureLine} />
+                                    <Text style={styles.signatureLabel}>Reviewed by</Text>
+                                </View>
                             </View>
-                            <View style={styles.signatureBlock}>
-                                <View style={styles.signatureLine} />
-                                <Text style={styles.signatureLabel}>Reviewed by</Text>
-                            </View>
-                        </View>
+                        </>
                     )}
 
                     <Text style={styles.pageNumber}>
