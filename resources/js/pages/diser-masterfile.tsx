@@ -221,6 +221,47 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
         return <Input value={value} onChange={onChange} onBlur={onBlur} />;
     }, [handleCellChange]);
 
+    // Memoized RateCell for percentage display
+    const RateCell = useCallback(({ getValue, row, column }: CellContext<Diser, number>) => {
+        // Convert decimal to percentage for display
+        const initialValue = getValue();
+        const [value, setValue] = useState(
+            initialValue !== undefined && initialValue !== null
+                ? (parseFloat(initialValue.toString()) * 100).toString()
+                : ''
+        );
+
+        const onBlur = useCallback(() => {
+            // Convert back to decimal before saving
+            const numericValue = value.replace(/[^0-9.]/g, '');
+            const decimalValue = numericValue === '' ? 0 : parseFloat(numericValue) / 100;
+            handleCellChange(row.index, column.id, decimalValue.toString());
+        }, [row.index, column.id, value]);
+
+        const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+            const inputValue = e.target.value;
+            // Allow typing numbers, decimal points, and backspace
+            if (inputValue === '' || /^[0-9]*\.?[0-9]*$/.test(inputValue)) {
+                setValue(inputValue);
+            }
+        }, []);
+
+        return (
+            <div className="flex items-center">
+                <Input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={value}
+                    onChange={handleChange}
+                    onBlur={onBlur}
+                    className="text-right"
+                />
+                <span className="ml-1">%</span>
+            </div>
+        );
+    }, [handleCellChange]);
+
     // Memoized columns
     const columns = useMemo(() => [
         columnHelper.accessor('name', {
@@ -244,7 +285,7 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
         }),
         columnHelper.accessor('rate', {
             header: 'RATE',
-            cell: NumberCell,
+            cell: RateCell,
         }),
         columnHelper.accessor('sales', {
             header: 'SALES',
@@ -296,7 +337,7 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
                 </Button>
             ),
         }),
-    ], [columnHelper, EditableCell, handleDelete, ReadOnlyCell, NumberCell, ComputedTotalCell]);
+    ], [columnHelper, EditableCell, handleDelete, ReadOnlyCell, NumberCell, ComputedTotalCell, RateCell]);
 
     // Apply zero sales filter using a custom filter function
     const filteredData = useMemo(() => {
