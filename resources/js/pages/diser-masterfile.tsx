@@ -221,43 +221,47 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
         return <Input value={value} onChange={onChange} onBlur={onBlur} />;
     }, [handleCellChange]);
 
-    // Memoized RateCell for percentage display
+    // UX-friendly RateCell for percentage input
     const RateCell = useCallback(({ getValue, row, column }: CellContext<Diser, number>) => {
-        // Convert decimal to percentage for display
         const initialValue = getValue();
         const [value, setValue] = useState(
             initialValue !== undefined && initialValue !== null
-                ? (parseFloat(initialValue.toString()) * 100).toString()
+                ? (parseFloat(initialValue.toString()) * 100).toFixed(2)
                 : ''
         );
 
         const onBlur = useCallback(() => {
-            // Convert back to decimal before saving
-            const numericValue = value.replace(/[^0-9.]/g, '');
-            const decimalValue = numericValue === '' ? 0 : parseFloat(numericValue) / 100;
-            handleCellChange(row.index, column.id, decimalValue.toString());
-        }, [row.index, column.id, value]);
+            let num = value === '' ? 0 : parseFloat(value);
+            if (isNaN(num)) num = 0;
+            // Clamp between 0 and 100
+            num = Math.max(0, Math.min(num, 100));
+            const decimalValue = (num / 100).toFixed(4); // store as decimal, up to 4 decimals for precision
+            handleCellChange(row.index, column.id, decimalValue);
+            setValue(num.toFixed(2));
+        }, [value, row, column, handleCellChange]);
 
-        const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
             const inputValue = e.target.value;
-            // Allow typing numbers, decimal points, and backspace
-            if (inputValue === '' || /^[0-9]*\.?[0-9]*$/.test(inputValue)) {
+            // Allow only numbers and up to one dot and two decimals
+            if (/^\d*\.?\d{0,2}$/.test(inputValue) || inputValue === '') {
                 setValue(inputValue);
             }
-        }, []);
+        };
 
         return (
-            <div className="flex items-center">
+            <div className="relative flex items-center">
                 <Input
                     type="number"
                     step="0.01"
                     min="0"
+                    max="100"
                     value={value}
                     onChange={handleChange}
                     onBlur={onBlur}
-                    className="text-right"
+                    className="pr-8 text-right"
+                    placeholder="0.00"
                 />
-                <span className="ml-1">%</span>
+                <span className="absolute right-2 text-gray-400 pointer-events-none select-none">%</span>
             </div>
         );
     }, [handleCellChange]);

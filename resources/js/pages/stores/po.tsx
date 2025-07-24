@@ -92,7 +92,7 @@ export default function StoreShow({ store, storeItems: initialStoreItems }: Stor
     ]);
     const [pagination, setPagination] = useState({
         pageIndex: 0,
-        pageSize: 100,
+        pageSize: 1000,
     });
     const [columnVisibility, setColumnVisibility] = useState({
         m_no: false,
