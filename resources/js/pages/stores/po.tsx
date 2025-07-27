@@ -463,6 +463,10 @@ export default function StoreShow({ store, storeItems: initialStoreItems }: Stor
                                 po_or_limit: 'PO or Limit',
                                 items_not_allowed: 'Items Not Allowed',
                                 items_order: 'Items Order',
+                                items_overstock: 'Items Overstock',
+                                others: 'Others 1',
+                                others_2: 'Others 2',
+                                others_3: 'Others 3',
                                 fb_name: 'FB Name',
                             };
 

@@ -5,6 +5,7 @@ import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Store } from '@/types/store';
 import { Head } from '@inertiajs/react';
+import React from 'react';
 import {
     createColumnHelper,
     flexRender,
@@ -558,6 +559,25 @@ export default function Dashboard({ stores }: DashboardProps) {
                                                     const rendered = flexRender(column.columnDef.header, headerObj.getContext());
                                                     if (typeof rendered === 'string') {
                                                         headerText = rendered;
+                                                    } else if (React.isValidElement(rendered)) {
+                                                        // Extract text content from React elements
+                                                        const extractText = (element: React.ReactElement): string => {
+                                                            const props = element.props as { children?: React.ReactNode };
+                                                            if (typeof props.children === 'string') {
+                                                                return props.children;
+                                                            } else if (Array.isArray(props.children)) {
+                                                                return props.children
+                                                                    .map((child: any) => {
+                                                                        if (typeof child === 'string') return child;
+                                                                        if (React.isValidElement(child)) return extractText(child);
+                                                                        return '';
+                                                                    })
+                                                                    .join(' ')
+                                                                    .trim();
+                                                            }
+                                                            return '';
+                                                        };
+                                                        headerText = extractText(rendered) || headerText;
                                                     }
                                                 }
                                             }
