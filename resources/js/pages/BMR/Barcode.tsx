@@ -39,7 +39,7 @@ export default function BarcodeShow({ barcodes: initialBarcodes }: BarcodeShowPr
     const [globalFilter, setGlobalFilter] = useState('');
     const [pagination, setPagination] = useState({
         pageIndex: 0,
-        pageSize: 100,
+        pageSize: 50000,
     });
     const [columnVisibility, setColumnVisibility] = useState({});
     const columnHelper = createColumnHelper<Barcode>();
