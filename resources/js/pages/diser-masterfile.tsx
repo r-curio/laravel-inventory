@@ -29,6 +29,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { DISER_VIEWS as PREDEFINED_VIEWS } from '@/lib/previews';
 import { AddDiserModal } from '@/components/add-diser-modal';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -36,6 +37,8 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/diser-masterfile',
     },
 ];
+
+
 
 
 
@@ -69,6 +72,8 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
     const [columnVisibility, setColumnVisibility] = useState(() =>
         Object.fromEntries(PREDEFINED_VIEWS[selectedView].hiddenColumns.map((col) => [col, false]))
     );
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [pendingDeleteIndex, setPendingDeleteIndex] = useState<number | null>(null);
 
     // Debounced search effect
     useEffect(() => {
@@ -157,14 +162,23 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
         );
     }, [selectedView]);
 
-    const handleDelete = async (rowIndex: number) => {
-        const diser = data[rowIndex];
+    const requestDelete = (rowIndex: number) => {
+        setPendingDeleteIndex(rowIndex);
+        setConfirmOpen(true);
+    };
+
+    const confirmDelete = async () => {
+        if (pendingDeleteIndex === null) return;
+        const diser = data[pendingDeleteIndex];
         try {
             await axios.delete(`/disers/${diser.id}`);
-            setData((old) => old.filter((_, index) => index !== rowIndex));
+            setData((old) => old.filter((_, index) => index !== pendingDeleteIndex));
             toast.success('Diser deleted successfully');
         } catch (error) {
             toast.error('Failed to delete diser');
+        } finally {
+            setConfirmOpen(false);
+            setPendingDeleteIndex(null);
         }
     };
 
@@ -336,12 +350,12 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
             id: 'actions',
             header: 'Actions',
             cell: (props: { row: Row<Diser> }) => (
-                <Button variant="destructive" size="sm" onClick={() => handleDelete(props.row.index)}>
+                <Button variant="destructive" size="sm" onClick={() => requestDelete(props.row.index)}>
                     <Trash2 className="h-4 w-4" />
                 </Button>
             ),
         }),
-    ], [columnHelper, EditableCell, handleDelete, ReadOnlyCell, NumberCell, ComputedTotalCell, RateCell]);
+    ], [columnHelper, EditableCell, ReadOnlyCell, NumberCell, ComputedTotalCell, RateCell]);
 
     // Apply zero sales filter using a custom filter function
     const filteredData = useMemo(() => {
@@ -635,6 +649,21 @@ export default function DiserMasterfile({ disers }: DiserMasterfileProps) {
                     </div>
                 </div>
             </div>
+
+            <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Delete diser?</DialogTitle>
+                        <DialogDescription>
+                            {pendingDeleteIndex !== null ? `Are you sure you want to delete "${data[pendingDeleteIndex]?.name}"?` : ''}
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setConfirmOpen(false)}>Cancel</Button>
+                        <Button variant="destructive" onClick={confirmDelete}>Delete</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </AppLayout>
     );
 }

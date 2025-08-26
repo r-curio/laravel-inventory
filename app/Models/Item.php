@@ -36,6 +36,6 @@ class Item extends Model
 
     public function barcode()
     {
-        return $this->hasOne(barcode::class, 'item_id');
+        return $this->hasOne(Barcode::class, 'item_id');
     }
 }

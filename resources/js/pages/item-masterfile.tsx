@@ -25,6 +25,7 @@ import { FileDown, Search, Settings2, Trash2 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState, useMemo } from 'react';
 import { toast } from 'sonner';
 import { AddItemModal } from '@/components/add-item-modal';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -58,6 +59,8 @@ export default function Dashboard({ items }: DashboardProps) {
         { id: 'm_no', desc: false },
         { id: 'name', desc: false },
     ]);
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [pendingDeleteIndex, setPendingDeleteIndex] = useState<number | null>(null);
 
     // Debounced search effect
     useEffect(() => {
@@ -150,14 +153,23 @@ export default function Dashboard({ items }: DashboardProps) {
         };
     }, []);
 
-    const handleDelete = async (rowIndex: number) => {
-        const item = data[rowIndex];
+    const requestDelete = (rowIndex: number) => {
+        setPendingDeleteIndex(rowIndex);
+        setConfirmOpen(true);
+    };
+
+    const confirmDelete = async () => {
+        if (pendingDeleteIndex === null) return;
+        const item = data[pendingDeleteIndex];
         try {
             await axios.delete(`/items/${item.id}`);
-            setData((old) => old.filter((_, index) => index !== rowIndex));
+            setData((old) => old.filter((_, index) => index !== pendingDeleteIndex));
             toast.success('Item deleted successfully');
         } catch (error) {
             toast.error('Failed to delete item');
+        } finally {
+            setConfirmOpen(false);
+            setPendingDeleteIndex(null);
         }
     };
 
@@ -299,12 +311,12 @@ export default function Dashboard({ items }: DashboardProps) {
             id: 'actions',
             header: 'Actions',
             cell: (props: { row: Row<Item> }) => (
-                <Button variant="destructive" size="sm" onClick={() => handleDelete(props.row.index)}>
+                <Button variant="destructive" size="sm" onClick={() => requestDelete(props.row.index)}>
                     <Trash2 className="h-4 w-4" />
                 </Button>
             ),
         }),
-    ], [columnHelper, EditableCell, handleDelete]);
+    ], [columnHelper, EditableCell]);
 
     const table = useReactTable({
         data,
@@ -553,6 +565,21 @@ export default function Dashboard({ items }: DashboardProps) {
                     </div>
                 </div>
             </div>
+
+            <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Delete item?</DialogTitle>
+                        <DialogDescription>
+                            {pendingDeleteIndex !== null ? `Are you sure you want to delete "${data[pendingDeleteIndex]?.name}"? This will also remove related stock levels and barcodes.` : ''}
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setConfirmOpen(false)}>Cancel</Button>
+                        <Button variant="destructive" onClick={confirmDelete}>Delete</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </AppLayout>
     );
 }

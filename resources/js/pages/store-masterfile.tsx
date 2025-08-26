@@ -28,6 +28,7 @@ import { toast } from 'sonner';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { STORE_VIEWS as PREDEFINED_VIEWS } from '@/lib/previews';
 import { AddStoreModal } from '@/components/add-store-modal';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -68,6 +69,8 @@ export default function Dashboard({ stores }: DashboardProps) {
     const [columnVisibility, setColumnVisibility] = useState(() =>
         Object.fromEntries(PREDEFINED_VIEWS[selectedView].hiddenColumns.map((col) => [col, false]))
     );
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [pendingDeleteIndex, setPendingDeleteIndex] = useState<number | null>(null);
 
     // Debounced search effect
     useEffect(() => {
@@ -167,14 +170,23 @@ export default function Dashboard({ stores }: DashboardProps) {
         );
     }, [selectedView]);
 
-    const handleDelete = async (rowIndex: number) => {
-        const store = data[rowIndex];
+    const requestDelete = (rowIndex: number) => {
+        setPendingDeleteIndex(rowIndex);
+        setConfirmOpen(true);
+    };
+
+    const confirmDelete = async () => {
+        if (pendingDeleteIndex === null) return;
+        const store = data[pendingDeleteIndex];
         try {
             await axios.delete(`/stores/${store.id}`);
-            setData((old) => old.filter((_, index) => index !== rowIndex));
+            setData((old) => old.filter((_, index) => index !== pendingDeleteIndex));
             toast.success('Store deleted successfully');
         } catch (error) {
             toast.error('Failed to delete store');
+        } finally {
+            setConfirmOpen(false);
+            setPendingDeleteIndex(null);
         }
     };
 
@@ -355,12 +367,12 @@ export default function Dashboard({ stores }: DashboardProps) {
             id: 'actions',
             header: 'Actions',
             cell: (props: { row: Row<Store> }) => (
-                <Button variant="destructive" size="sm" onClick={() => handleDelete(props.row.index)}>
+                <Button variant="destructive" size="sm" onClick={() => requestDelete(props.row.index)}>
                     <Trash2 className="h-4 w-4" />
                 </Button>
             ),
         }),
-    ], [columnHelper, EditableCell, handleDelete]);
+    ], [columnHelper, EditableCell]);
 
     const table = useReactTable({
         data, // Use original data, not sortedData
@@ -659,6 +671,21 @@ export default function Dashboard({ stores }: DashboardProps) {
                     </div>
                 </div>
             </div>
+
+            <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Delete store?</DialogTitle>
+                        <DialogDescription>
+                            {pendingDeleteIndex !== null ? `Are you sure you want to delete "${data[pendingDeleteIndex]?.name}"?` : ''}
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setConfirmOpen(false)}>Cancel</Button>
+                        <Button variant="destructive" onClick={confirmDelete}>Delete</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </AppLayout>
     );
 }

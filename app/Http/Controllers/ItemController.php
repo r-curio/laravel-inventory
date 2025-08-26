@@ -8,6 +8,8 @@ use App\Models\StoreItem;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
+use App\Models\Barcode;
+use App\Models\StockLevel;
 
 class ItemController extends Controller
 {
@@ -103,8 +105,27 @@ class ItemController extends Controller
      */
     public function destroy(Item $item)
     {
-        $item->delete();
-        return response()->json(['message' => 'Item deleted successfully']);
+        try {
+            DB::transaction(function () use ($item) {
+                // Delete related barcodes (no FK cascade defined in migration)
+                Barcode::where('item_id', $item->id)->delete();
+
+                // Delete related stock levels that reference this item by name and company code
+                StockLevel::where('name', $item->name)
+                    ->where('co', $item->co)
+                    ->delete();
+
+                // store_item rows will cascade via FK; finally delete the item
+                $item->delete();
+            });
+
+            return response()->json(['message' => 'Item deleted successfully']);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to delete item',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
