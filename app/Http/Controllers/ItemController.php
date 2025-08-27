@@ -62,6 +62,41 @@ class ItemController extends Controller
             ]);
         }
 
+        // Ensure stock_levels contain entries for all items under this CO across existing combinations
+        // 1) Get all existing (store_name, class, co) combinations for this CO
+        $combinations = StockLevel::select('store_name', 'class', 'co')
+            ->where('co', $validated['co'])
+            ->distinct()
+            ->get();
+
+        if ($combinations->isNotEmpty()) {
+            // 2) Get all item names for this CO (including the newly created one)
+            $itemNamesForCo = Item::where('co', $validated['co'])->pluck('name')->toArray();
+
+            foreach ($combinations as $combo) {
+                // 3) Fetch existing names for this combination to avoid duplicates
+                $existingNames = StockLevel::where('store_name', $combo->store_name)
+                    ->where('class', $combo->class)
+                    ->where('co', $combo->co)
+                    ->pluck('name')
+                    ->toArray();
+
+                // 4) Determine which names are missing for this combination
+                $missingNames = array_diff($itemNamesForCo, $existingNames);
+
+                // 5) Insert missing stock_levels with order = 0
+                foreach ($missingNames as $missingName) {
+                    StockLevel::create([
+                        'store_name' => $combo->store_name,
+                        'class' => $combo->class,
+                        'co' => $combo->co,
+                        'name' => $missingName,
+                        'order' => 0,
+                    ]);
+                }
+            }
+        }
+
         return response()->json([
             'message' => 'Item created successfully',
             'item' => $item
