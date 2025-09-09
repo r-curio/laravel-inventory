@@ -46,7 +46,7 @@ class BMRController extends Controller
     }
 
     /**
-     * Store factory assignments for BMR items
+     * Store factory assignments for BMR items with chunked processing
      */
     public function assignFactories(Request $request)
     {
@@ -56,93 +56,146 @@ class BMRController extends Controller
             'groupedItems.*.item_id' => 'required|exists:items,id',
             'groupedItems.*.assigned_factory' => 'required|string|in:m30,apollo,site3',
             'groupedItems.*.total_final_order' => 'required|integer',
+            'chunk_index' => 'nullable|integer|min:0',
+            'total_chunks' => 'nullable|integer|min:1',
+            'is_chunked' => 'nullable|boolean',
         ]);
 
-        $processedItemIds = [];
+        $chunkIndex = $request->input('chunk_index', 0);
+        $totalChunks = $request->input('total_chunks', 1);
+        $isChunked = $request->input('is_chunked', false);
+        $chunkSize = 50; // Process 50 items at a time
 
         try {
-            foreach ($request->groupedItems as $item) {
-                // Check if item_id exists in the barcodes table
-                $barcode = Barcode::where('item_id', $item['item_id'])->first();
+            $groupedItems = $request->groupedItems;
+            $processedItemIds = [];
 
-                if ($barcode) {
-                    // Update existing barcode record
-                    $updateData = [
-                        'm30' => 0,
-                        'apollo' => 0,
-                        'site3' => 0,
-                    ];
+            if ($isChunked) {
+                // Process items in chunks
+                $startIndex = $chunkIndex * $chunkSize;
+                $endIndex = min($startIndex + $chunkSize, count($groupedItems));
+                $chunkItems = array_slice($groupedItems, $startIndex, $chunkSize);
 
-                    // Set the appropriate factory field based on assigned_factory
-                    switch ($item['assigned_factory']) {
-                        case 'm30':
-                            $updateData['m30'] = $item['total_final_order'];
-                            break;
-                        case 'apollo':
-                            $updateData['apollo'] = $item['total_final_order'];
-                            break;
-                        case 'site3':
-                            $updateData['site3'] = $item['total_final_order'];
-                            break;
-                    }
+                $processedItemIds = $this->processItemsChunk($chunkItems);
 
-                    $barcode->update($updateData);
-                    Log::info("Updated barcode record for item_id: {$item['item_id']} with factory: {$item['assigned_factory']}");
-                } else {
-                    // Create new barcode record
-                    // Find the most recent barcode for this item_id
-                    $previousBarcode = Barcode::where('item_id', $item['item_id'])->orderByDesc('id')->first();
-                    $begbal = $previousBarcode ? $previousBarcode->endbal : 0;
+                // Get existing processed items from session
+                $existingProcessedItems = session('processed_barcode_items', []);
+                $allProcessedItems = array_merge($existingProcessedItems, $processedItemIds);
+                session(['processed_barcode_items' => $allProcessedItems]);
 
-                    $createData = [
-                        'item_id' => $item['item_id'],
-                        'name' => $item['item_name'],
-                        'm30' => 0,
-                        'apollo' => 0,
-                        'site3' => 0,
-                        'begbal' => $begbal,
-                        'total' => 0,
-                        'actual' => 0,
-                        'purchase' => 0,
-                        'returns' => 0,
-                        'damaged' => 0,
-                        'endbal' => 0,
-                        'final_total' => 0,
-                        's_request' => 0,
-                        'f_request' => 0,
-                        'notes' => '',
-                        'condition' => '',
-                    ];
+                // Check if this is the last chunk
+                $isLastChunk = ($chunkIndex + 1) >= $totalChunks;
 
-                    // Set the appropriate factory field based on assigned_factory
-                    switch ($item['assigned_factory']) {
-                        case 'm30':
-                            $createData['m30'] = $item['total_final_order'];
-                            break;
-                        case 'apollo':
-                            $createData['apollo'] = $item['total_final_order'];
-                            break;
-                        case 'site3':
-                            $createData['site3'] = $item['total_final_order'];
-                            break;
-                    }
-
-                    Barcode::create($createData);
-                    Log::info("Created new barcode record for item_id: {$item['item_id']} with factory: {$item['assigned_factory']}");
-                }
-
-                $processedItemIds[] = $item['item_id'];
+                return response()->json([
+                    'success' => true,
+                    'message' => "Chunk " . ($chunkIndex + 1) . " of " . $totalChunks . " processed successfully",
+                    'chunk_index' => $chunkIndex,
+                    'total_chunks' => $totalChunks,
+                    'is_last_chunk' => $isLastChunk,
+                    'processed_count' => count($processedItemIds),
+                    'total_processed' => count($allProcessedItems)
+                ]);
+            } else {
+                // Original processing for backward compatibility
+                $processedItemIds = $this->processItemsChunk($groupedItems);
+                session(['processed_barcode_items' => $processedItemIds]);
+                return back()->with('success', 'Factory assignments saved successfully');
             }
-
-            // Store the processed item IDs in session
-            session(['processed_barcode_items' => $processedItemIds]);
-
-            // Return success response for Inertia
-            return back()->with('success', 'Factory assignments saved successfully');
         } catch (\Exception $e) {
             Log::error("Error in assignFactories: " . $e->getMessage());
-            return back()->withErrors(['error' => 'Failed to save factory assignments: ' . $e->getMessage()]);
+            
+            if ($isChunked) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to process chunk: ' . $e->getMessage()
+                ], 500);
+            } else {
+                return back()->withErrors(['error' => 'Failed to save factory assignments: ' . $e->getMessage()]);
+            }
         }
+    }
+
+    /**
+     * Process a chunk of items
+     */
+    private function processItemsChunk(array $items): array
+    {
+        $processedItemIds = [];
+
+        foreach ($items as $item) {
+            // Check if item_id exists in the barcodes table
+            $barcode = Barcode::where('item_id', $item['item_id'])->first();
+
+            if ($barcode) {
+                // Update existing barcode record
+                $updateData = [
+                    'm30' => 0,
+                    'apollo' => 0,
+                    'site3' => 0,
+                ];
+
+                // Set the appropriate factory field based on assigned_factory
+                switch ($item['assigned_factory']) {
+                    case 'm30':
+                        $updateData['m30'] = $item['total_final_order'];
+                        break;
+                    case 'apollo':
+                        $updateData['apollo'] = $item['total_final_order'];
+                        break;
+                    case 'site3':
+                        $updateData['site3'] = $item['total_final_order'];
+                        break;
+                }
+
+                $barcode->update($updateData);
+                Log::info("Updated barcode record for item_id: {$item['item_id']} with factory: {$item['assigned_factory']}");
+            } else {
+                // Create new barcode record
+                // Find the most recent barcode for this item_id
+                $previousBarcode = Barcode::where('item_id', $item['item_id'])->orderByDesc('id')->first();
+                $begbal = $previousBarcode ? $previousBarcode->endbal : 0;
+
+                $createData = [
+                    'item_id' => $item['item_id'],
+                    'name' => $item['item_name'],
+                    'm30' => 0,
+                    'apollo' => 0,
+                    'site3' => 0,
+                    'begbal' => $begbal,
+                    'total' => 0,
+                    'actual' => 0,
+                    'purchase' => 0,
+                    'returns' => 0,
+                    'damaged' => 0,
+                    'endbal' => 0,
+                    'final_total' => 0,
+                    's_request' => 0,
+                    'f_request' => 0,
+                    'notes' => '',
+                    'condition' => '',
+                ];
+
+                // Set the appropriate factory field based on assigned_factory
+                switch ($item['assigned_factory']) {
+                    case 'm30':
+                        $createData['m30'] = $item['total_final_order'];
+                        break;
+                    case 'apollo':
+                        $createData['apollo'] = $item['total_final_order'];
+                        break;
+                    case 'site3':
+                        $createData['site3'] = $item['total_final_order'];
+                        break;
+                }
+
+                Barcode::create($createData);
+                Log::info("Created new barcode record for item_id: {$item['item_id']} with factory: {$item['assigned_factory']}");
+            }
+
+            $processedItemIds[] = $item['item_id'];
+        }
+
+        return $processedItemIds;
     }
 
     public function factories()
