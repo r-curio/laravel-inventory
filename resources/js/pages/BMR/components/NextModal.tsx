@@ -4,6 +4,7 @@ import { GroupedItem } from '@/types/groupedItems';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import { useState } from 'react';
 import { TotalPDF } from './TotalPDF';
+import axios from 'axios';
 
 interface NextModalProps {
     allItemsAssigned: boolean;
@@ -37,24 +38,15 @@ export default function NextModal({ allItemsAssigned, groupedItems, currentBarco
                     message: `Processing chunk ${chunkIndex + 1} of ${totalChunks} (${chunkItems.length} items)...` 
                 });
 
-                const response = await fetch('/bmr/assign-factories', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
-                    },
-                    body: JSON.stringify({
-                        groupedItems: chunkItems,
-                        chunk_index: chunkIndex,
-                        total_chunks: totalChunks,
-                        is_chunked: true,
-                    }),
+                const response = await axios.post('/bmr/assign-factories', {
+                    groupedItems: chunkItems,
+                    chunk_index: chunkIndex,
+                    total_chunks: totalChunks,
+                    is_chunked: true,
                 });
 
-                const result = await response.json();
-
-                if (!result.success) {
-                    throw new Error(result.message || 'Failed to process chunk');
+                if (!response.data.success) {
+                    throw new Error(response.data.message || 'Failed to process chunk');
                 }
 
                 // Add a small delay between chunks to prevent overwhelming the server
